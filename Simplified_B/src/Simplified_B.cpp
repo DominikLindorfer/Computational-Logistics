@@ -9,7 +9,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-void read_csv(string& file, vector<vector <string> >& data){
+void read_csv(string& file, vector<vector <string> >& data, vector< tuple<string,string,string>> distances	){
 
 	ifstream in;
 	in.open(file);
@@ -33,32 +33,48 @@ void read_csv(string& file, vector<vector <string> >& data){
 
 		data.push_back(vec_line);
 	}
-
+	//sort distances
+	auto sort_tuple = [] (tuple<string,string,string> a , tuple<string,string,string> b) { return tie(a) < tie(b); };
+	try {
+		unsigned long i=0;
+//		cout << distances.size() << endl;
+		for(auto d : data) {
+//			cout << i << " " << d.size() << endl;
+			//			distances.at(i) = make_tuple(d.at(0),d.at(2),d.at(1));
+			if(d.size()==3)
+				distances.push_back(make_tuple(d.at(0),d.at(2),d.at(1)));
+			i++;
+		}
+	}
+	catch (exception &e) {
+		cout << e.what() << endl;
+	}
+	sort(distances.begin(),distances.end(),sort_tuple);
+	cout << distances.size() << endl;
+	for(auto d : distances) {
+		cout << get<0>(d) << " " << get<1>(d) << " "<< get<2>(d) << endl;
+	}
 }
 
 int main() {
 
+
 	string TravTime = "Data/TravelTim1_short.csv";
 	vector<vector <string> > data;
-	read_csv(TravTime, data);
-
-	for(auto i : data){
-		for(auto j : i){
-			cout << j << " ";
-		}
-		cout << endl;
-	}
+	vector< tuple<string,string,string>> distances;
+	read_csv(TravTime, data,distances);
+	//	vector< tuple<string,string,string>> distances(data.size());
 
 	//Test EGit
-//	std::string input = "abc,def,ghi";
-//	std::istringstream ss(input);
-//	std::string token;
-//
-//	while(std::getline(ss, token, ',')) {
-//	    std::cout << token << '\n';
-//	}
-//
-//
-//	cout << "Hello World!" << endl; // prints
+	//	std::string input = "abc,def,ghi";
+	//	std::istringstream ss(input);
+	//	std::string token;
+	//
+	//	while(std::getline(ss, token, ',')) {
+	//	    std::cout << token << '\n';
+	//	}
+	//
+	//
+	//	cout << "Hello World!" << endl; // prints
 	return 0;
 }
