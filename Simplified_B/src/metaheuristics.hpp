@@ -79,6 +79,89 @@ void initial_solution(list< int >& solution, vector< store >& stores, dist_mat& 
 	}
 }
 
+void evaluate_solution(int& result, list< int >& solution, dist_mat& dist){
+
+	result = 0;
+
+    auto it = solution.begin();
+    for(int i = 0; i < solution.size() - 1; i++){
+
+    	int id = *it;
+    	result += dist(id , *(++it) );
+    }
+}
+
+void evaluate_sublist_solution(int& result, list<int>::iterator& start, list<int>::iterator& end, dist_mat& dist){
+
+	result = 0;
+
+    for(auto it = start; it != end; ){
+
+    	int id = *it;
+    	result += dist(id , *(++it) );
+    }
+}
+
+bool opt_2(list<int>::iterator& start, list<int>::iterator& end, int& route_size, dist_mat& dist){
+
+	bool return_val = true;
+
+	//-----implement evaluate_sublist-----
+	int result_old = 0;
+	evaluate_sublist_solution(result_old, start, end, dist);
+
+	int a = rand() % route_size;
+	int b = rand() % route_size;
+
+	if(a == 0)	a++;
+	if(a == route_size) a--;
+	if(b == 0) b++;
+	if(b == route_size) b--;
+
+	auto it_start = next(start,min(a,b));
+	auto it_end = next(start,max(a,b));
+//	cout << a << " " << b << endl;
+
+	for(int i=0; i<(max(a,b)-min(a,b)+1)/2; i++) {
+
+		auto val1 = *it_start;
+		auto val2 = *it_end;
+
+		*it_end=val1;
+		*it_start=val2;
+
+		it_start++;
+		it_end--;
+	}
+
+	//-----implement evaluate_sublist-----
+	int result = 0;
+	evaluate_sublist_solution(result, start, end, dist);
+
+	if(result_old <= result){
+
+		it_start = next(start,min(a,b));
+		it_end = next(start,max(a,b));
+
+		for (int i = 0; i < (max(a, b) - min(a, b) + 1) / 2; i++) {
+
+			auto val1 = *it_start;
+			auto val2 = *it_end;
+
+			*it_end = val1;
+			*it_start = val2;
+
+			it_start++;
+			it_end--;
+		}
+
+		return_val = false;
+	}
+
+//	cout << "Result old: " << result_old << "  result: " << result << endl;
+
+	return return_val;
+}
 
 
 #endif /* METAHEURISTICS_HPP_ */
