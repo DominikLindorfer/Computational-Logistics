@@ -1,0 +1,87 @@
+"Month";"Day";"SiteName";"Temperature";"DemandPallets"
+"January";2;"STO_002";"Ambient";7
+"January";2;"STO_002";"Chilled";2
+"January";2;"STO_002";"Frozen";1
+"January";2;"STO_002";"Temp cont.";12
+"January";2;"STO_003";"Ambient";16
+"January";2;"STO_003";"Chilled";2
+"January";2;"STO_003";"Frozen";1
+"January";2;"STO_003";"Temp cont.";8
+"January";2;"STO_004";"Ambient";15
+"January";2;"STO_004";"Chilled";6
+"January";2;"STO_004";"Frozen";2
+"January";2;"STO_004";"Temp cont.";7
+"January";2;"STO_005";"Ambient";31
+"January";2;"STO_005";"Chilled";14
+"January";2;"STO_005";"Frozen";2
+"January";2;"STO_005";"Temp cont.";11
+"January";2;"STO_006";"Ambient";15
+"January";2;"STO_006";"Chilled";8
+"January";2;"STO_006";"Frozen";1
+"January";2;"STO_006";"Temp cont.";9
+"January";2;"STO_007";"Ambient";10
+"January";2;"STO_007";"Chilled";7
+"January";2;"STO_007";"Temp cont.";12
+"January";2;"STO_008";"Ambient";6
+"January";2;"STO_008";"Chilled";2
+"January";2;"STO_008";"Frozen";1
+"January";2;"STO_008";"Temp cont.";17
+"January";2;"STO_009";"Temp cont.";6
+"January";2;"STO_010";"Ambient";7
+"January";2;"STO_010";"Chilled";2
+"January";2;"STO_010";"Frozen";1
+"January";2;"STO_010";"Temp cont.";12
+"January";2;"STO_011";"Frozen";1
+"January";2;"STO_011";"Temp cont.";23
+"January";2;"STO_012";"Temp cont.";7
+"January";2;"STO_013";"Frozen";5
+"January";2;"STO_014";"Temp cont.";8
+"January";2;"STO_015";"Temp cont.";6
+"January";2;"STO_016";"Temp cont.";12
+"January";2;"STO_017";"Temp cont.";2
+"January";2;"STO_018";"Temp cont.";12
+"January";2;"STO_019";"Temp cont.";4
+"January";2;"STO_020";"Frozen";3
+"January";2;"STO_020";"Temp cont.";1
+"January";2;"STO_021";"Temp cont.";9
+"January";2;"STO_022";"Temp cont.";6
+"January";2;"STO_023";"Temp cont.";11
+"January";2;"STO_024";"Frozen";1
+"January";2;"STO_025";"Temp cont.";5
+"January";2;"STO_025";"Temp cont.";16
+"January";2;"STO_026";"Temp cont.";8
+"January";2;"STO_027";"Temp cont.";5
+"January";2;"STO_028";"Temp cont.";9
+"January";2;"STO_029";"Frozen";1
+"January";2;"STO_029";"Temp cont.";14
+"January";2;"STO_030";"Frozen";3
+"January";2;"STO_031";"Frozen";1
+"January";2;"STO_032";"Frozen";1
+"January";2;"STO_033";"Frozen";2
+"January";2;"STO_034";"Frozen";2
+"January";2;"STO_035";"Frozen";10
+"January";2;"STO_036";"Frozen";5
+"January";2;"STO_037";"Frozen";3
+"January";2;"STO_038";"Frozen";1
+"January";2;"STO_039";"Frozen";3
+"January";2;"STO_040";"Temp cont.";7
+"January";2;"STO_041";"Temp cont.";6
+"January";2;"STO_042";"Temp cont.";1
+"January";2;"STO_043";"Temp cont.";1
+"January";2;"STO_044";"Ambient";24
+"January";2;"STO_044";"Chilled";3
+"January";2;"STO_044";"Frozen";2
+"January";2;"STO_044";"Temp cont.";14
+"January";2;"STO_045";"Ambient";6
+"January";2;"STO_045";"Chilled";5
+"January";2;"STO_045";"Temp cont.";5
+"January";2;"STO_046";"Ambient";2
+"January";2;"STO_046";"Chilled";5
+"January";2;"STO_046";"Frozen";1
+"January";2;"STO_046";"Temp cont.";9
+"January";2;"STO_047";"Ambient";16
+"January";2;"STO_047";"Chilled";6
+"January";2;"STO_048";"Ambient";34
+"January";2;"STO_048";"Chilled";15
+"January";2;"STO_048";"Frozen";2
+"January";2;"STO_048";"Temp cont.";17
