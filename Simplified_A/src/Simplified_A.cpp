@@ -106,24 +106,42 @@ int main() {
 	}
 
 	cout << "max: " << evaluate_solution(trucks) << endl;
+	print_docks(docks);
 
 	for(int i = 0; i < 500; i++){
 		opt_2(docks,dist,trucks,t_load,t_fix_load);
-		cout << i << endl;
+//		cout << i << endl;
 	}
 
 
 	cout << "max: " << evaluate_solution(trucks) << endl;
+	print_docks(docks);
 
-	for(auto i : docks){
+
+//	for(auto i : docks){
+//		//list< tuple <int, int, int> > jobs;
+//		for(auto j : i.jobs){
+//			cout << "{";
+//			cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j);
+//			cout << "},"<< endl;
+//		}
+//
+//	}
+	cout << "Trucks:" << endl;
+	for(auto i : trucks){
 		//list< tuple <int, int, int> > jobs;
 		for(auto j : i.jobs){
 			cout << "{";
 			cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j);
 			cout << "},"<< endl;
 		}
-
+		cout << endl;
 	}
+
+
+
+
+
 
 
 //	for(auto i : solution){

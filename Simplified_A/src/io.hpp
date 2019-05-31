@@ -8,6 +8,7 @@
 #ifndef IO_HPP_
 #define IO_HPP_
 #include <bits/stdc++.h>
+#include "datastructures.hpp"
 using namespace std;
 
 void read_csv_demand(string& file,vector< tuple<string,string,string,tuple<string,string> > >& demands){
@@ -103,6 +104,43 @@ void read_csv_distance(string& file, vector<vector <string> >& data, vector< tup
 	//	for(auto d : distances) {
 	//		cout << get<0>(d) << " " << get<1>(d) << " "<< get<2>(d) << endl;
 	//	}
+}
+
+void print_docks(vector< dock >& docks){
+
+	cout << endl << endl << "Mathematica Output: " << endl;
+
+	cout << "{";
+
+	for(auto i = docks.begin(); i != docks.end(); i++){
+
+		cout << "{";
+
+		if( get<0>(*(*i).jobs.begin()) != 0){
+			cout << "0," << get<0>(*(*i).jobs.begin()) << ",";
+		}
+
+		for(auto it = (*i).jobs.begin(); it != prev((*i).jobs.end(), 1); it++){
+
+
+			cout << get<1>(*it) - get<0>(*it) << "," << get<0>( *next(it, 1) ) - get<1>(*it) << ",";
+
+//			if(it != prev((*i).jobs.end(), 2)){
+//
+//			}
+//			else{
+//				cout << get<1>(*it) - get<0>(*it) << "," << get<0>( *next(it, 1) ) - get<1>(*it);
+//			}
+		}
+
+		cout << get<1>(*prev((*i).jobs.end(), 1)) - get<0>(*prev((*i).jobs.end(), 1));
+
+		if(i != prev(docks.end(),1))
+			cout << "},";
+		else
+			cout << "}";
+	}
+	cout << "}" << endl;
 }
 
 #endif /* IO_HPP_ */
