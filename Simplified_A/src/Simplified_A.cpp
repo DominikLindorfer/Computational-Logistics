@@ -22,7 +22,7 @@ int main() {
 	read_csv_distance(TravTime, data,distances);
 	read_csv_demand(Demand,demands);
 	//	vector< tuple<string,string,string>> distances(data.size());
-	int t_load = 1 * 60;
+	int t_load = 15 * 60;
 	int t_fix_load = 10 * 60;
 
 	//-----initialize distance matrix-----
@@ -105,6 +105,28 @@ int main() {
 
 	}
 
+	cout << "max: " << evaluate_solution(trucks) << endl;
+
+	for(int i = 0; i < 500; i++){
+		opt_2(docks,dist,trucks,t_load,t_fix_load);
+		cout << i << endl;
+	}
+
+
+
+	cout << "max: " << evaluate_solution(trucks) << endl;
+
+	for(auto i : docks){
+		//list< tuple <int, int, int> > jobs;
+		for(auto j : i.jobs){
+			cout << "{";
+			cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j);
+			cout << "},"<< endl;
+		}
+
+	}
+
+
 //	for(auto i : solution){
 //		cout << i+1 << ",";
 //	}
@@ -158,14 +180,35 @@ int main() {
 //
 //
 //	list<int> t = {1,2,3,4,5,6,7,8,9};
-//
+
 //	int a = 2;
 //	int b = 7;
-//
+
 //	auto it_start = next(t.begin(),min(a,b));
 //	auto it_end = next(t.begin(),max(a,b));
-//
+
 //	cout << a << " " << b << endl;
+
+//
+//	for(auto j : t )
+//		cout << j  << " ";
+//	cout << endl;
+//	vector<list<int>::iterator > del;
+//	for(auto j = t.begin();j!=t.end();j++) {
+//			if(rand()%2) {
+//				cout << *j << " ";
+//				del.push_back(j);
+//			}
+//	}
+//	cout << endl;
+//	for(auto j : del)
+//		t.erase(j);
+//
+//	for(auto j : t )
+//		cout << j  << " ";
+//	cout << endl;
+
+
 //	for(int i=0;i<(max(a,b)-min(a,b)+1)/2;i++) {
 //
 //		auto val1 = *it_start;

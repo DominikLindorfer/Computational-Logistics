@@ -55,12 +55,12 @@ public:
 	int capacity;
 	int load;
 	//----- start, end, store-id -----
-	list< tuple <int, int, int> > jobs;
+	list< tuple <int, int, int,int> > jobs;
 
 	truck(){
 		capacity = 0;
 		load = 0;
-		jobs.emplace_back( make_tuple(0,0,0) );  //tuple<int, int, int> (0,0,0)
+		jobs.emplace_back( make_tuple(0,0,0,0) );  //tuple<int, int, int> (0,0,0)
 	};
 
 	truck(int capacity_, int load_){
@@ -86,25 +86,20 @@ public:
 	}
 
 	bool is_free(int time){
-
 		if((int)jobs.size() > 0){
-
 			if(time > get<1>( jobs.back() )){
 				return true;
 			}
-
-			for(auto i : jobs){
-
-				if(time >= get<0>(i) && time <= get<1>(i)){
+			auto it = jobs.begin();
+			for(auto j=0;j<jobs.size();j++,it++) {
+				if( (time >= get<0>(*it)) && (time <= get<1>(*it)) ){
 					return false;
 				}
 			}
-
 			return true;
 		}
 		else
 			return true;
-
 	}
 };
 #endif /* DATASTRUCTURES_HPP_ */
