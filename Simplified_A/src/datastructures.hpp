@@ -63,6 +63,12 @@ public:
 		jobs.emplace_back( make_tuple(0,0,0,0) );  //tuple<int, int, int> (0,0,0)
 	};
 
+	truck(const truck& t){
+		capacity = t.capacity;
+		load = t.load;
+		jobs = t.jobs;
+	}
+
 	truck(int capacity_, int load_){
 		capacity = capacity_;
 		load = load_;
@@ -83,6 +89,29 @@ public:
 	dock(int id_, list< tuple <int, int, int> > jobs_){
 		id = id_;
 		jobs = jobs_;
+	}
+
+	bool is_free(int start_time, int end_time){
+		if((int)jobs.size() > 1){
+
+			for(auto it = jobs.begin(); it != prev(jobs.end(), 1); it++){
+//				start_time >= get<1>(*it) && end_time <= get<0>(*next(it, 1
+
+				if(start_time >= get<1>(*(it)) && end_time <= get<0>(*(next(it, 1)))){
+					return true;
+				}
+			}
+			return false;
+		}
+		else if((int)jobs.size()==1) {
+			auto it = jobs.begin();
+			if(end_time<=get<0>(*it)||start_time>=get<1>(*it))
+				return true;
+			else
+				return false;
+		}
+		else
+			return true;
 	}
 
 	bool is_free(int time){

@@ -108,9 +108,13 @@ int main() {
 	cout << "max: " << evaluate_solution(trucks) << endl;
 	print_docks(docks);
 
-	for(int i = 0; i < 500; i++){
+//	swap_2jobs_difftrucks(docks,dist,trucks,t_load,t_fix_load);
+
+	for(int i = 0; i < 10000; i++){
+//		swap_2jobs_difftrucks(docks,dist,trucks,t_load,t_fix_load);
 		opt_2(docks,dist,trucks,t_load,t_fix_load);
-//		cout << i << endl;
+		cout << i << endl;
+		print_docks(docks);
 	}
 
 
@@ -118,15 +122,15 @@ int main() {
 	print_docks(docks);
 
 
-//	for(auto i : docks){
-//		//list< tuple <int, int, int> > jobs;
-//		for(auto j : i.jobs){
-//			cout << "{";
-//			cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j);
-//			cout << "},"<< endl;
-//		}
-//
-//	}
+	for(auto i : docks){
+		//list< tuple <int, int, int> > jobs;
+		for(auto j : i.jobs){
+			cout << "{";
+			cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j);
+			cout << "},"<< endl;
+		}
+		cout << endl;
+	}
 	cout << "Trucks:" << endl;
 	for(auto i : trucks){
 		//list< tuple <int, int, int> > jobs;
