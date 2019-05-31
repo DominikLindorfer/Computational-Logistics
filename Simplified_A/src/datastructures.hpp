@@ -87,9 +87,9 @@ public:
 
 	bool is_free(int time){
 		if((int)jobs.size() > 0){
-			if(time > get<1>( jobs.back() )){
-				return true;
-			}
+//			if(time > get<1>( jobs.back() )){
+//				return true;
+//			}
 			auto it = jobs.begin();
 			for(auto j=0;j<jobs.size();j++,it++) {
 				if( (time >= get<0>(*it)) && (time <= get<1>(*it)) ){

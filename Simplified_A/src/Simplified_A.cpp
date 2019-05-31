@@ -113,7 +113,6 @@ int main() {
 	}
 
 
-
 	cout << "max: " << evaluate_solution(trucks) << endl;
 
 	for(auto i : docks){
