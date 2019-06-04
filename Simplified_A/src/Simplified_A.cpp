@@ -139,9 +139,9 @@ int main() {
 
 	cout << "Number of Jobs Trucks: " << numb_j_trucks << "  Docks: " << numb_j_docks << endl;
 
-	for(int i = 0; i < 10000; i++){
-		//swap_2jobs_difftrucks(docks,dist,trucks,t_load,t_fix_load);
-		opt_2(docks, dist, trucks, t_load, t_fix_load);
+	for(int i = 0; i < 500; i++){
+		swap_2jobs_difftrucks(docks, dist, trucks, t_load, t_fix_load);
+//		opt_2(docks, dist, trucks, t_load, t_fix_load);
 		cout << i << endl;
 //		print_docks(docks);
 	}

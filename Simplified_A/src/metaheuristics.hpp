@@ -114,105 +114,9 @@ void evaluate_sublist_solution(int& result, list<int>::iterator& start, list<int
 	}
 }
 
-bool opt_2(vector< dock >& docks, dist_mat& dist, vector< truck >& trucks, int& t_load, int& t_fix_load){
-
-	//-----Version of 2-opt for the Scheduling Problem at the Docks-----
-
-	//-----Select random truck and 2 random jobs of that truck-----
-	auto docks_try = docks;
-	int truck_id = rand() % trucks.size();
-	auto truck = trucks[truck_id];
-
-	int job_id_1 = rand() % truck.jobs.size();
-	int job_id_2 = rand() % truck.jobs.size();
-
-	if (truck.jobs.size() > 1) {
-		if (job_id_1 == job_id_2) {
-			if(job_id_1 == truck.jobs.size() -1){
-				job_id_1--;
-			}
-			else{
-				job_id_2++;
-			}
-		}
-
-	} else {
-		return false;
-	}
-
-	cout << "jobid_1: " << job_id_1 << "  jobid_2: " << job_id_2 << "  jobsize: " << truck.jobs.size() << "  truckid: " << truck_id << endl;
-//	return false;
-
-	//-----reverse stores, demands and delete jobs from (job_id_1 -> job_id_2) in docks-----
+void delete_jobs_docks(vector< dock >& docks_try, truck& truck, int& truck_id, int& job_id_1 ,int& job_id_2){
 
 	auto it_start = next(truck.jobs.begin(), min(job_id_1, job_id_2));
-	auto it_end = next(truck.jobs.begin(), max(job_id_1, job_id_2));
-
-	cout << endl << "Trucks before swap:" << endl;
-	for(auto j : truck.jobs){
-		cout << "{";
-		cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j);
-		cout << "},"<< endl;
-	}
-	cout << endl;
-
-
-	for(int i = 0 ; i < (max(job_id_1, job_id_2)- min(job_id_1, job_id_2) + 1)/2; i++) {
-
-		auto temp_job = *it_start;
-		*it_start = *it_end;
-		*it_end = temp_job;
-
-		//		int temp_store_id = get<2>(*it_start);
-		//		int temp_demand = get<3>(*it_start);
-		//		get<2>(*it_start) = get<2>(*it_end);
-		//		get<3>(*it_start) = get<3>(*it_end);
-		//		get<2>(*it_end) = temp_store_id;
-		//		get<3>(*it_end) = temp_demand;
-
-//		for(auto& d : docks_try) {
-//			vector<list<tuple<int,int,int>>::iterator> del;
-//
-//			for(auto j = d.jobs.begin(); j!= d.jobs.end();j++) {
-//				if(truck_id == get<2>(*j) && get<0>(*it_start)==get<0>(*j)) {
-//					del.emplace_back(j);
-//				}
-//				if((it_start!=it_end) && (truck_id == get<2>(*j) && get<0>(*it_end)==get<0>(*j))) {
-//					del.emplace_back(j);
-//				}
-//			}
-//			for(auto j : del) {
-//				//				cout <<d.id << " " << get<0>(*j) << " " << get<1>(*j) << " " << get<2>(*j) << endl;
-//				d.jobs.erase(j);
-//			}
-//		}
-		it_start++;
-		it_end--;
-	}
-
-//	cout << endl << "Trucks after swap:" << endl;
-//	for(auto j : truck.jobs){
-//		cout << "{";
-//		cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j);
-//		cout << "},"<< endl;
-//	}
-//	cout << endl;
-
-
-	cout << endl << "Docks before delete:" << endl;
-	for(auto i : docks_try){
-		//list< tuple <int, int, int> > jobs;
-		for(auto j : i.jobs){
-			cout << "{";
-			cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j);
-			cout << "},"<< endl;
-		}
-		cout << endl;
-	}
-
-	//-----Delete all jobs of truck_id starting from it_start in all docks-----
-	it_start = next(truck.jobs.begin(), min(job_id_1, job_id_2));
-
 	for(auto it = it_start; it != truck.jobs.end(); it++) {
 
 		list<tuple<int,int,int>>::iterator del;
@@ -234,61 +138,12 @@ bool opt_2(vector< dock >& docks, dist_mat& dist, vector< truck >& trucks, int& 
 		}
 	}
 
-//	cout << endl << "Docks after delete:" << endl;
-//	for(auto i : docks_try){
-//		//list< tuple <int, int, int> > jobs;
-//		for(auto j : i.jobs){
-//			cout << "{";
-//			cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j);
-//			cout << "},"<< endl;
-//
-//		}
-//		cout << endl;
-//	}
+}
 
+void create_new_jobs(vector< dock >& docks_try, truck& truck, dist_mat& dist, int& truck_id, int& job_id_1 ,int& job_id_2, int& t_fix_load, int& t_load) {
 
-//	cout << endl << "Docks Original:" << endl;
-//	for(auto i : docks){
-//		//list< tuple <int, int, int> > jobs;
-//		for(auto j : i.jobs){
-//			cout << "{";
-//			cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j);
-//			cout << "},"<< endl;
-//
-//		}
-//		cout << endl;
-//	}
-//
-//	cout << endl << "Trucks Original:" << endl;
-//	for(auto j : trucks[truck_id].jobs){
-//		cout << "{";
-//		cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j);
-//		cout << "},"<< endl;
-//	}
-//	cout << endl;
+	auto it_start = next(truck.jobs.begin(), min(job_id_1, job_id_2));
 
-
-//	it_end = next(truck.jobs.begin(), max(job_id_1, job_id_2)+1);
-//
-//	for(auto it=it_end; it!=truck.jobs.end(); it++) {
-//		for(auto& d : docks_try) {
-//			vector<list<tuple<int,int,int>>::iterator> del;
-//
-//			for(auto j = d.jobs.begin(); j!= d.jobs.end(); j++) {
-//				if(truck_id == get<2>(*j) && get<0>(*it)==get<0>(*j)) {
-//					del.emplace_back(j);
-//					//					d.jobs.erase(j);
-//				}
-//			}
-//			for(auto j : del)
-//				d.jobs.erase(j);
-//		}
-//	}
-
-	//-----make new dock-jobs by inserting the reversed list of jobs on the truck_id into the docks-----
-	it_start = next(truck.jobs.begin(), min(job_id_1, job_id_2));
-	//	it_end = next(truck.jobs.begin(),max(job_id_1,job_id_2));
-	//sort jobs of truck into docks
 	for(auto &job = it_start; job!=truck.jobs.end(); job++) {
 
 		int loading_time = t_fix_load + t_load*get<3>(*job);
@@ -301,12 +156,8 @@ bool opt_2(vector< dock >& docks, dist_mat& dist, vector< truck >& trucks, int& 
 		int is_dock_free = 0;
 		int earliest_dock = -1;
 
-		cout << "start_time: " << start_time << "  end_time: " << start_time + loading_time << endl;
-
 		for(int d_ind = 0; d_ind < (int)docks_try.size(); d_ind++){
 
-			//			assert(docks_try[2].jobs.end() != it_test);
-//			if(docks_try[d_ind].is_free(start_time) && docks_try[d_ind].is_free(start_time+loading_time)) {
 			if( docks_try[d_ind].is_free(start_time, start_time+loading_time) ){
 				//				docks_try[d].jobs.insert(next(it_dock_job,1), make_tuple(time_wind_begin,time_wind_begin+loading_time,truck_id));
 
@@ -340,21 +191,20 @@ bool opt_2(vector< dock >& docks, dist_mat& dist, vector< truck >& trucks, int& 
 							break;
 						}
 					}
-//					else if((time_wind_end - loading_time) >= start_time && time_wind_begin <= start_time){
-//						docks_try[d].jobs.emplace_back(make_tuple(start_time, start_time+loading_time, truck_id));
-//						docks_try[d].jobs.sort([](tuple<int,int,int> a,tuple<int,int,int> b) {return get<0>(a) < get<0>(b);});
-//
-//						get<0>(*job) = start_time;
-//						get<1>(*job) = start_time + 2*loading_time + 2*dist(0,get<2>(*job));
-//						earliest_dock=d;
-//						break;
-//					}
+					//					else if((time_wind_end - loading_time) >= start_time && time_wind_begin <= start_time){
+					//						docks_try[d].jobs.emplace_back(make_tuple(start_time, start_time+loading_time, truck_id));
+					//						docks_try[d].jobs.sort([](tuple<int,int,int> a,tuple<int,int,int> b) {return get<0>(a) < get<0>(b);});
+					//
+					//						get<0>(*job) = start_time;
+					//						get<1>(*job) = start_time + 2*loading_time + 2*dist(0,get<2>(*job));
+					//						earliest_dock=d;
+					//						break;
+					//					}
 				}
 				if(earliest_dock>=0)
 					break;
 			}
 		}
-		cout << "dock free?: " << is_dock_free << "  earliest dock: " << earliest_dock << endl;
 
 		if(!is_dock_free && earliest_dock < 0) {
 			earliest_dock = 0;
@@ -374,37 +224,56 @@ bool opt_2(vector< dock >& docks, dist_mat& dist, vector< truck >& trucks, int& 
 			get<0>(*job) = start_time;
 			get<1>(*job) = start_time + 2*loading_time + 2*dist(0, get<2>(*job));
 		}
-
-		cout << "dock free?: " << is_dock_free << endl;
 	}
-//
-//	//-----Evaluate the solution and accept everything that does not make the solution worse-----
-	int numb_j_trucks = 0;
-	int numb_j_docks  = 0;
+}
 
-	cout << endl << "Trucks after 2opt:" << endl;
-	for(auto j : truck.jobs){
-		cout << "{";
-		cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j);
-		cout << "},"<< endl;
+bool opt_2(vector< dock >& docks, dist_mat& dist, vector< truck >& trucks, int& t_load, int& t_fix_load){
 
-		numb_j_trucks++;
-	}
-	cout << endl;
+	//-----Version of 2-opt for the Scheduling Problem at the Docks-----
 
-	cout << endl << "Docks after 2opt:" << endl;
-	for(auto i : docks_try){
-		//list< tuple <int, int, int> > jobs;
-		for(auto j : i.jobs){
-			cout << "{";
-			cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j);
-			cout << "},"<< endl;
+	//-----Select random truck and 2 random jobs of that truck-----
+	auto docks_try = docks;
+	int truck_id = rand() % trucks.size();
+	auto truck = trucks[truck_id];
 
-			numb_j_docks++;
+	int job_id_1 = rand() % truck.jobs.size();
+	int job_id_2 = rand() % truck.jobs.size();
+
+	if (truck.jobs.size() > 1) {
+		if (job_id_1 == job_id_2) {
+			if(job_id_1 == truck.jobs.size() -1){
+				job_id_1--;
+			}
+			else{
+				job_id_2++;
+			}
 		}
-		cout << endl;
+
+	} else {
+		return false;
 	}
-	cout << "Number of Jobs Trucks: " << numb_j_trucks << "  Docks: " << numb_j_docks << endl;
+
+	//-----reverse stores, demands and delete jobs from (job_id_1 -> job_id_2) in docks-----
+	auto it_start = next(truck.jobs.begin(), min(job_id_1, job_id_2));
+	auto it_end = next(truck.jobs.begin(), max(job_id_1, job_id_2));
+
+	for(int i = 0 ; i < (max(job_id_1, job_id_2)- min(job_id_1, job_id_2) + 1)/2; i++) {
+
+		auto temp_job = *it_start;
+		*it_start = *it_end;
+		*it_end = temp_job;
+
+		it_start++;
+		it_end--;
+	}
+
+	//-----Delete all jobs of truck_id starting from it_start in all docks-----
+	delete_jobs_docks(docks_try, truck, truck_id, job_id_1, job_id_2);
+
+	//-----make new dock-jobs by inserting the reversed list of jobs on the truck_id into the docks-----
+	create_new_jobs(docks_try, truck, dist, truck_id, job_id_1, job_id_2, t_fix_load, t_load);
+
+//	//-----Evaluate the solution and accept everything that does not make the solution worse-----
 
 	auto trucks_temp = trucks;
 	trucks_temp[truck_id] = truck;
@@ -445,153 +314,215 @@ bool swap_2jobs_difftrucks(vector< dock >& docks, dist_mat& dist, vector< truck 
 	int job_id_1 = rand() % truck_1.jobs.size();
 	int job_id_2 = rand() % truck_2.jobs.size();
 
-
-
 	if(truck_1.jobs.size() == 0 || truck_2.jobs.size() == 0){
 		return false;
 	}
 
-	//-----reverse stores, demands and delete jobs from (job_id_1 -> job_id_2) in docks-----
+	cout << "truck_id1: " << truck_id_1 << "  truck_id2: " << truck_id_2  << "  job_id1: " << job_id_1 << "  job_id2: " << job_id_2 << endl;
 
-	auto it_t1 = next(truck_1.jobs.begin(), job_id_1);
-	auto it_t2 = next(truck_2.jobs.begin(), job_id_2);
-
-	for(auto& d : docks_try) {
-		vector<list<tuple<int,int,int>>::iterator> del;
-
-		for(auto j = d.jobs.begin(); j!= d.jobs.end();j++) {
-			if(truck_id_1 == get<2>(*j) && get<0>(*it_t1)==get<0>(*j)) {
-				del.emplace_back(j);
-			}
-			if(truck_id_2 == get<2>(*j) && get<0>(*it_t2)==get<0>(*j)) {
-				del.emplace_back(j);
-			}
+	cout << endl << "Trucks before swap:" << endl;
+	for(auto i : {truck_1, truck_2}){
+		//list< tuple <int, int, int> > jobs;
+		for(auto j : i.jobs){
+			cout << "{";
+			cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j) << " , " << get<3>(j);
+			cout << "},"<< endl;
 		}
-		for(auto j : del) {
-			//				cout <<d.id << " " << get<0>(*j) << " " << get<1>(*j) << " " << get<2>(*j) << endl;
-			d.jobs.erase(j);
+		cout << endl;
+	}
+
+	cout << "Docks before swap: " << endl;
+	for(auto i : docks){
+		//list< tuple <int, int, int> > jobs;
+		for(auto j : i.jobs){
+			cout << "{";
+			cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j);
+			cout << "},"<< endl;
 		}
 	}
+
+
+
+	//-----delete the 2 jobs + succeeding jobs from docks_try-----
+
+	delete_jobs_docks(docks_try, truck_1, truck_id_1, job_id_1, job_id_1);
+	delete_jobs_docks(docks_try, truck_2, truck_id_2, job_id_2, job_id_2);
+
+	//-----swap the 2 jobs-----
+	auto it_t1 = next(truck_1.jobs.begin(), job_id_1);
+	auto it_t2 = next(truck_2.jobs.begin(), job_id_2);
 
 	auto temp_job = *it_t1;
 	*it_t1 = *it_t2;
 	*it_t2 = temp_job;
 
-	vector< list< tuple<int, int ,int ,int > >::iterator > it_list;
-	it_list.push_back(it_t1);
-	it_list.push_back(it_t2);
+	create_new_jobs(docks_try, truck_1, dist, truck_id_1, job_id_1, job_id_1, t_fix_load, t_load);
+	create_new_jobs(docks_try, truck_2, dist, truck_id_2, job_id_2, job_id_2, t_fix_load, t_load);
 
-	vector<int> truck_id_list = {truck_id_1, truck_id_2};
-	truck *truck_list[] = {&truck_1, &truck_2};
 
-	//-----Delete all jobs of truck_id after it_start (it_end?) in all docks-----
+	cout << endl << "Trucks after swap:" << endl;
+	for(auto i : {truck_1, truck_2}){
+		//list< tuple <int, int, int> > jobs;
+		for(auto j : i.jobs){
+			cout << "{";
+			cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j) << " , " << get<3>(j);
+			cout << "},"<< endl;
+		}
+		cout << endl;
+	}
 
-	for(auto i = 0; i < 2; i++){
-
-		for(auto it= next(it_list[i], 1); it!=truck_list[i]->jobs.end(); it++) {
-			for(auto& d : docks_try) {
-				vector<list<tuple<int,int,int>>::iterator> del;
-
-				for(auto j = d.jobs.begin(); j!= d.jobs.end(); j++) {
-					if(truck_id_list[i] == get<2>(*j) && get<0>(*it)==get<0>(*j)) {
-						del.emplace_back(j);
-						//					d.jobs.erase(j);
-					}
-				}
-				for(auto j : del)
-					d.jobs.erase(j);
-			}
+	cout << "Docks after swap: " << endl;
+	for(auto i : docks_try){
+		//list< tuple <int, int, int> > jobs;
+		for(auto j : i.jobs){
+			cout << "{";
+			cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j);
+			cout << "},"<< endl;
 		}
 	}
-	//-----make new dock-jobs by inserting the list of jobs on the truck_id_list into the docks-----
-	for(auto i = 0; i < 2; i++){
 
-		for(auto &job = it_list[i]; job!=truck_list[i]->jobs.end(); job++) {
 
-			int loading_time = t_fix_load + t_load*get<3>(*job);
-			int start_time;
-			if(job == truck_list[i]->jobs.begin())
-				start_time = 0;
-			else
-				start_time = get<1>(*prev(job,1));
-
-			int is_dock_free = 0;
-			int earliest_dock = -1;
-
-			for(int d_ind = 0; d_ind < (int)docks_try.size(); d_ind++){
-
-				//			assert(docks_try[2].jobs.end() != it_test);
-
-				if( docks_try[d_ind].is_free(start_time, start_time+loading_time) ){
-					//				docks_try[d].jobs.insert(next(it_dock_job,1), make_tuple(time_wind_begin,time_wind_begin+loading_time,truck_id));
-
-					docks_try[d_ind].jobs.push_back(make_tuple(start_time, start_time+loading_time,truck_id_list[i]));
-
-					docks_try[d_ind].jobs.sort([](tuple<int,int,int> a,tuple<int,int,int> b) {return get<0>(a) < get<0>(b);});
-
-					get<0>(*job) = start_time;
-					get<1>(*job) = start_time + 2*loading_time + 2*dist(0, get<2>(*job));
-					is_dock_free = 1;
-					break;
-				}
-			}
-
-			if(!is_dock_free) {
-				for(int d = 0; d < (int)docks_try.size(); d++) {
-					for(auto it_dock_job =docks_try[d].jobs.begin();it_dock_job != prev(docks_try[d].jobs.end(),1);it_dock_job++ ) {
-
-						int time_wind_begin=get<1>(*it_dock_job);
-						int time_wind_end=get<0>(*next(it_dock_job,1));
-
-						if(start_time<=time_wind_begin) {
-							if(loading_time<=time_wind_end-time_wind_begin) {
-								//							docks_try[d].jobs.insert(next(it_dock_job,1), make_tuple(time_wind_begin,time_wind_begin+loading_time,truck_id));
-
-								docks_try[d].jobs.emplace_back(make_tuple(time_wind_begin,time_wind_begin+loading_time,truck_id_list[i]));
-								docks_try[d].jobs.sort([](tuple<int,int,int> a,tuple<int,int,int> b) {return get<0>(a) < get<0>(b);});
-
-								get<0>(*job) = time_wind_begin;
-								get<1>(*job) = time_wind_begin + 2*loading_time + 2*dist(0,get<2>(*job));
-								earliest_dock=d;
-								break;
-							}
-						}
-						else if((time_wind_end - loading_time) >= start_time && time_wind_begin >= start_time){
-							docks_try[d].jobs.emplace_back(make_tuple(start_time, start_time+loading_time, truck_id_list[i]));
-							docks_try[d].jobs.sort([](tuple<int,int,int> a,tuple<int,int,int> b) {return get<0>(a) < get<0>(b);});
-
-							get<0>(*job) = start_time;
-							get<1>(*job) = start_time + 2*loading_time + 2*dist(0,get<2>(*job));
-							earliest_dock=d;
-							break;
-						}
-					}
-					if(earliest_dock>=0)
-						break;
-				}
-			}
-
-			if(!is_dock_free&&earliest_dock<0) {
-				earliest_dock = 0;
-				//			for(auto& d : docks_try)
-				//				d.jobs.sort([](tuple<int,int,int> a,tuple<int,int,int> b) {return get<0>(a) < get<0>(b);});
-
-				for(int d = 0; d < (int)docks_try.size(); d++) {
-					if( get<1>(docks_try[d].jobs.back()) < get<1>(docks_try[earliest_dock].jobs.back()) ){
-						earliest_dock = d;
-					}
-				}
-				int t1 = get<1>(docks_try[earliest_dock].jobs.back());
-				//			docks_try[earliest_dock].jobs.insert(docks_try[earliest_dock].jobs.end(), make_tuple(t1,t1+loading_time,truck_id));
-
-				docks_try[earliest_dock].jobs.emplace_back(make_tuple(t1, t1+loading_time, truck_id_list[i]));
-				//			docks_try[earliest_dock].jobs.sort([](tuple<int,int,int> a,tuple<int,int,int> b) {return get<0>(a) < get<0>(b);});
-
-				get<0>(*job) = t1;
-				get<1>(*job) = t1 + 2*loading_time + 2*dist(0, get<2>(*job));
-			}
-		}
-	}
+//	//-----reverse stores, demands and delete jobs from (job_id_1 -> job_id_2) in docks-----
+//
+//	auto it_t1 = next(truck_1.jobs.begin(), job_id_1);
+//	auto it_t2 = next(truck_2.jobs.begin(), job_id_2);
+//
+//	for(auto& d : docks_try) {
+//		vector<list<tuple<int,int,int>>::iterator> del;
+//
+//		for(auto j = d.jobs.begin(); j!= d.jobs.end();j++) {
+//			if(truck_id_1 == get<2>(*j) && get<0>(*it_t1)==get<0>(*j)) {
+//				del.emplace_back(j);
+//			}
+//			if(truck_id_2 == get<2>(*j) && get<0>(*it_t2)==get<0>(*j)) {
+//				del.emplace_back(j);
+//			}
+//		}
+//		for(auto j : del) {
+//			//				cout <<d.id << " " << get<0>(*j) << " " << get<1>(*j) << " " << get<2>(*j) << endl;
+//			d.jobs.erase(j);
+//		}
+//	}
+//
+//	auto temp_job = *it_t1;
+//	*it_t1 = *it_t2;
+//	*it_t2 = temp_job;
+//
+//	vector< list< tuple<int, int ,int ,int > >::iterator > it_list;
+//	it_list.push_back(it_t1);
+//	it_list.push_back(it_t2);
+//
+//	vector<int> truck_id_list = {truck_id_1, truck_id_2};
+//	truck *truck_list[] = {&truck_1, &truck_2};
+//
+//	//-----Delete all jobs of truck_id after it_start (it_end?) in all docks-----
+//
+//	for(auto i = 0; i < 2; i++){
+//
+//		for(auto it= next(it_list[i], 1); it!=truck_list[i]->jobs.end(); it++) {
+//			for(auto& d : docks_try) {
+//				vector<list<tuple<int,int,int>>::iterator> del;
+//
+//				for(auto j = d.jobs.begin(); j!= d.jobs.end(); j++) {
+//					if(truck_id_list[i] == get<2>(*j) && get<0>(*it)==get<0>(*j)) {
+//						del.emplace_back(j);
+//						//					d.jobs.erase(j);
+//					}
+//				}
+//				for(auto j : del)
+//					d.jobs.erase(j);
+//			}
+//		}
+//	}
+//	//-----make new dock-jobs by inserting the list of jobs on the truck_id_list into the docks-----
+//	for(auto i = 0; i < 2; i++){
+//
+//		for(auto &job = it_list[i]; job!=truck_list[i]->jobs.end(); job++) {
+//
+//			int loading_time = t_fix_load + t_load*get<3>(*job);
+//			int start_time;
+//			if(job == truck_list[i]->jobs.begin())
+//				start_time = 0;
+//			else
+//				start_time = get<1>(*prev(job,1));
+//
+//			int is_dock_free = 0;
+//			int earliest_dock = -1;
+//
+//			for(int d_ind = 0; d_ind < (int)docks_try.size(); d_ind++){
+//
+//				//			assert(docks_try[2].jobs.end() != it_test);
+//
+//				if( docks_try[d_ind].is_free(start_time, start_time+loading_time) ){
+//					//				docks_try[d].jobs.insert(next(it_dock_job,1), make_tuple(time_wind_begin,time_wind_begin+loading_time,truck_id));
+//
+//					docks_try[d_ind].jobs.push_back(make_tuple(start_time, start_time+loading_time,truck_id_list[i]));
+//
+//					docks_try[d_ind].jobs.sort([](tuple<int,int,int> a,tuple<int,int,int> b) {return get<0>(a) < get<0>(b);});
+//
+//					get<0>(*job) = start_time;
+//					get<1>(*job) = start_time + 2*loading_time + 2*dist(0, get<2>(*job));
+//					is_dock_free = 1;
+//					break;
+//				}
+//			}
+//
+//			if(!is_dock_free) {
+//				for(int d = 0; d < (int)docks_try.size(); d++) {
+//					for(auto it_dock_job =docks_try[d].jobs.begin();it_dock_job != prev(docks_try[d].jobs.end(),1);it_dock_job++ ) {
+//
+//						int time_wind_begin=get<1>(*it_dock_job);
+//						int time_wind_end=get<0>(*next(it_dock_job,1));
+//
+//						if(start_time<=time_wind_begin) {
+//							if(loading_time<=time_wind_end-time_wind_begin) {
+//								//							docks_try[d].jobs.insert(next(it_dock_job,1), make_tuple(time_wind_begin,time_wind_begin+loading_time,truck_id));
+//
+//								docks_try[d].jobs.emplace_back(make_tuple(time_wind_begin,time_wind_begin+loading_time,truck_id_list[i]));
+//								docks_try[d].jobs.sort([](tuple<int,int,int> a,tuple<int,int,int> b) {return get<0>(a) < get<0>(b);});
+//
+//								get<0>(*job) = time_wind_begin;
+//								get<1>(*job) = time_wind_begin + 2*loading_time + 2*dist(0,get<2>(*job));
+//								earliest_dock=d;
+//								break;
+//							}
+//						}
+//						else if((time_wind_end - loading_time) >= start_time && time_wind_begin >= start_time){
+//							docks_try[d].jobs.emplace_back(make_tuple(start_time, start_time+loading_time, truck_id_list[i]));
+//							docks_try[d].jobs.sort([](tuple<int,int,int> a,tuple<int,int,int> b) {return get<0>(a) < get<0>(b);});
+//
+//							get<0>(*job) = start_time;
+//							get<1>(*job) = start_time + 2*loading_time + 2*dist(0,get<2>(*job));
+//							earliest_dock=d;
+//							break;
+//						}
+//					}
+//					if(earliest_dock>=0)
+//						break;
+//				}
+//			}
+//
+//			if(!is_dock_free&&earliest_dock<0) {
+//				earliest_dock = 0;
+//				//			for(auto& d : docks_try)
+//				//				d.jobs.sort([](tuple<int,int,int> a,tuple<int,int,int> b) {return get<0>(a) < get<0>(b);});
+//
+//				for(int d = 0; d < (int)docks_try.size(); d++) {
+//					if( get<1>(docks_try[d].jobs.back()) < get<1>(docks_try[earliest_dock].jobs.back()) ){
+//						earliest_dock = d;
+//					}
+//				}
+//				int t1 = get<1>(docks_try[earliest_dock].jobs.back());
+//				//			docks_try[earliest_dock].jobs.insert(docks_try[earliest_dock].jobs.end(), make_tuple(t1,t1+loading_time,truck_id));
+//
+//				docks_try[earliest_dock].jobs.emplace_back(make_tuple(t1, t1+loading_time, truck_id_list[i]));
+//				//			docks_try[earliest_dock].jobs.sort([](tuple<int,int,int> a,tuple<int,int,int> b) {return get<0>(a) < get<0>(b);});
+//
+//				get<0>(*job) = t1;
+//				get<1>(*job) = t1 + 2*loading_time + 2*dist(0, get<2>(*job));
+//			}
+//		}
+//	}
 
 	//-----Evaluate the solution and accept everything that does not make the solution worse-----
 	auto truck_temp_1 = trucks[truck_id_1];
@@ -602,9 +533,8 @@ bool swap_2jobs_difftrucks(vector< dock >& docks, dist_mat& dist, vector< truck 
 	trucks[truck_id_2] = truck_2;
 	int score_new = evaluate_solution(trucks);
 
-	if(score_new <= score_old) {
+	if(true||score_new <= score_old) {
 		docks = docks_try;
-
 		//		for(auto& d : docks)
 		//			d.jobs.sort([](tuple<int,int,int> a,tuple<int,int,int> b) {return get<0>(a) < get<0>(b);});
 
