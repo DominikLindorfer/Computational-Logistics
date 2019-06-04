@@ -142,16 +142,149 @@ int main() {
 	auto docks_new = docks;
 	auto trucks_new = trucks;
 
-	int n_swaps = 2;
+	auto docks_best = docks;
+	auto trucks_best = trucks;
 
-	for(int i = 0; i < 1; i++){
-		swap_njobs_difftrucks(docks_new, dist, trucks_new, t_load, t_fix_load, n_swaps);
+	int n_swaps = 3;
 
-		docks = docks_new;
-		trucks = trucks_new;
+	//-----VND-----
+
+	int level = 0;
+	int moves = 0;
+	int accept = 0;
+	int n_tries = 10000;
+	int tries = 0;
+	int not_updated = 0;
+	int not_updated_max = 50;
+
+	double accept_ratio = 0.3;
+
+	while(moves <= 10000){
+		tries++;
+		accept = 0;
+
+		switch(level){
+		case 0 :
+			//swap 2 jobs at same truck
+			for(int i = 0; i < n_tries; i++){
+
+				swap_2job_sametruck(docks_new, dist, trucks_new, t_load, t_fix_load);
+
+				if(accept_solution(trucks, trucks_new)){
+					docks = docks_new;
+					trucks = trucks_new;
+					accept++;
+				}
+				else{
+					docks_new = docks;
+					trucks_new = trucks;
+				}
+			}
+			break;
+		case 1 :
+			//swap 2 jobs different trucks
+			for(int i = 0; i < n_tries; i++){
+
+				swap_2jobs_difftrucks(docks_new, dist, trucks_new, t_load, t_fix_load);
+
+				if(accept_solution(trucks, trucks_new)){
+					docks = docks_new;
+					trucks = trucks_new;
+					accept++;
+				}
+				else{
+					docks_new = docks;
+					trucks_new = trucks;
+				}
+			}
+			break;
+		case 2 :
+			//2opt
+			for(int i = 0; i < n_tries; i++){
+
+				opt_2(docks_new, dist, trucks_new, t_load, t_fix_load);
+
+				if(accept_solution(trucks, trucks_new)){
+					docks = docks_new;
+					trucks = trucks_new;
+					accept++;
+				}
+				else{
+					docks_new = docks;
+					trucks_new = trucks;
+				}
+			}
+			break;
+		case 3 :
+			//swap njobs
+			for(int i = 0; i < n_tries; i++){
+
+				swap_njobs_difftrucks(docks_new, dist, trucks_new, t_load, t_fix_load, n_swaps);
+
+				if(accept_solution(trucks, trucks_new)){
+					docks = docks_new;
+					trucks = trucks_new;
+					accept++;
+				}
+				else{
+					docks_new = docks;
+					trucks_new = trucks;
+				}
+			}
+			break;
+		case 4 :
+			//move job
+
+			docks_new = docks_best;
+			trucks_new = trucks_best;
+
+			for(int i = 0; i < n_tries; i++){
+
+				move_job(docks_new, dist, trucks_new, t_load, t_fix_load);
+			}
+
+			docks = docks_new;
+			trucks = trucks_new;
+
+			moves = moves + 10;
+			break;
+		default:
+			level = 0;
+		}
+
+		if(level != 4 && ((double)accept / (double)n_tries) < accept_ratio){
+			level++;
+		}
+		else if(not_updated > not_updated_max){
+			level++;
+		}
+		else{
+			level = 0;
+		}
+
+		//-----Set new best Solution-----
+		if(accept_solution(trucks_best, trucks)){
+			docks_best = docks;
+			trucks_best = trucks;
+
+			not_updated = 0;
+		}
+		else{
+			not_updated++;
+		}
+		cout << "Current Level: " << level << "  amount of Tries: " << tries << "  AcceptanceRatio: " << ((double)accept / (double)n_tries) << "  moves: " << moves << endl;
 	}
 
 
+
+//	for(int i = 0; i < 1; i++){
+//		swap_njobs_difftrucks(docks_new, dist, trucks_new, t_load, t_fix_load, n_swaps);
+//
+//		docks = docks_new;
+//		trucks = trucks_new;
+//	}
+//
+//
 //	for(int i = 0; i < 1; i++){
 //		move_job(docks_new, dist, trucks_new, t_load, t_fix_load);
 //
@@ -205,30 +338,30 @@ int main() {
 
 	//
 	//
-	cout << "new max: " << evaluate_solution(trucks) << endl;
-	print_docks(docks);
+	cout << "new max: " << evaluate_solution(trucks_best) << endl;
+	print_docks(docks_best);
 
-	cout << endl << "Docks:" << endl;
-	for(auto i : docks){
-		//list< tuple <int, int, int> > jobs;
-		for(auto j : i.jobs){
-			cout << "{";
-			cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j);
-			cout << "},"<< endl;
-		}
-		cout << endl;
-	}
-
-	cout << endl << "Trucks:" << endl;
-	for(auto i : trucks){
-		//list< tuple <int, int, int> > jobs;
-		for(auto j : i.jobs){
-			cout << "{";
-			cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j);
-			cout << "},"<< endl;
-		}
-		cout << endl;
-	}
+//	cout << endl << "Docks:" << endl;
+//	for(auto i : docks){
+//		//list< tuple <int, int, int> > jobs;
+//		for(auto j : i.jobs){
+//			cout << "{";
+//			cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j);
+//			cout << "},"<< endl;
+//		}
+//		cout << endl;
+//	}
+//
+//	cout << endl << "Trucks:" << endl;
+//	for(auto i : trucks){
+//		//list< tuple <int, int, int> > jobs;
+//		for(auto j : i.jobs){
+//			cout << "{";
+//			cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j);
+//			cout << "},"<< endl;
+//		}
+//		cout << endl;
+//	}
 
 
 

@@ -487,6 +487,47 @@ bool swap_njobs_difftrucks(vector< dock >& docks, dist_mat& dist, vector< truck 
 	return true;
 };
 
+bool swap_2job_sametruck(vector< dock >& docks, dist_mat& dist, vector< truck >& trucks, int& t_load, int& t_fix_load){
 
+	//-----Swap_2 on the same Truck for the Scheduling Problem at the Docks-----
+
+	//-----Select random truck and 2 random jobs of that truck-----
+	int truck_id = rand() % trucks.size();
+	auto& truck = trucks[truck_id];
+
+	int job_id_1 = rand() % truck.jobs.size();
+	int job_id_2 = rand() % truck.jobs.size();
+
+	if (truck.jobs.size() > 1) {
+		if (job_id_1 == job_id_2) {
+			if(job_id_1 == truck.jobs.size() -1){
+				job_id_1--;
+			}
+			else{
+				job_id_2++;
+			}
+		}
+
+	} else {
+		return false;
+	}
+
+	//-----reverse stores, demands and delete jobs from (job_id_1 -> job_id_2) in docks-----
+	auto it_start = next(truck.jobs.begin(), min(job_id_1, job_id_2));
+	auto it_end = next(truck.jobs.begin(), max(job_id_1, job_id_2));
+
+	auto temp_job = *it_start;
+	*it_start = *it_end;
+	*it_end = temp_job;
+
+	//-----Delete all jobs of truck_id starting from it_start in all docks-----
+	delete_jobs_docks(docks, truck, truck_id, job_id_1, job_id_2);
+
+	//-----make new dock-jobs by inserting the reversed list of jobs on the truck_id into the docks-----
+	create_new_jobs(docks, truck, dist, truck_id, job_id_1, job_id_2, t_fix_load, t_load);
+
+//	//-----Evaluate the solution and accept everything that does not make the solution worse-----
+	return true;
+};
 
 #endif /* METAHEURISTICS_HPP_ */
