@@ -94,6 +94,10 @@ public:
 	bool is_free(int start_time, int end_time){
 		if((int)jobs.size() > 1){
 
+			if(end_time <= get<0>(*jobs.begin())){
+				return true;
+			}
+
 			for(auto it = jobs.begin(); it != prev(jobs.end(), 1); it++){
 //				start_time >= get<1>(*it) && end_time <= get<0>(*next(it, 1
 
@@ -103,9 +107,9 @@ public:
 			}
 			return false;
 		}
-		else if((int)jobs.size()==1) {
+		else if((int)jobs.size() == 1) {
 			auto it = jobs.begin();
-			if(end_time<=get<0>(*it)||start_time>=get<1>(*it))
+			if(end_time <= get<0>(*it) || start_time >= get<1>(*it))
 				return true;
 			else
 				return false;

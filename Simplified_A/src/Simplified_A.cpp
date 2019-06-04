@@ -108,30 +108,54 @@ int main() {
 	cout << "max: " << evaluate_solution(trucks) << endl;
 	print_docks(docks);
 
-//	swap_2jobs_difftrucks(docks,dist,trucks,t_load,t_fix_load);
+	int numb_j_trucks = 0;
+	int numb_j_docks  = 0;
 
-	for(int i = 0; i < 10000; i++){
-//		swap_2jobs_difftrucks(docks,dist,trucks,t_load,t_fix_load);
-		opt_2(docks,dist,trucks,t_load,t_fix_load);
-		cout << i << endl;
-		print_docks(docks);
+	cout << endl << "Trucks:" << endl;
+	for(auto i : trucks){
+		//list< tuple <int, int, int> > jobs;
+		for(auto j : i.jobs){
+			cout << "{";
+			cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j);
+			cout << "},"<< endl;
+
+			numb_j_trucks++;
+		}
+		cout << endl;
 	}
 
-
-	cout << "max: " << evaluate_solution(trucks) << endl;
-	print_docks(docks);
-
-
+	cout << endl << "Docks:" << endl;
 	for(auto i : docks){
 		//list< tuple <int, int, int> > jobs;
 		for(auto j : i.jobs){
 			cout << "{";
 			cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j);
 			cout << "},"<< endl;
+
+			numb_j_docks++;
 		}
 		cout << endl;
 	}
-	cout << "Trucks:" << endl;
+
+	cout << "Number of Jobs Trucks: " << numb_j_trucks << "  Docks: " << numb_j_docks << endl;
+
+	for(int i = 0; i < 10000; i++){
+		//swap_2jobs_difftrucks(docks,dist,trucks,t_load,t_fix_load);
+		opt_2(docks, dist, trucks, t_load, t_fix_load);
+		cout << i << endl;
+//		print_docks(docks);
+	}
+
+
+////	swap_2jobs_difftrucks(docks,dist,trucks,t_load,t_fix_load);
+//
+
+//
+//
+//	cout << "max: " << evaluate_solution(trucks) << endl;
+	print_docks(docks);
+
+	cout << endl << "Trucks:" << endl;
 	for(auto i : trucks){
 		//list< tuple <int, int, int> > jobs;
 		for(auto j : i.jobs){
@@ -141,6 +165,8 @@ int main() {
 		}
 		cout << endl;
 	}
+
+
 
 
 
