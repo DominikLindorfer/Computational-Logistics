@@ -81,7 +81,7 @@ int main() {
 	//	truck.at(0).capacity = 100;
 
 	//-----initialize docks-----
-	int n_docks = 5;
+	int n_docks = 4;
 	vector< dock > docks(n_docks);
 
 	//-----sort store-demands-----
@@ -102,7 +102,6 @@ int main() {
 			cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j);
 			cout << "},"<< endl;
 		}
-
 	}
 
 	cout << "max: " << evaluate_solution(trucks) << endl;
@@ -126,6 +125,7 @@ int main() {
 
 	cout << endl << "Docks:" << endl;
 	for(auto i : docks){
+		cout << i.jobs.size() << endl;
 		//list< tuple <int, int, int> > jobs;
 		for(auto j : i.jobs){
 			cout << "{";
@@ -263,7 +263,8 @@ int main() {
 		}
 
 		//-----Set new best Solution-----
-		if(accept_solution(trucks_best, trucks)){
+
+		if(evaluate_solution(trucks_best) > evaluate_solution(trucks)){
 			docks_best = docks;
 			trucks_best = trucks;
 
@@ -341,27 +342,27 @@ int main() {
 	cout << "new max: " << evaluate_solution(trucks_best) << endl;
 	print_docks(docks_best);
 
-//	cout << endl << "Docks:" << endl;
-//	for(auto i : docks){
-//		//list< tuple <int, int, int> > jobs;
-//		for(auto j : i.jobs){
-//			cout << "{";
-//			cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j);
-//			cout << "},"<< endl;
-//		}
-//		cout << endl;
-//	}
-//
-//	cout << endl << "Trucks:" << endl;
-//	for(auto i : trucks){
-//		//list< tuple <int, int, int> > jobs;
-//		for(auto j : i.jobs){
-//			cout << "{";
-//			cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j);
-//			cout << "},"<< endl;
-//		}
-//		cout << endl;
-//	}
+	cout << endl << "Docks_best:" << endl;
+	for(auto i : docks_best){
+		//list< tuple <int, int, int> > jobs;
+		for(auto j : i.jobs){
+			cout << "{";
+			cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j);
+			cout << "},"<< endl;
+		}
+		cout << endl;
+	}
+
+	cout << endl << "Trucks_best:" << endl;
+	for(auto i : trucks_best){
+		//list< tuple <int, int, int> > jobs;
+		for(auto j : i.jobs){
+			cout << "{";
+			cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j);
+			cout << "},"<< endl;
+		}
+		cout << endl;
+	}
 
 
 

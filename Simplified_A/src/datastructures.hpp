@@ -81,7 +81,7 @@ public:
 	//----- start, end, truck-id -----
 	list< tuple <int, int, int> > jobs;
 
-	dock(){
+	dock():jobs(0){
 		id = -1;
 //		jobs.emplace_back ( make_tuple(-1,-1,-1) );
 	}

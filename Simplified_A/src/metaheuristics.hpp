@@ -56,6 +56,8 @@ void initial_solution_A(vector< dock >& docks, vector< store >& stores, dist_mat
 						docks[d].jobs.emplace_back(make_tuple(start_time, end_time, avail));
 
 						earliest_dock = -1;
+
+						cout << "d : " << d << endl;
 						break;
 					}
 
@@ -78,7 +80,7 @@ void initial_solution_A(vector< dock >& docks, vector< store >& stores, dist_mat
 					docks[earliest_dock].jobs.emplace_back(make_tuple(start_time, end_time, avail));
 				}
 
-
+				cout << "earliest dock: " << earliest_dock << endl;
 			}
 		}
 	}
