@@ -53,15 +53,14 @@ void read_csv_demand(string& file,vector< tuple<string,string,string,tuple<strin
 	for(auto d : demands) {
 		cout << get<0>(d) << " " << get<1>(d) << " " << get<2>(d) <<" " <<  get<0>(get<3>(d)) << " "  <<get<1>(get<3>(d)) << " "  << endl;
 	}
-	cout << "test" << endl;
-
-
 }
 
 void read_csv_distance(string& file, vector<vector <string> >& data, vector< tuple<string,string,string> >& distances	){
 
 	ifstream in;
 	in.open(file);
+	if(in.is_open())
+		cout << "open" << endl;
 	string line;
 
 	//-----Reads in the Header-----
