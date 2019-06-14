@@ -22,12 +22,12 @@ public:
 
 		distances.resize(s);
 		for(int i = 0; i < s; i++){
-			distances.at(i).resize(s);
+			distances[i].resize(s);
 		}
 	}
 
 	inline int& operator()(int i, int j) {
-		return distances.at(i).at(j);
+		return distances[i][j];
 	};
 
 };

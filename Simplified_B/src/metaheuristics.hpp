@@ -196,7 +196,7 @@ void fixSolutionConstrains(list< int >& solution, vector< store >& stores, vecto
 		if(route_remaining_loads[i]==0)
 			continue;
 		for(auto& s: sort_stores) {
-			if(get<1>(s)->cur_demand > 0 && ((rand()%3) ? route_remaining_loads[i] >0 : get<1>(s)->cur_demand <= route_remaining_loads[i])) { //
+			if(get<1>(s)->cur_demand > 0 && ((rand()%2) ? route_remaining_loads[i] >0 : get<1>(s)->cur_demand <= route_remaining_loads[i])) { //
 				int reduce = min(route_remaining_loads[i],get<1>(s)->cur_demand);
 				get<1>(s)->cur_demand-=reduce;
 				route_remaining_loads[i] -= reduce;
@@ -379,6 +379,15 @@ int checkSolution(list< int >& solution, vector< store >& stores, dist_mat& dist
 		//		}
 		//		cout << endl;
 	}
+
+	for(auto it=next(solution.begin(),1);it!=solution.end();it++) {
+		if(*it==*prev(it,1)) {
+			solution.erase(prev(it,1));
+		}
+	}
+
+
+
 	return 0;
 }
 
@@ -473,7 +482,7 @@ int swap_n(list< int >& solution, vector< store >& stores, dist_mat& dist, vecto
 		do {
 			b = 1+rand() % (route_size_2-1);
 		}
-		while(start_1==start_2 && a==b);
+		while(start_1==start_2 && a==b && route_size_1>2 && route_size_2 >2);
 
 		//		if(a == 0)	a++;
 		//		if(a == route_size_1) a--;
@@ -519,7 +528,7 @@ int swap_2(list<int>::iterator& start_1, list<int>::iterator& start_2, int& rout
 	do {
 		b = 1+rand() % (route_size_2-1);
 	}
-	while(start_1==start_2 && a==b);
+	while(start_1==start_2 && a==b && route_size_1>2 && route_size_2 >2);
 
 
 	//	if(a == 0)	a++;
@@ -572,8 +581,7 @@ void move(list<int>::iterator& start_1, list<int>::iterator& start_2, int& route
 	do {
 		b = 1+rand() % (route_size_2-1);
 	}
-	while(start_1==start_2 && a==b);
-
+	while(start_1==start_2 && a==b && route_size_1>2 && route_size_2 >2);
 
 
 	//	if(a == 0)	a++;
@@ -661,9 +669,9 @@ void movePartsOfRoutes(list< int >& solution, vector< store >& stores, dist_mat&
 
 	auto n_shortest = solution.size();
 
-	n_shortest = (n_max<n_shortest) ? n_max : n_shortest;
-	for(auto& r : routes)
-		n_shortest = min(r.size(),n_shortest);
+	//	n_shortest = (n_max<n_shortest) ? n_max : n_shortest;
+	//	for(auto& r : routes)
+	//		n_shortest = min(r.size(),n_shortest);
 
 
 
@@ -672,7 +680,7 @@ void movePartsOfRoutes(list< int >& solution, vector< store >& stores, dist_mat&
 
 	int temp_ind;
 
-	for(int i=0;start_1+i<routes[a].size() && start_2+i<routes[b].size() && i<n_shortest;i++) {
+	for(int i=0;start_1+i<routes[a].size() && start_2+i<routes[b].size() && i<n_max;i++) {
 		temp_ind = *next(routes[a].begin(),start_1+i);
 		*next(routes[a].begin(),start_1+i)=*next(routes[b].begin(),start_2+i);
 		*next(routes[b].begin(),start_2+i)=temp_ind;
@@ -680,8 +688,52 @@ void movePartsOfRoutes(list< int >& solution, vector< store >& stores, dist_mat&
 	createSolutionFromRoutes(solution,routes);
 	checkSolution(solution,stores,dist,trucks,total_demand,true);
 
+}
 
+void swap_neighbours_nn(list< int >& solution, vector< store >& stores, dist_mat& dist, vector< truck >& trucks) {
+	int total_demand;
 
+	int score_before;
+	int score_after;
+
+//	cout << "before swap n" << endl;
+
+	for(auto it=next(solution.begin(),1);it!=prev(solution.end(),2);it++) {
+		auto next_el = next(it,1);
+		auto nnext_el = next(it,2);
+		if(*next_el != 0 && *it != 0 && *nnext_el != 0) {
+			score_before = dist(*prev(it,1),*it)+dist(*next_el,*nnext_el);
+			score_after = dist(*prev(it,1),*next_el)+dist(*it,*nnext_el);
+//			cout << "before swap" << endl;
+			if(score_after<=score_before)
+				iter_swap(it,next_el);
+//			cout << "after swap" << endl;
+		}
+	}
+//	cout << "after swap n" << endl;
+//	cout << solution.size() << " " << endl;
+	for(auto it=next(solution.begin(),1);it!=prev(solution.end(),3);it++) {
+		auto next_el = next(it,1);
+		auto nnext_el = next(it,2);
+		auto nnnext_el = next(it,3);
+		if(*nnext_el != 0 && *next_el != 0 && *it != 0 && *nnnext_el != 0) {
+			score_before = dist(*prev(it,1),*it)+dist(*it,*next(it,1))+dist(*next(it,1),*next(it,2))+dist(*next(it,2),*next(it,3));
+//			cout << "before swap" << endl;
+			iter_swap(it,nnext_el);
+//			cout << "after swap" << endl;
+			score_after = dist(*prev(it,1),*it)+dist(*it,*next(it,1))+dist(*next(it,1),*next(it,2))+dist(*next(it,2),*next(it,3));
+//			cout << "before back swap" << endl;
+			if(score_before<score_after) {
+				iter_swap(it,nnext_el);
+			}
+//			cout << "after back swap" << endl;
+		}
+//		cout << i << endl;
+	}
+//	cout << "after swap nn" << endl;
+//	cout << "before check sol nn" << endl;
+	checkSolution(solution,stores,dist,trucks,total_demand,true);
+//	cout << "after check sol nn" << endl;
 }
 
 
