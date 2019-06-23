@@ -11,21 +11,21 @@
 #include "datastructures.hpp"
 
 
-auto removeDuplicates(list<int> solution) {
+auto removeDuplicates(list<long> solution) {
 
 
 
 	return true;
 }
 
-void initial_solution(list< int >& solution, vector< store >& stores, dist_mat& dist, vector< truck >& truck){
+void initial_solution(list< long >& solution, vector< store >& stores, dist_mat& dist, vector< truck >& truck){
 
-	int n_stores = dist.distances.at(0).size();
-	int max_dist = 0;
-	int min_dist = 1e9;
-	int ind_max = 0;
-	int ind_min = 0;
-	int remain_demand = 0;
+	long n_stores = dist.distances.at(0).size();
+	long max_dist = 0;
+	long min_dist = 1e9;
+	long ind_max = 0;
+	long ind_min = 0;
+	long remain_demand = 0;
 
 	for(auto s : stores){
 		remain_demand += s.cur_demand;
@@ -40,7 +40,7 @@ void initial_solution(list< int >& solution, vector< store >& stores, dist_mat& 
 		max_dist = 0;
 		min_dist = 1e9;
 
-		for(int i = 0; i < n_stores; i++){
+		for(long i = 0; i < n_stores; i++){
 
 			if(stores.at(i).cur_demand > 0){
 
@@ -53,7 +53,7 @@ void initial_solution(list< int >& solution, vector< store >& stores, dist_mat& 
 
 		solution.emplace_back(ind_max);
 
-		int unload = min(stores.at(ind_max).cur_demand, truck.at(0).load);
+		long unload = min(stores.at(ind_max).cur_demand, truck.at(0).load);
 
 		stores.at(ind_max).cur_demand -= unload;
 		truck.at(0).load -= unload;
@@ -61,7 +61,7 @@ void initial_solution(list< int >& solution, vector< store >& stores, dist_mat& 
 
 		while(truck.at(0).load > 0 && remain_demand > 0){
 
-			for(int i = 1; i < n_stores; i++){
+			for(long i = 1; i < n_stores; i++){
 
 				if(stores.at(i).cur_demand > 0){
 
@@ -87,31 +87,31 @@ void initial_solution(list< int >& solution, vector< store >& stores, dist_mat& 
 	}
 }
 
-void evaluate_solution(int& result, list< int >& solution, dist_mat& dist){
+void evaluate_solution(long& result, list< long >& solution, dist_mat& dist){
 
 	result = 0;
 
 	auto it = solution.begin();
-	for(int i = 0; i < solution.size() - 1; i++){
+	for(long i = 0; i < solution.size() - 1; i++){
 
-		int id = *it;
+		long id = *it;
 		result += dist(id , *(++it) );
 	}
 }
 
-void evaluate_sublist_solution(int& result, list<int>::iterator& start, list<int>::iterator& end, dist_mat& dist){
+void evaluate_sublist_solution(long& result, list<long>::iterator& start, list<long>::iterator& end, dist_mat& dist){
 
 	result = 0;
 
 	for(auto it = start; it != end; ){
 
-		int id = *it;
+		long id = *it;
 		result += dist(id , *(++it) );
 	}
 }
 
 
-void createSolutionFromRoutes(list< int >& solution, vector<list<int>> &routes) {
+void createSolutionFromRoutes(list< long >& solution, vector<list<long>> &routes) {
 	solution.clear();
 	for(auto& r : routes) {
 		solution.emplace_back(0);
@@ -123,11 +123,11 @@ void createSolutionFromRoutes(list< int >& solution, vector<list<int>> &routes) 
 }
 
 
-int updateDemand(list< int >& solution, vector< store >& stores, vector< truck >& trucks, vector<int> & route_remaining_loads,int &total_demand) {
+long updateDemand(list< long >& solution, vector< store >& stores, vector< truck >& trucks, vector<long> & route_remaining_loads,long &total_demand) {
 
 	total_demand=0;
 	route_remaining_loads.clear();
-	int i=0;
+	long i=0;
 	for(auto& s: stores) {
 		s.cur_demand = s.tot_demand;
 		total_demand +=s.tot_demand;
@@ -137,7 +137,7 @@ int updateDemand(list< int >& solution, vector< store >& stores, vector< truck >
 	i=-1;
 	//	cout << endl;
 
-	int reduce =0;
+	long reduce =0;
 
 	for(auto r : solution) {
 		//		cout << r << ":" << stores[r].cur_demand << " ";
@@ -166,7 +166,7 @@ int updateDemand(list< int >& solution, vector< store >& stores, vector< truck >
 	return total_demand;
 }
 
-void fixSolutionConstrains(list< int >& solution, vector< store >& stores, vector< truck >& trucks, vector<list<int>> &routes, vector<int>& route_remaining_loads, int &total_demand) {
+void fixSolutionConstrains(list< long >& solution, vector< store >& stores, vector< truck >& trucks, vector<list<long>> &routes, vector<long>& route_remaining_loads, long &total_demand) {
 
 
 	//		for(auto r: routes) {
@@ -183,8 +183,8 @@ void fixSolutionConstrains(list< int >& solution, vector< store >& stores, vecto
 
 	//----------- try random stuff
 
-	vector<tuple<int,store*>> sort_stores;
-	int s_id=0;
+	vector<tuple<long,store*>> sort_stores;
+	long s_id=0;
 	bool random_select = rand()%2;
 	for(auto it = stores.begin();it!=stores.end(); it++,s_id++ ){
 		sort_stores.push_back(make_tuple(s_id,&(*it)));
@@ -192,12 +192,12 @@ void fixSolutionConstrains(list< int >& solution, vector< store >& stores, vecto
 	if(random_select)
 		random_shuffle(sort_stores.begin(),sort_stores.end());
 
-	for(unsigned int i=0; i<route_remaining_loads.size();i++) {
+	for(unsigned long i=0; i<route_remaining_loads.size();i++) {
 		if(route_remaining_loads[i]==0)
 			continue;
 		for(auto& s: sort_stores) {
 			if(get<1>(s)->cur_demand > 0 && ((rand()%2) ? route_remaining_loads[i] >0 : get<1>(s)->cur_demand <= route_remaining_loads[i])) { //
-				int reduce = min(route_remaining_loads[i],get<1>(s)->cur_demand);
+				long reduce = min(route_remaining_loads[i],get<1>(s)->cur_demand);
 				get<1>(s)->cur_demand-=reduce;
 				route_remaining_loads[i] -= reduce;
 				total_demand -= reduce;
@@ -227,11 +227,11 @@ void fixSolutionConstrains(list< int >& solution, vector< store >& stores, vecto
 
 	for(auto& r: routes) {
 		trucks[0].load=trucks[0].capacity;
-		list<int>::iterator it;
+		list<long>::iterator it;
 		for(it= r.begin();it!=r.end();it++) {
 			if(trucks[0].load==0)
 				break;
-			int reduce = min(trucks[0].load,stores[*it].cur_demand);
+			long reduce = min(trucks[0].load,stores[*it].cur_demand);
 			stores[*it].cur_demand -= reduce;
 			trucks[0].load -= reduce;
 			//			total_demand -= reduce;
@@ -265,7 +265,7 @@ void fixSolutionConstrains(list< int >& solution, vector< store >& stores, vecto
 	bool sort_in=false;
 	while(total_demand>0) {
 		sort_in=true;
-		list<int> new_route;
+		list<long> new_route;
 		trucks[0].load = trucks[0].capacity;
 		for(auto &s: sort_stores) {
 			if(trucks[0].load==0) {
@@ -273,7 +273,7 @@ void fixSolutionConstrains(list< int >& solution, vector< store >& stores, vecto
 			}
 			else {
 				if(get<1>(s)->cur_demand > 0 && trucks[0].load >0) { // && s.cur_demand
-					int reduce = min(trucks[0].load,get<1>(s)->cur_demand );
+					long reduce = min(trucks[0].load,get<1>(s)->cur_demand );
 					get<1>(s)->cur_demand -=reduce;
 					trucks[0].load -= reduce;
 					total_demand -= reduce;
@@ -307,7 +307,7 @@ void fixSolutionConstrains(list< int >& solution, vector< store >& stores, vecto
 	//		cout << endl;
 
 	//	trucks[0].load = trucks[0].capacity;
-	//	for(int i=0;i<stores.size();i++) {
+	//	for(long i=0;i<stores.size();i++) {
 	//		if(stores[i].cur_demand>0) {
 	//			auto it = solution.end();
 	//			do {
@@ -323,7 +323,7 @@ void fixSolutionConstrains(list< int >& solution, vector< store >& stores, vecto
 	//	}
 }
 
-void splitRoutes(list<int>& solution, vector<list<int> >& routes) {
+void splitRoutes(list<long>& solution, vector<list<long> >& routes) {
 	for(auto it = solution.begin(); it != prev(solution.end(),1);it++) {
 		if(*it==0) {
 			routes.resize(routes.size()+1);
@@ -335,8 +335,8 @@ void splitRoutes(list<int>& solution, vector<list<int> >& routes) {
 }
 
 
-void updateRoutes(list<int>& solution,vector<int>& it_routes_size, vector< list<int>::iterator >& it_routes) {
-	int route_size = 0;
+void updateRoutes(list<long>& solution,vector<long>& it_routes_size, vector< list<long>::iterator >& it_routes) {
+	long route_size = 0;
 	it_routes_size.clear();
 	it_routes.clear();
 	for(auto it = solution.begin(); it != solution.end(); it++, route_size++){
@@ -350,14 +350,14 @@ void updateRoutes(list<int>& solution,vector<int>& it_routes_size, vector< list<
 }
 
 
-int checkSolution(list< int >& solution, vector< store >& stores, dist_mat& dist, vector< truck >& trucks, int &total_demand,bool fix,bool print=false) {
-	vector<int> route_remaining_loads;
+long checkSolution(list< long >& solution, vector< store >& stores, dist_mat& dist, vector< truck >& trucks, long &total_demand,bool fix,bool prlong=false) {
+	vector<long> route_remaining_loads;
 
 	updateDemand(solution,stores,trucks,route_remaining_loads,total_demand);
 
 	if(fix) {
 		while(total_demand > 0) {
-			vector<list<int> > routes;
+			vector<list<long> > routes;
 			splitRoutes(solution,routes);
 			//		for(auto v: routes) {
 			//			for(auto r : v) {
@@ -370,7 +370,7 @@ int checkSolution(list< int >& solution, vector< store >& stores, dist_mat& dist
 			fixSolutionConstrains(solution,stores,trucks,routes,route_remaining_loads,total_demand);
 			if(total_demand)
 				cout << "total demand >0" << endl;
-			if(print)
+			if(prlong)
 				cout << "fixed" << " " << total_demand <<endl;
 		}
 		//		cout << "total demand: " << total_demand << " remaining loads: ";
@@ -392,14 +392,14 @@ int checkSolution(list< int >& solution, vector< store >& stores, dist_mat& dist
 }
 
 
-bool opt_2(list<int>::iterator& start, list<int>::iterator& end, int& route_size, dist_mat& dist){
+bool opt_2(list<long>::iterator& start, list<long>::iterator& end, long& route_size, dist_mat& dist){
 
 	bool return_val = true;
 
 	//-----implement evaluate_sublist-----
 
-	int a = 1+rand() % (route_size-1);
-	int b = 1+rand() % (route_size-1);
+	long a = 1+rand() % (route_size-1);
+	long b = 1+rand() % (route_size-1);
 
 	//	if(a == 0)	a++;
 	//	if(a == route_size) a--;
@@ -410,7 +410,7 @@ bool opt_2(list<int>::iterator& start, list<int>::iterator& end, int& route_size
 	auto it_end = next(start,max(a,b));
 	//	cout << a << " " << b << endl;
 
-	for(int i=0; i<(max(a,b)-min(a,b)+1)/2; i++) {
+	for(long i=0; i<(max(a,b)-min(a,b)+1)/2; i++) {
 
 		auto val1 = *it_start;
 		auto val2 = *it_end;
@@ -423,7 +423,7 @@ bool opt_2(list<int>::iterator& start, list<int>::iterator& end, int& route_size
 	}
 
 	//	//-----implement evaluate_sublist-----
-	//	int result = 0;
+	//	long result = 0;
 	//	evaluate_sublist_solution(result, start, end, dist);
 	//
 	//	if(result_old <= result){
@@ -431,7 +431,7 @@ bool opt_2(list<int>::iterator& start, list<int>::iterator& end, int& route_size
 	//		it_start = next(start,min(a,b));
 	//		it_end = next(start,max(a,b));
 	//
-	//		for (int i = 0; i < (max(a, b) - min(a, b) + 1) / 2; i++) {
+	//		for (long i = 0; i < (max(a, b) - min(a, b) + 1) / 2; i++) {
 	//
 	//			auto val1 = *it_start;
 	//			auto val2 = *it_end;
@@ -451,19 +451,19 @@ bool opt_2(list<int>::iterator& start, list<int>::iterator& end, int& route_size
 	return return_val;
 }
 
-int swap_n(list< int >& solution, vector< store >& stores, dist_mat& dist, vector< truck >& trucks, int swaps) {
+long swap_n(list< long >& solution, vector< store >& stores, dist_mat& dist, vector< truck >& trucks, long swaps) {
 
 	//-----implement evaluate_sublist-----
 
-	int update=1;
-	vector<int> it_routes_size;
-	vector< list<int>::iterator > it_routes;
-	for(int i=0;i<swaps;i++ ) {
+	long update=1;
+	vector<long> it_routes_size;
+	vector< list<long>::iterator > it_routes;
+	for(long i=0;i<swaps;i++ ) {
 		if(update)
 			updateRoutes(solution,it_routes_size,it_routes);
 
-		int select_1 =0;
-		int select_2 =0;
+		long select_1 =0;
+		long select_2 =0;
 
 		if((it_routes_size.size() - 1))
 			select_1=rand() % (it_routes_size.size());
@@ -477,8 +477,8 @@ int swap_n(list< int >& solution, vector< store >& stores, dist_mat& dist, vecto
 		auto end_1 =  next(start_1,route_size_1);
 		auto end_2 =  next(start_2,route_size_2);
 
-		int a = 1+rand() % (route_size_1-1);
-		int b;
+		long a = 1+rand() % (route_size_1-1);
+		long b;
 		do {
 			b = 1+rand() % (route_size_2-1);
 		}
@@ -509,7 +509,7 @@ int swap_n(list< int >& solution, vector< store >& stores, dist_mat& dist, vecto
 		}
 	}
 
-	int total_demand;
+	long total_demand;
 	checkSolution(solution,stores,dist,trucks,total_demand,true);
 
 	return 1;
@@ -517,13 +517,13 @@ int swap_n(list< int >& solution, vector< store >& stores, dist_mat& dist, vecto
 
 }
 
-int swap_2(list<int>::iterator& start_1, list<int>::iterator& start_2, int& route_size_1, int& route_size_2, list< int >& solution, vector< store >& stores, dist_mat& dist, vector< truck >& trucks){
+long swap_2(list<long>::iterator& start_1, list<long>::iterator& start_2, long& route_size_1, long& route_size_2, list< long >& solution, vector< store >& stores, dist_mat& dist, vector< truck >& trucks){
 	//-----implement evaluate_sublist-----
 	auto end_1 =  next(start_1,route_size_1);
 	auto end_2 =  next(start_2,route_size_2);
 
-	int a = 1+rand() % (route_size_1-1);
-	int b;
+	long a = 1+rand() % (route_size_1-1);
+	long b;
 
 	do {
 		b = 1+rand() % (route_size_2-1);
@@ -558,25 +558,25 @@ int swap_2(list<int>::iterator& start_1, list<int>::iterator& start_2, int& rout
 		}
 	}
 
-	int total_demand;
+	long total_demand;
 
 	checkSolution(solution,stores,dist,trucks,total_demand,true);
 
 	return 1;
 }
 
-void move(list<int>::iterator& start_1, list<int>::iterator& start_2, int& route_size_1, int& route_size_2, list< int >& solution, vector< store >& stores, dist_mat& dist, vector< truck >& trucks){
+void move(list<long>::iterator& start_1, list<long>::iterator& start_2, long& route_size_1, long& route_size_2, list< long >& solution, vector< store >& stores, dist_mat& dist, vector< truck >& trucks){
 
 	//-----implement evaluate_sublist-----
 
-	int result_old_1 = 0;
+	long result_old_1 = 0;
 	auto end_2 =  next(start_2,route_size_2);
 
-	//	int a = 1+(rand() % route_size_1-1);
-	//	int b = 1+(rand() % route_size_2-1);
+	//	long a = 1+(rand() % route_size_1-1);
+	//	long b = 1+(rand() % route_size_2-1);
 
-	int a = 1+rand() % (route_size_1-1);
-	int b;
+	long a = 1+rand() % (route_size_1-1);
+	long b;
 
 	do {
 		b = 1+rand() % (route_size_2-1);
@@ -589,7 +589,7 @@ void move(list<int>::iterator& start_1, list<int>::iterator& start_2, int& route
 	//	if(b == 0) b++;
 	//	if(b == route_size_2) b--;
 
-	list<int>::iterator it_insert_to, it_insert_from;
+	list<long>::iterator it_insert_to, it_insert_from;
 
 	for(it_insert_to = solution.begin(); it_insert_to!= next(start_2,b);it_insert_to++);
 	for(it_insert_from = solution.begin(); it_insert_from!= next(start_1,a);it_insert_from++);
@@ -597,20 +597,20 @@ void move(list<int>::iterator& start_1, list<int>::iterator& start_2, int& route
 	if(start_1==start_2 || end_2==find(start_2,end_2,*it_insert_from))
 		solution.insert(it_insert_to,*it_insert_from);
 	solution.erase(it_insert_from);
-	int total_demand;
+	long total_demand;
 	checkSolution(solution,stores,dist,trucks,total_demand,true);
 }
 
-void destroyAndRepairRoutes(list< int >& solution, vector< store >& stores, dist_mat& dist, vector< truck >& trucks, int n_routes) {
+void destroyAndRepairRoutes(list< long >& solution, vector< store >& stores, dist_mat& dist, vector< truck >& trucks, long n_routes) {
 
-	vector<list<int> > routes;
+	vector<list<long> > routes;
 	splitRoutes(solution,routes);
-	n_routes=min(n_routes,(const int)routes.size());
+	n_routes=min(n_routes,(const long)routes.size());
 
 	//------ delete n_routes routes ------
-	int i=0;
+	long i=0;
 	while(i<n_routes) {
-		int rnd = rand() % routes.size();
+		long rnd = rand() % routes.size();
 		if(routes[rnd].size()>0) {
 			routes[rnd].clear();
 			i++;
@@ -627,32 +627,32 @@ void destroyAndRepairRoutes(list< int >& solution, vector< store >& stores, dist
 	}
 	solution.emplace_back(0);
 	//------ rebuild ------
-	int total_demand;
+	long total_demand;
 	checkSolution(solution,stores,dist,trucks,total_demand,true);
 
 }
 
-void destroyAndRepairStations(list< int >& solution, vector< store >& stores, dist_mat& dist, vector< truck >& trucks, int n_routes) {
+void destroyAndRepairStations(list< long >& solution, vector< store >& stores, dist_mat& dist, vector< truck >& trucks, long n_routes) {
 
 	//------ delete n_routes routes ------
-	int i=0;
+	long i=0;
 	while(i<n_routes) {
-		int rnd = rand() % solution.size();
+		long rnd = rand() % solution.size();
 		if(*next(solution.begin(),rnd)>0) {
 			solution.erase(next(solution.begin(),rnd));
 			i++;
 		}
 	}
 	//------ rebuild ------
-	int total_demand;
+	long total_demand;
 	checkSolution(solution,stores,dist,trucks,total_demand,true);
 
 }
 
-void randomRouteOrder(list< int >& solution, vector< store >& stores, dist_mat& dist, vector< truck >& trucks) {
+void randomRouteOrder(list< long >& solution, vector< store >& stores, dist_mat& dist, vector< truck >& trucks) {
 
-	vector<list<int> > routes;
-	int total_demand;
+	vector<list<long> > routes;
+	long total_demand;
 	splitRoutes(solution,routes);
 	random_shuffle(routes.begin(),routes.end());
 	createSolutionFromRoutes(solution,routes);
@@ -660,11 +660,11 @@ void randomRouteOrder(list< int >& solution, vector< store >& stores, dist_mat& 
 
 }
 
-void movePartsOfRoutes(list< int >& solution, vector< store >& stores, dist_mat& dist, vector< truck >& trucks, int a,int b, int n_max) {
+void movePartsOfRoutes(list< long >& solution, vector< store >& stores, dist_mat& dist, vector< truck >& trucks, long a,long b, long n_max) {
 
 
-	vector<list<int> > routes;
-	int total_demand;
+	vector<list<long> > routes;
+	long total_demand;
 	splitRoutes(solution,routes);
 
 	auto n_shortest = solution.size();
@@ -675,12 +675,12 @@ void movePartsOfRoutes(list< int >& solution, vector< store >& stores, dist_mat&
 
 
 
-	int start_1=rand()%routes[a].size();
-	int start_2=rand()%routes[b].size();
+	long start_1=rand()%routes[a].size();
+	long start_2=rand()%routes[b].size();
 
-	int temp_ind;
+	long temp_ind;
 
-	for(int i=0;start_1+i<routes[a].size() && start_2+i<routes[b].size() && i<n_max;i++) {
+	for(long i=0;start_1+i<routes[a].size() && start_2+i<routes[b].size() && i<n_max;i++) {
 		temp_ind = *next(routes[a].begin(),start_1+i);
 		*next(routes[a].begin(),start_1+i)=*next(routes[b].begin(),start_2+i);
 		*next(routes[b].begin(),start_2+i)=temp_ind;
@@ -690,11 +690,11 @@ void movePartsOfRoutes(list< int >& solution, vector< store >& stores, dist_mat&
 
 }
 
-void swap_neighbours_nn(list< int >& solution, vector< store >& stores, dist_mat& dist, vector< truck >& trucks) {
-	int total_demand;
+void swap_neighbours_nn(list< long >& solution, vector< store >& stores, dist_mat& dist, vector< truck >& trucks) {
+	long total_demand;
 
-	int score_before;
-	int score_after;
+	long score_before;
+	long score_after;
 
 //	cout << "before swap n" << endl;
 

@@ -12,21 +12,21 @@ using namespace std;
 
 class dist_mat{
 public:
-	vector<vector <int> > distances;
+	vector<vector <long> > distances;
 
 	dist_mat(){
 
 	};
 
-	dist_mat(int s){
+	dist_mat(long s){
 
 		distances.resize(s);
-		for(int i = 0; i < s; i++){
+		for(long i = 0; i < s; i++){
 			distances[i].resize(s);
 		}
 	}
 
-	inline int& operator()(int i, int j) {
+	inline long& operator()(long i, long j) {
 		return distances[i][j];
 	};
 
@@ -34,15 +34,15 @@ public:
 
 class store{
 public:
-	int tot_demand;
-	int cur_demand;
+	long tot_demand;
+	long cur_demand;
 
 	store(){
 		tot_demand = 0;
 		cur_demand = 0;
 	};
 
-	store(int demand_tot_, int demand_cur_){
+	store(long demand_tot_, long demand_cur_){
 		tot_demand = demand_tot_;
 		cur_demand = demand_cur_;
 	}
@@ -50,15 +50,15 @@ public:
 
 class truck{
 public:
-	int capacity;
-	int load;
+	long capacity;
+	long load;
 
 	truck(){
 		capacity = 0;
 		load = 0;
 	};
 
-	truck(int capacity_, int load_){
+	truck(long capacity_, long load_){
 		capacity = capacity_;
 		load = load_;
 	}
