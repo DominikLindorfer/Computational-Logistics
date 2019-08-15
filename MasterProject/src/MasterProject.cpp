@@ -30,6 +30,8 @@ int main() {
 	//	vector< tuple<string,string,string>> distances(data.size());
 	int t_load = 15 * 60;
 	int t_fix_load = 10 * 60;
+	int t_unload = 15 * 60;
+	int t_fix_unload = 10 * 60;
 
 	//-----initialize distance matrix-----
 	int n_stores = sqrt(distances.size());
@@ -161,10 +163,33 @@ int main() {
 //		return s1.tot_demand > s2.tot_demand;
 //	});
 
-	//-----build initial solution-----
+	//-----build nearest neighbor matrix-----
+	vector<vector< tuple <int, int>>> nn_mat;
+	build_nn_mat(dist, nn_mat, stores);
 
-	list< vector<long> > solution;
-	initial_solution_routes(solution, stores, dist, trucks);
+	for(int i = 0; i < (int)nn_mat.size(); i++){
+		cout << "{";
+		for(int j = 0; j < (int)nn_mat[i].size();j++){
+			cout << "(" << get<0>(nn_mat[i][j]) << "," << get<1>(nn_mat[i][j]) << ")" << ",";
+		}
+		cout << "}" << endl << endl;
+	}
+
+	//-----build initial solution-----
+	vector<vector< list< vector<long> > > > solution;
+	initial_solution_routes(solution, stores, dist, trucks, nn_mat, t_unload, t_fix_unload);
+
+	for(int day = 0; day < solution.size(); day++){
+
+		for(int route_ind = 0; route_ind < solution[day].size(); route_ind++){
+
+			for(auto i : solution[day][route_ind]){
+				cout << i[0] << " " << i[1] << " - ";
+			}
+			cout << endl;
+		}
+		cout << endl << endl;
+	}
 
 //	initial_solution_A(docks, stores, dist, trucks, t_load, t_fix_load);
 //

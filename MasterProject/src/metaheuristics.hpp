@@ -10,83 +10,114 @@
 #include <bits/stdc++.h>
 #include "datastructures.hpp"
 
-void initial_solution_routes(list< vector<long> >& solution, vector< store >& stores, dist_mat& dist, vector< truck >& truck){
+void initial_solution_routes(vector< vector< list< vector<long> > > >& solution, vector< store >& stores, dist_mat& dist, vector< truck >& truck, vector<vector< tuple <int, int>>>& nn_mat, int t_unload, int t_fix_unload){
 
 	long n_stores = dist.distances.at(0).size();
-	long max_dist = 0;
 	long min_dist = 1e9;
 	long ind_max = 0;
 	long ind_min = 0;
 	vector< long > remain_demand_vec(stores[0].tot_demand.size(), 0);
+	int days = 0;
 
 	for(auto s : stores){
 
-		int day = 0;
+		days = 0;
 		for(auto d : s.tot_demand){
-			remain_demand_vec[day] += d;
-			day++;
+			remain_demand_vec[days] += d;
+			days++;
 		}
 	}
+
+	solution.resize(days);
 
 	cout << remain_demand_vec[0] << " " << remain_demand_vec[1] << endl;
 
-	solution.emplace_back({0,0});
+//	solution.emplace_back({0,0});
 
-	for(int day = 0; day < remain_demand_vec.size(); day++){
+	for(int day = 0; day < (int)remain_demand_vec.size(); day++){
+		int route_ind = -1;
+		while(remain_demand_vec[day] > 0){
 
-	while(remain_demand_vec[day] > 0){
-		ind_max = 0;
-		ind_min = 0;
-		truck.at(0).load = truck.at(0).capacity;
-		max_dist = 0;
-		min_dist = 1e9;
+			route_ind++;
+			solution[day].push_back(list< vector<long> > ());
 
-		for(long i = 0; i < n_stores; i++){
+			ind_max = 0;
+			ind_min = 0;
+			truck.at(0).load = truck.at(0).capacity;
+			min_dist = 1e9;
 
-			if(stores.at(i).cur_demand[day] > 0){
+			//-----select store farthest away------
 
-				if(dist(0, i) > max_dist){
-					max_dist = dist(0, i);
-					ind_max = i;
+			for(long i = (int)nn_mat[0].size() - 1; i >= 0; i--){
+
+				if(stores.at(get<0>(nn_mat[0][i]) - 1).cur_demand[day] > 0){
+					ind_max = get<0>(nn_mat[0][i]) - 1;
+					break;
 				}
 			}
-		}
 
-		solution.emplace_back(ind_max);
 
-		long unload = min(stores.at(ind_max).cur_demand, truck.at(0).load);
+			long unload = min((int)stores.at(ind_max).cur_demand[day], (int)truck.at(0).load);
+			solution[day][route_ind].push_back({ind_max, unload});
 
-		stores.at(ind_max).cur_demand -= unload;
-		truck.at(0).load -= unload;
-		remain_demand -= unload;
+			stores.at(ind_max).cur_demand[day] -= unload;
+			truck.at(0).load -= unload;
+			remain_demand_vec[day] -= unload;
 
-		while(truck.at(0).load > 0 && remain_demand > 0){
+			while(truck.at(0).load > 0 && remain_demand_vec[day] > 0){
 
-			for(long i = 1; i < n_stores; i++){
+				ind_min = 0;
 
-				if(stores.at(i).cur_demand > 0){
+				for(long i = 0; i < (int)nn_mat[ind_max].size() - 1; i++){
 
-					if(dist(ind_max, i) < min_dist){
-						min_dist = dist(ind_max, i);
-						ind_min = i;
+					if(stores.at(get<0>(nn_mat[ind_max][i]) - 1).cur_demand[day] > 0){
+
+						long unload_tmp = min((int)stores.at(get<0>(nn_mat[ind_max][i]) - 1).cur_demand[day], (int)truck.at(0).load);
+						if(stores.at(ind_max).service_time.first + get<1>(nn_mat[ind_max][i]) + 2 * t_fix_unload + t_unload * unload + t_unload * unload_tmp <=	stores.at(get<0>(nn_mat[ind_max][i]) - 1).service_time.second){
+							ind_min = get<0>(nn_mat[ind_max][i]) - 1;
+							unload = unload_tmp;
+							break;
+						}
 					}
 				}
+
+				if(ind_min == 0){
+//					solution[day][solution[day].size()-1].push_back({ind_min, 0});
+					break;
+				}
+
+				stores.at(ind_min).cur_demand[day] -= unload;
+				truck.at(0).load -= unload;
+
+				solution[day][route_ind].push_back({ind_min, unload});
+
+				remain_demand_vec[day] -= unload;
+				ind_max = ind_min;
+			}
+		}
+	}
+}
+
+void build_nn_mat(dist_mat& dist, vector<vector< tuple <int, int>>>& nn_mat, vector< store >& stores){
+
+	nn_mat.resize((int)dist.distances.size() );
+
+	for(int i = 0; i < (int)dist.distances.size(); i++){
+		nn_mat[i].resize(dist.distances.size() );
+
+		for(int j = 0; j < (int)dist.distances.size(); j++){
+
+			if(i == j){
+				continue;
 			}
 
-			solution.emplace_back(ind_min);
-			unload = min(stores.at(ind_min).cur_demand, truck.at(0).load);
-
-			stores.at(ind_min).cur_demand -= unload;
-			truck.at(0).load -= unload;
-			remain_demand -= unload;
-
-			ind_max = ind_min;
-			min_dist = 1e9;
+			nn_mat[i][j] = make_tuple(j+1, dist(i,j));
 		}
 
-		solution.emplace_back(0);
+		sort(nn_mat[i].begin(), nn_mat[i].end(), [](tuple<int,int> t1, tuple<int,int> t2){return get<1>(t1) < get<1>(t2);});
+		nn_mat[i].erase(nn_mat[i].begin());
 	}
-	}
+
 }
 
 //void initial_solution_A(vector< dock >& docks, vector< store >& stores, dist_mat& dist, vector< truck >& trucks, int& t_load, int& t_fix_load){
