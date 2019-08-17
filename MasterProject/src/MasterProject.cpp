@@ -30,7 +30,7 @@ int main() {
 	//	vector< tuple<string,string,string>> distances(data.size());
 	int t_load = 15 * 60;
 	int t_fix_load = 10 * 60;
-	int t_unload = 15 * 60;
+	int t_unload = 1 * 60;
 	int t_fix_unload = 10 * 60;
 
 	//-----initialize distance matrix-----
@@ -179,9 +179,9 @@ int main() {
 	vector<vector< list< vector<long> > > > solution;
 	initial_solution_routes(solution, stores, dist, trucks, nn_mat, t_unload, t_fix_unload);
 
-	for(int day = 0; day < solution.size(); day++){
+	for(int day = 0; day < (int)solution.size(); day++){
 
-		for(int route_ind = 0; route_ind < solution[day].size(); route_ind++){
+		for(int route_ind = 0; route_ind < (int)solution[day].size(); route_ind++){
 
 			for(auto i : solution[day][route_ind]){
 				cout << i[0] << " " << i[1] << " - ";
@@ -191,7 +191,88 @@ int main() {
 		cout << endl << endl;
 	}
 
-//	initial_solution_A(docks, stores, dist, trucks, t_load, t_fix_load);
+
+	//-----Optimize Initial Solution for Routes-----
+
+	//------ Days -- Routes -- Scores -----
+	vector< vector < vector< long > > > route_scores;
+	route_scores.resize(solution.size());
+
+	for(int day = 0; day < (int)solution.size(); day++){
+
+		route_scores[day].resize(solution[day].size());
+
+		for(int route = 0; route < (int)solution[day].size(); route++){
+
+			int latest_time = 0;
+			int earliest_time = 0;
+			int route_time = 0;
+			int wait_time = 0;
+
+			int tmp = 0;
+			tmp = latest_returntime(latest_time, route_time, wait_time, solution[day][route], t_unload, t_fix_unload, stores, dist);
+			cout << tmp << endl;
+			earliest_returntime(earliest_time, route_time, wait_time, solution[day][route], t_unload, t_fix_unload, stores, dist);
+
+			route_scores[day][route].push_back(earliest_time);
+			route_scores[day][route].push_back(latest_time);
+			route_scores[day][route].push_back(route_time);
+			route_scores[day][route].push_back(wait_time);
+		}
+	}
+
+	//-----Print Scores of Initial Solution-----
+	for(int day = 0; day < (int)solution.size(); day++){
+			for(int route = 0; route < (int)solution[day].size(); route++){
+				cout << route_scores[day][route].at(0) << " " << route_scores[day][route].at(1) << " " << route_scores[day][route].at(2) << " " << route_scores[day][route].at(3) << endl;
+			}
+			cout << endl << endl;
+		}
+
+
+	int latest_time = 0;
+	int route_time = 0;
+	int wait_time = 0;
+	latest_returntime(latest_time, route_time, wait_time, solution[0][0], t_unload, t_fix_unload, stores, dist);
+
+	cout << "Latest Return-Time: " << latest_time << "  " << route_time << "  " << wait_time << endl;
+	cout << "Latest Return-Time: " << latest_time << "  " << stores[10].service_time.first << "  " << stores[10].service_time.second << "  " << dist(0,10) << endl;
+
+	int earliest_time = 0;
+	route_time = 0;
+	wait_time = 0;
+	earliest_returntime(earliest_time, route_time, wait_time, solution[0][0], t_unload, t_fix_unload, stores, dist);
+
+	cout << "Earliest Return-Time: " << earliest_time << "  " << route_time << "  " << wait_time << endl;
+
+
+	//-----Swap 2 Stores in diff Routes-----
+
+	long sw_1 = 0;
+	long sw_2 = 1;
+	auto& sol_1 = solution[0][0];
+	auto& sol_2 = sol_1;
+
+	routes_swap_2(sol_1, sol_2, stores, dist, trucks, sw_1, sw_2);
+	int feasible = latest_returntime(latest_time, route_time, wait_time, solution[0][0], t_unload, t_fix_unload, stores, dist);
+	cout << "Feasible?: " << feasible << endl;
+
+
+
+	for(int day = 0; day < (int)solution.size(); day++){
+
+		for(int route_ind = 0; route_ind < (int)solution[day].size(); route_ind++){
+
+			for(auto i : solution[day][route_ind]){
+				cout << i[0] << " " << i[1] << " - ";
+			}
+			cout << endl;
+		}
+		cout << endl << endl;
+	}
+
+
+	//	initial_solution_A(docks, stores, dist, trucks, t_load, t_fix_load);
 //
 //
 //	for(auto i : docks){

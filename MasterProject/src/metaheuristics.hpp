@@ -642,4 +642,459 @@ bool swap_2job_sametruck(vector< dock >& docks, dist_mat& dist, vector< truck >&
 	return true;
 };
 
+bool latest_returntime(int& time, int& route_time, int& wait_time, list< vector<long> >& subsolution, int& t_unload, int& t_fix_unload, vector< store >& stores, dist_mat& dist){
+
+	//-----Calculate Latest Starting-Time-----
+
+	if((int)subsolution.size() == 0){
+		time = 0;
+		return true;
+	}
+
+	int latest_time = stores[(*next(subsolution.begin(), subsolution.size()-1)).at(0)].service_time.second;
+	int unload_time = 0;
+
+	for(int i = subsolution.size() - 1; i > 0; i--){
+
+		unload_time = (*next(subsolution.begin(), i)).at(1) * t_unload + t_fix_unload;
+		latest_time = min(latest_time, stores[(*next(subsolution.begin(),i)).at(0)].service_time.second);
+		latest_time-= unload_time + dist((*next(subsolution.begin(), i-1)).at(0), (*next(subsolution.begin(), i)).at(0));
+
+		latest_time = min(latest_time, stores[(*next(subsolution.begin(), i-1)).at(0)].service_time.second);
+
+		//-----Check if Solution is still Feasible-----
+		if(latest_time < stores[(*next(subsolution.begin(), i-1)).at(0)].service_time.first){
+			return false;
+		}
+	}
+
+	unload_time = (*subsolution.begin()).at(1) * t_unload + t_fix_unload;
+
+	if(latest_time - unload_time < stores[(*next(subsolution.begin(), 0)).at(0)].service_time.first){
+		return false;
+	}
+	latest_time -= unload_time + dist(0, (*next(subsolution.begin(), 0)).at(0));
+	time = latest_time;
+
+
+	//-----Calculate Route Time (Hub -> Store -> Unload -> Next Store -> Unload -> ... -> Hub) starting from Latest Time -----
+	route_time = 0;
+	wait_time = 0;
+
+	route_time = latest_time + dist(0, (*next(subsolution.begin(), 0)).at(0)) + unload_time;
+	for(int i = 1; i < (int)subsolution.size(); i++){
+
+		route_time += dist((*next(subsolution.begin(), i-1)).at(0), (*next(subsolution.begin(), i)).at(0));
+
+		if(route_time < stores[(*next(subsolution.begin(),i)).at(0)].service_time.first){
+			wait_time += stores[(*next(subsolution.begin(),i)).at(0)].service_time.first - route_time;
+		}
+
+		route_time = max(route_time, stores[(*next(subsolution.begin(),i)).at(0)].service_time.first);
+		unload_time = (*next(subsolution.begin(), i)).at(1) * t_unload + t_fix_unload;
+		route_time += unload_time;
+	}
+
+	route_time += dist((*prev(subsolution.end(), 1)).at(0), 0);
+	route_time -= latest_time;
+
+	return true;
+}
+
+bool earliest_returntime(int& time, int& route_time, int& wait_time, list< vector<long> >& subsolution, int& t_unload, int& t_fix_unload, vector< store >& stores, dist_mat& dist){
+
+	//-----Calculate Earliest Starting-Time-----
+
+	if((int)subsolution.size() == 0){
+		time = 0;
+		return false;
+	}
+
+	int earliest_time = stores[(*subsolution.begin()).at(0)].service_time.first;
+	int unload_time = 0;
+
+	unload_time = (*next(subsolution.begin(), 0)).at(1) * t_unload + t_fix_unload;
+	earliest_time += unload_time;
+
+	for(int i = 1; i < (int)subsolution.size(); i++){
+
+		unload_time = (*next(subsolution.begin(), i)).at(1) * t_unload + t_fix_unload;
+		earliest_time+= dist((*next(subsolution.begin(), i-1)).at(0), (*next(subsolution.begin(), i)).at(0));
+		earliest_time = max(earliest_time, stores[(*next(subsolution.begin(),i)).at(0)].service_time.first);
+
+		earliest_time += unload_time;
+	}
+
+	earliest_time -= unload_time;
+
+	//-----Calculate Route Time (Hub -> Store -> Unload -> Next Store -> Unload -> ... -> Hub) starting from Earliest Time -----
+	route_time = 0;
+	wait_time = 0;
+
+	route_time = earliest_time;
+	for(int i = (int)subsolution.size() - 1; i > 0; i--){
+
+		route_time -= dist((*next(subsolution.begin(), i-1)).at(0), (*next(subsolution.begin(), i)).at(0));
+
+		if(route_time > stores[(*next(subsolution.begin(),i-1)).at(0)].service_time.second){
+			wait_time += route_time - stores[(*next(subsolution.begin(),i-1)).at(0)].service_time.second;
+		}
+
+		route_time = min(route_time, stores[(*next(subsolution.begin(),i-1)).at(0)].service_time.second);
+		unload_time = (*next(subsolution.begin(), i-1)).at(1) * t_unload + t_fix_unload;
+		route_time -= unload_time;
+	}
+
+	route_time -= dist((*prev(subsolution.begin(), 0)).at(0), 0);
+
+	int earliest_time_tmp = earliest_time;
+	earliest_time = route_time;
+
+	route_time = earliest_time_tmp - route_time + dist((*prev(subsolution.end(), 1)).at(0), 0) + (*prev(subsolution.end(), 1)).at(1) * t_unload + t_fix_unload;
+
+	time = earliest_time;
+	return true;
+}
+
+bool evaluate_subroute(int& latest_time, int& route_time, int& wait_time, list< vector<long> >& subsolution, int& t_unload, int& t_fix_unload, vector< store >& stores, dist_mat& dist){
+
+	latest_time = 0;
+	route_time = 0;
+	wait_time = 0;
+
+	if(subsolution.size() == 0){
+		return false;
+	}
+	//-----Returns False if Route is not Feasible-----
+	return latest_returntime(latest_time, route_time, wait_time, subsolution, t_unload, t_fix_unload, stores, dist);
+}
+
+long updateDemand(list< long >& solution, vector< store >& stores, vector< truck >& trucks, vector<long> & route_remaining_loads,long &total_demand) {
+
+	total_demand=0;
+	route_remaining_loads.clear();
+	long i=0;
+	for(auto& s: stores) {
+		s.cur_demand = s.tot_demand;
+		total_demand +=s.tot_demand;
+		//		cout << i << ":" << s.cur_demand << " ";
+		//		i++;
+	}
+	i=-1;
+	//	cout << endl;
+
+	long reduce =0;
+
+	for(auto r : solution) {
+		//		cout << r << ":" << stores[r].cur_demand << " ";
+		if(r == 0) {
+			i++;
+			trucks[0].load = trucks[0].capacity;
+			route_remaining_loads.push_back(trucks[0].load);
+			//			cout << " " <<  route_remaining_loads[i-1] << endl;
+		}
+		else {
+			reduce = min(trucks[0].load,stores[r].cur_demand);
+			stores[r].cur_demand -= reduce;
+			trucks[0].load -= reduce;
+			total_demand -= reduce;
+			route_remaining_loads[route_remaining_loads.size()-1]-= reduce;
+		}
+	}
+	route_remaining_loads.pop_back();
+	i=0;
+	//	for(auto& s: stores) {
+	//		cout << i << ":" << s.cur_demand << " ";
+	//		i++;
+	//	}
+	//	cout << endl;
+
+	return total_demand;
+}
+
+void splitRoutes(list<long>& solution, vector<list<long> >& routes) {
+	for(auto it = solution.begin(); it != prev(solution.end(),1);it++) {
+		if(*it==0) {
+			routes.resize(routes.size()+1);
+		}
+		else {
+			routes[routes.size()-1].emplace_back(*it);
+		}
+	}
+}
+
+void updateRoutes(list<long>& solution,vector<long>& it_routes_size, vector< list<long>::iterator >& it_routes) {
+	long route_size = 0;
+	it_routes_size.clear();
+	it_routes.clear();
+	for(auto it = solution.begin(); it != solution.end(); it++, route_size++){
+		if(*it == 0){
+			it_routes.push_back(it);
+			it_routes_size.push_back(route_size);
+			route_size = 0;
+		}
+	}
+	it_routes_size.erase(it_routes_size.begin());
+}
+
+void fixSolutionConstrains(list< long >& solution, vector< store >& stores, vector< truck >& trucks, vector<list<long>> &routes, vector<long>& route_remaining_loads, long &total_demand) {
+
+
+	//		for(auto r: routes) {
+	//			for(auto s: r) {
+	//				cout << s << " ";
+	//			}
+	//			cout << endl;
+	//		}
+	//	for(auto& s: stores) {
+	//		cout << i << ":" << s.cur_demand << " ";
+	//		i++;
+	//	}
+	//	cout << endl;
+
+	//----------- try random stuff
+
+	vector<tuple<long,store*>> sort_stores;
+	long s_id=0;
+	bool random_select = rand()%2;
+	for(auto it = stores.begin();it!=stores.end(); it++,s_id++ ){
+		sort_stores.push_back(make_tuple(s_id,&(*it)));
+	}
+	if(random_select)
+		random_shuffle(sort_stores.begin(),sort_stores.end());
+
+	for(unsigned long i=0; i<route_remaining_loads.size();i++) {
+		if(route_remaining_loads[i]==0)
+			continue;
+		for(auto& s: sort_stores) {
+			if(get<1>(s)->cur_demand > 0 && ((rand()%2) ? route_remaining_loads[i] >0 : get<1>(s)->cur_demand <= route_remaining_loads[i])) { //
+				long reduce = min(route_remaining_loads[i],get<1>(s)->cur_demand);
+				get<1>(s)->cur_demand-=reduce;
+				route_remaining_loads[i] -= reduce;
+				total_demand -= reduce;
+				routes[i].emplace_back(get<0>(s));
+			}
+		}
+		if(total_demand==0)
+			break;
+	}
+	//	for(auto r: routes) {
+	//		for(auto s: r) {
+	//			cout << s << " ";
+	//		}
+	//		cout << endl;
+	//	}
+	//		for(auto r: routes) {
+	//			for(auto s: r) {
+	//				cout << s << " ";
+	//			}
+	//			cout << endl;
+	//		}
+
+	for(auto& s: stores) {
+		s.cur_demand = s.tot_demand;
+		total_demand+= s.tot_demand;
+	}
+
+	for(auto& r: routes) {
+		trucks[0].load=trucks[0].capacity;
+		list<long>::iterator it;
+		for(it= r.begin();it!=r.end();it++) {
+			if(trucks[0].load==0)
+				break;
+			long reduce = min(trucks[0].load,stores[*it].cur_demand);
+			stores[*it].cur_demand -= reduce;
+			trucks[0].load -= reduce;
+			//			total_demand -= reduce;
+		}
+		r.erase(it,r.end());
+	}
+	//		for(auto r: routes) {
+	//			for(auto s: r) {
+	//				cout << s << " ";
+	//			}
+	//			cout << endl;
+	//		}
+	//	for(auto& s: stores) {
+	//		cout << i << ":" << s.cur_demand << " ";
+	//		i++;
+	//	}
+	//	cout << endl;
+
+	//	solution.clear();
+	//	for(auto& r : routes) {
+	//		solution.emplace_back(0);
+	//		for(auto& s: r) {
+	//			solution.emplace_back(s);
+	//		}
+	//	}
+	//	solution.emplace_back(0);
+
+	createSolutionFromRoutes(solution,routes);
+
+	updateDemand(solution,stores,trucks,route_remaining_loads,total_demand);
+	bool sort_in=false;
+	while(total_demand>0) {
+		sort_in=true;
+		list<long> new_route;
+		trucks[0].load = trucks[0].capacity;
+		for(auto &s: sort_stores) {
+			if(trucks[0].load==0) {
+				continue;
+			}
+			else {
+				if(get<1>(s)->cur_demand > 0 && trucks[0].load >0) { // && s.cur_demand
+					long reduce = min(trucks[0].load,get<1>(s)->cur_demand );
+					get<1>(s)->cur_demand -=reduce;
+					trucks[0].load -= reduce;
+					total_demand -= reduce;
+					new_route.emplace_back(get<0>(s));
+				}
+			}
+			s_id++;
+		}
+		if(new_route.size()>0) {
+			routes.push_back(new_route);
+		}
+	}
+	//		for(auto s: solution) {
+	//			cout << s << " ";
+	//		}
+	//		cout << endl;
+	if(sort_in) {
+		createSolutionFromRoutes(solution,routes);
+		//		solution.clear();
+		//		for(auto& r : routes) {
+		//			solution.emplace_back(0);
+		//			for(auto& s: r) {
+		//				solution.emplace_back(s);
+		//			}
+		//		}
+		//		solution.emplace_back(0);
+	}
+	//		for(auto s: solution) {
+	//			cout << s << " ";
+	//		}
+	//		cout << endl;
+
+	//	trucks[0].load = trucks[0].capacity;
+	//	for(long i=0;i<stores.size();i++) {
+	//		if(stores[i].cur_demand>0) {
+	//			auto it = solution.end();
+	//			do {
+	//				it--;
+	//			}while(*it != 0);
+	//			for(;it!=solution.end();i++) {
+	//
+	//			}
+	//
+	//
+	//		}
+	//
+	//	}
+}
+
+long checkSolution(list< vector<long> >& solution, vector< store >& stores, dist_mat& dist, vector< truck >& trucks, long &total_demand, bool fix, bool prlong=false) {
+	vector<long> route_remaining_loads;
+
+	updateDemand(solution,stores,trucks,route_remaining_loads,total_demand);
+
+	if(fix) {
+		while(total_demand > 0) {
+			vector<list<long> > routes;
+			splitRoutes(solution,routes);
+			//		for(auto v: routes) {
+			//			for(auto r : v) {
+			//				cout << r << " ";
+			//			}
+			//			cout << endl;
+			//		}
+			//		cout << endl;
+
+			fixSolutionConstrains(solution,stores,trucks,routes,route_remaining_loads,total_demand);
+			if(total_demand)
+				cout << "total demand >0" << endl;
+			if(prlong)
+				cout << "fixed" << " " << total_demand <<endl;
+		}
+		//		cout << "total demand: " << total_demand << " remaining loads: ";
+		//		for(auto r: route_remaining_loads) {
+		//			cout << r << " ";
+		//		}
+		//		cout << endl;
+	}
+
+	for(auto it=next(solution.begin(),1);it!=solution.end();it++) {
+		if(*it==*prev(it,1)) {
+			solution.erase(prev(it,1));
+		}
+	}
+
+
+
+	return 0;
+}
+
+long routes_swap_2(list< vector<long> >& sol_1, list< vector<long> >& sol_2, vector< store >& stores, dist_mat& dist, vector< truck >& trucks, long& sw_1, long& sw_2){
+
+	//-----implement evaluate_sublist-----
+	auto start_1 = sol_1.begin();
+	auto start_2 = sol_2.begin();
+
+	auto end_1 =  next(start_1, sol_1.size());
+	auto end_2 =  next(start_2, sol_2.size());
+
+//	long a = 1+rand() % (route_size_1-1);
+//	long b;
+//
+//	do {
+//		b = 1+rand() % (route_size_2-1);
+//	}
+//	while(start_1==start_2 && a==b && route_size_1>2 && route_size_2 >2);
+
+
+	//	if(a == 0)	a++;
+	//	if(a == route_size_1) a--;
+	//	if(b == 0) b++;
+	//	if(b == route_size_2) b--;
+	auto swap_1 = next(start_1, sw_1), swap_2 = next(start_2, sw_2);
+
+	//-----Swap if Route 1 & 2 are the same-----
+	if(start_1 == start_2) {
+		auto temp = *swap_1;
+		*swap_1 = *swap_2;
+		*swap_2 = temp;
+	}
+	else {
+		//-----Check if Store from Route 1 is already in Route 2 and vice versa-----
+		//-----and swap Demands accordingly-----
+		if(end_2 == find(start_2,end_2,*swap_1) && end_1 == find(start_1,end_1,*swap_2)) {
+			auto temp = *swap_1;
+			*swap_1 = *swap_2;
+			*swap_2 = temp;
+		}
+		else if(end_1!=find(start_1,end_1,*swap_2) && end_2==find(start_2,end_2,*swap_1)) {
+			int demand_2 = *swap_2[1];
+			(*find(start_1,end_1,*swap_2))[1]+=demand_2;
+			*swap_2 = *swap_1;
+
+			sol_1.erase(swap_1);
+		}
+		else if(end_1==find(start_1,end_1,*swap_2) && end_2!=find(start_2,end_2,*swap_1)) {
+			int demand_1 = *swap_1[1];
+			(*find(start_2,end_2,*swap_1))[1]+=demand_1;
+			*swap_1 = *swap_2;
+
+			sol_2.erase(swap_2);
+		}
+	}
+
+	long total_demand;
+
+	checkSolution(solution,stores,dist,trucks,total_demand,true);
+
+	return 1;
+}
+
+
 #endif /* METAHEURISTICS_HPP_ */
