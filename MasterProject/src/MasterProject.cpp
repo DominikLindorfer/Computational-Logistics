@@ -22,31 +22,31 @@ int main() {
 	vector< vector< tuple<string,string,string,tuple<string,string>>> > demands;
 	vector< tuple<string,string,string, string> > service_times;
 
-	int numb_Days = 0;
+	long numb_Days = 0;
 	read_csv_distance(TravTime, data,distances);
 	read_csv_demand_multipleDays(Demand, demands, numb_Days);
 	read_csv_servicetimes(ServiceTime, service_times);
 
 	//	vector< tuple<string,string,string>> distances(data.size());
-	int t_load = 15 * 60;
-	int t_fix_load = 10 * 60;
-	int t_unload = 1 * 60;
-	int t_fix_unload = 10 * 60;
+	long t_load = 15 * 60;
+	long t_fix_load = 10 * 60;
+	long t_unload = 1 * 60;
+	long t_fix_unload = 10 * 60;
 
 	//-----initialize distance matrix-----
-	int n_stores = sqrt(distances.size());
+	long n_stores = sqrt(distances.size());
 	dist_mat dist(n_stores);
 
 	for(auto d : distances){
 
-		int i = stoi(get<0>(d)) - 1;
-		int j = stoi(get<1>(d)) - 1;
+		long i = stoi(get<0>(d)) - 1;
+		long j = stoi(get<1>(d)) - 1;
 
 		dist(i, j) = stoi(get<2>(d));
 	}
 
-	//	for(int i = 0; i < n_stores; i++){
-	//		for(int j = 0; j < n_stores; j++){
+	//	for(long i = 0; i < n_stores; i++){
+	//		for(long j = 0; j < n_stores; j++){
 	//			cout << dist(i,j) << " ";
 	//		}
 	//		cout << endl;
@@ -58,7 +58,7 @@ int main() {
 	cout << n_stores << endl;
 
 	//
-	//	for(int i = 0; i < n_stores - demands.size(); i++){
+	//	for(long i = 0; i < n_stores - demands.size(); i++){
 	//		stores.at(i).tot_demand = 0;
 	//		stores.at(i).cur_demand = 0;
 	//	}
@@ -75,12 +75,12 @@ int main() {
 		s.tot_demand.resize(numb_Days,0);
 	}
 
-	int day = 0;
+	long day = 0;
 	for(auto demand : demands){
 		for(auto s : demand){
 
-			int id = stoi(get<0>(s));
-			int d = stoi( get<1>(get<3>(s)) );
+			long id = stoi(get<0>(s));
+			long d = stoi( get<1>(get<3>(s)) );
 
 			stores.at(id - 1).tot_demand[day] += d;
 			stores.at(id - 1).cur_demand[day] += d;
@@ -92,7 +92,7 @@ int main() {
 	//-----Set Service Times-----
 	for(auto s : service_times){
 
-		int id = stoi(get<0>(s)) - 1;
+		long id = stoi(get<0>(s)) - 1;
 		string start = get<2>(s);
 		string end = get<3>(s);
 
@@ -102,8 +102,8 @@ int main() {
 		string token_s;
 		string token_e;
 
-		int start_time = 0;
-		int end_time = 0;
+		long start_time = 0;
+		long end_time = 0;
 
 		vector<string> vec_line_s;
 		vector<string> vec_line_e;
@@ -146,7 +146,7 @@ int main() {
 	}
 
 	//-----initialize trucks-----
-	int n_trucks = 3;
+	long n_trucks = 3;
 	vector< truck > trucks(n_trucks);
 
 	for(auto& i : trucks){
@@ -155,7 +155,7 @@ int main() {
 	//	truck.at(0).capacity = 100;
 
 	//-----initialize docks-----
-	int n_docks = 2;
+	long n_docks = 2;
 	vector< dock > docks(n_docks);
 
 //	//-----sort store-demands-----
@@ -164,24 +164,26 @@ int main() {
 //	});
 
 	//-----build nearest neighbor matrix-----
-	vector<vector< tuple <int, int>>> nn_mat;
+	vector<vector< tuple <long, long>>> nn_mat;
 	build_nn_mat(dist, nn_mat, stores);
 
-	for(int i = 0; i < (int)nn_mat.size(); i++){
+	for(long i = 0; i < (long)nn_mat.size(); i++){
 		cout << "{";
-		for(int j = 0; j < (int)nn_mat[i].size();j++){
+		for(long j = 0; j < (long)nn_mat[i].size();j++){
 			cout << "(" << get<0>(nn_mat[i][j]) << "," << get<1>(nn_mat[i][j]) << ")" << ",";
 		}
 		cout << "}" << endl << endl;
 	}
 
 	//-----build initial solution-----
+
+	//-----Days (vector) - Routes on that day (vector) - Routes (lists) - Store# and Demands as vector (longs) [0] == store, [1] == demands-----
 	vector<vector< list< vector<long> > > > solution;
 	initial_solution_routes(solution, stores, dist, trucks, nn_mat, t_unload, t_fix_unload);
 
-	for(int day = 0; day < (int)solution.size(); day++){
+	for(long day = 0; day < (long)solution.size(); day++){
 
-		for(int route_ind = 0; route_ind < (int)solution[day].size(); route_ind++){
+		for(long route_ind = 0; route_ind < (long)solution[day].size(); route_ind++){
 
 			for(auto i : solution[day][route_ind]){
 				cout << i[0] << " " << i[1] << " - ";
@@ -198,18 +200,18 @@ int main() {
 	vector< vector < vector< long > > > route_scores;
 	route_scores.resize(solution.size());
 
-	for(int day = 0; day < (int)solution.size(); day++){
+	for(long day = 0; day < (long)solution.size(); day++){
 
 		route_scores[day].resize(solution[day].size());
 
-		for(int route = 0; route < (int)solution[day].size(); route++){
+		for(long route = 0; route < (long)solution[day].size(); route++){
 
-			int latest_time = 0;
-			int earliest_time = 0;
-			int route_time = 0;
-			int wait_time = 0;
+			long latest_time = 0;
+			long earliest_time = 0;
+			long route_time = 0;
+			long wait_time = 0;
 
-			int tmp = 0;
+			long tmp = 0;
 			tmp = latest_returntime(latest_time, route_time, wait_time, solution[day][route], t_unload, t_fix_unload, stores, dist);
 			cout << tmp << endl;
 			earliest_returntime(earliest_time, route_time, wait_time, solution[day][route], t_unload, t_fix_unload, stores, dist);
@@ -222,23 +224,23 @@ int main() {
 	}
 
 	//-----Print Scores of Initial Solution-----
-	for(int day = 0; day < (int)solution.size(); day++){
-			for(int route = 0; route < (int)solution[day].size(); route++){
+	for(long day = 0; day < (long)solution.size(); day++){
+			for(long route = 0; route < (long)solution[day].size(); route++){
 				cout << route_scores[day][route].at(0) << " " << route_scores[day][route].at(1) << " " << route_scores[day][route].at(2) << " " << route_scores[day][route].at(3) << endl;
 			}
 			cout << endl << endl;
 		}
 
 
-	int latest_time = 0;
-	int route_time = 0;
-	int wait_time = 0;
+	long latest_time = 0;
+	long route_time = 0;
+	long wait_time = 0;
 	latest_returntime(latest_time, route_time, wait_time, solution[0][0], t_unload, t_fix_unload, stores, dist);
 
 	cout << "Latest Return-Time: " << latest_time << "  " << route_time << "  " << wait_time << endl;
 	cout << "Latest Return-Time: " << latest_time << "  " << stores[10].service_time.first << "  " << stores[10].service_time.second << "  " << dist(0,10) << endl;
 
-	int earliest_time = 0;
+	long earliest_time = 0;
 	route_time = 0;
 	wait_time = 0;
 	earliest_returntime(earliest_time, route_time, wait_time, solution[0][0], t_unload, t_fix_unload, stores, dist);
@@ -249,19 +251,67 @@ int main() {
 	//-----Swap 2 Stores in diff Routes-----
 
 	long sw_1 = 0;
-	long sw_2 = 1;
+	long sw_2 = 0;
 	auto& sol_1 = solution[0][0];
-	auto& sol_2 = sol_1;
+	auto& sol_2 = solution[0][1];
+	auto route_scores_best = route_scores;
+
+//	//-----Test-----
+//	(*next(solution[0][9].begin(), 0))[1] = 25;
+//	stores[2].tot_demand[0] += 24;
 
 	routes_swap_2(sol_1, sol_2, stores, dist, trucks, sw_1, sw_2);
-	int feasible = latest_returntime(latest_time, route_time, wait_time, solution[0][0], t_unload, t_fix_unload, stores, dist);
+
+	long cur_day = 0;
+	long total_demand = 0;
+	checkSolution(solution[0], cur_day, stores,dist,trucks,total_demand,true);
+	bool accept_swap = false;
+
+	for(long route = 0; route < (long)solution[cur_day].size(); route++){
+
+		long latest_time = 0;
+		long earliest_time = 0;
+		long route_time = 0;
+		long wait_time = 0;
+
+		long tmp = 0;
+		tmp = latest_returntime(latest_time, route_time, wait_time, solution[cur_day][route], t_unload, t_fix_unload, stores, dist);
+		if(tmp == 0){
+
+			cout << "Route " << route << " is not feasible!" << endl;
+
+			accept_swap = false;
+			break;
+		}
+		cout << tmp << endl;
+		accept_swap = true;
+		earliest_returntime(earliest_time, route_time, wait_time, solution[cur_day][route], t_unload, t_fix_unload, stores, dist);
+
+		route_scores[cur_day][route] = {earliest_time, latest_time, route_time, wait_time};
+//		route_scores[day][route].push_back(latest_time);
+//		route_scores[day][route].push_back(route_time);
+//		route_scores[day][route].push_back(wait_time);
+	}
+
+	long score_best = evaluate_route_scores(route_scores_best[cur_day]);
+	long score = evaluate_route_scores(route_scores[cur_day]);
+
+	cout << "Scores: " << score << "  " << score_best << endl;
+
+	if(accept_swap == true && score < score_best){
+
+		cout << "New best found!" << endl;
+		score_best = score;
+		route_scores_best[cur_day] = route_scores[cur_day];
+	}
+
+	long feasible = latest_returntime(latest_time, route_time, wait_time, solution[0][0], t_unload, t_fix_unload, stores, dist);
 	cout << "Feasible?: " << feasible << endl;
 
 
+	for(long day = 0; day < (long)solution.size(); day++){
 
-	for(int day = 0; day < (int)solution.size(); day++){
-
-		for(int route_ind = 0; route_ind < (int)solution[day].size(); route_ind++){
+		for(long route_ind = 0; route_ind < (long)solution[day].size(); route_ind++){
 
 			for(auto i : solution[day][route_ind]){
 				cout << i[0] << " " << i[1] << " - ";
@@ -272,11 +322,23 @@ int main() {
 	}
 
 
+	//-----Dock Scheduling with Optimized Routes-----
+
+	//-----day, route-jobs -----
+	vector< vector <job> > jobs;
+	jobs.resize(route_scores_best.size());
+
+	for(unsigned long d = 0; d < route_scores_best.size(); d++){
+		for(unsigned long r = 0; r < route_scores_best[d].size(); d++)
+//		jobs[d].push_back()
+
+	}
+
 	//	initial_solution_A(docks, stores, dist, trucks, t_load, t_fix_load);
 //
 //
 //	for(auto i : docks){
-//		//list< tuple <int, int, int> > jobs;
+//		//list< tuple <long, long, long> > jobs;
 //		for(auto j : i.jobs){
 //			cout << "{";
 //			cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j);
@@ -285,16 +347,16 @@ int main() {
 //	}
 //
 //	cout << "max: " << evaluate_solution(trucks) << endl;
-//	print_docks(docks);
-//	print_docks_mathematicaLabel(docks);
-//	print_trucks_mathematicaLabel(trucks);
+//	prlong_docks(docks);
+//	prlong_docks_mathematicaLabel(docks);
+//	prlong_trucks_mathematicaLabel(trucks);
 //
-//	int numb_j_trucks = 0;
-//	int numb_j_docks  = 0;
+//	long numb_j_trucks = 0;
+//	long numb_j_docks  = 0;
 //
 ////	cout << endl << "Trucks:" << endl;
 ////	for(auto i : trucks){
-////		//list< tuple <int, int, int> > jobs;
+////		//list< tuple <long, long, long> > jobs;
 ////		for(auto j : i.jobs){
 ////			cout << "{";
 ////			cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j);
@@ -308,7 +370,7 @@ int main() {
 ////	cout << endl << "Docks:" << endl;
 ////	for(auto i : docks){
 ////		cout << i.jobs.size() << endl;
-////		//list< tuple <int, int, int> > jobs;
+////		//list< tuple <long, long, long> > jobs;
 ////		for(auto j : i.jobs){
 ////			cout << "{";
 ////			cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j);
@@ -328,9 +390,9 @@ int main() {
 //	auto docks_best = docks;
 //	auto trucks_best = trucks;
 //
-//	int n_swaps = 3;
+//	long n_swaps = 3;
 
-//	for(int i = 0; i < 10000; i++){
+//	for(long i = 0; i < 10000; i++){
 //
 //		opt_2(docks_new, dist, trucks_new, t_load, t_fix_load);
 //
@@ -343,15 +405,15 @@ int main() {
 //			trucks_new = trucks;
 //		}
 //		//		cout << i << endl;
-//		//		print_docks(docks);
+//		//		prlong_docks(docks);
 //	}
 //
 //	cout << "new max: " << evaluate_solution(trucks) << endl;
-//	print_docks(docks);
+//	prlong_docks(docks);
 //
 //	cout << endl << "Docks:" << endl;
 //	for(auto i : docks){
-//		//list< tuple <int, int, int> > jobs;
+//		//list< tuple <long, long, long> > jobs;
 //		for(auto j : i.jobs){
 //			cout << "{";
 //			cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j);
@@ -362,7 +424,7 @@ int main() {
 //
 //	cout << endl << "Trucks_best:" << endl;
 //	for(auto i : trucks){
-//		//list< tuple <int, int, int> > jobs;
+//		//list< tuple <long, long, long> > jobs;
 //		for(auto j : i.jobs){
 //			cout << "{";
 //			cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j);
@@ -377,13 +439,13 @@ int main() {
 
 //	//-----VND-----
 //
-//	int level = 0;
-//	int moves = 0;
-//	int accept = 0;
-//	int n_tries = 1000;
-//	int tries = 0;
-//	int not_updated = 0;
-//	int not_updated_max = 50;
+//	long level = 0;
+//	long moves = 0;
+//	long accept = 0;
+//	long n_tries = 1000;
+//	long tries = 0;
+//	long not_updated = 0;
+//	long not_updated_max = 50;
 //
 //	double accept_ratio = 0.3;
 //
@@ -394,7 +456,7 @@ int main() {
 //		switch(level){
 //		case 0 :
 //			//swap 2 jobs at same truck
-//			for(int i = 0; i < n_tries; i++){
+//			for(long i = 0; i < n_tries; i++){
 //
 //				swap_2job_sametruck(docks_new, dist, trucks_new, t_load, t_fix_load);
 //
@@ -411,7 +473,7 @@ int main() {
 //			break;
 //		case 1 :
 //			//swap 2 jobs different trucks
-//			for(int i = 0; i < n_tries; i++){
+//			for(long i = 0; i < n_tries; i++){
 //
 //				swap_2jobs_difftrucks(docks_new, dist, trucks_new, t_load, t_fix_load);
 //
@@ -428,7 +490,7 @@ int main() {
 //			break;
 //		case 2 :
 //			//2opt
-//			for(int i = 0; i < n_tries; i++){
+//			for(long i = 0; i < n_tries; i++){
 //
 //				opt_2(docks_new, dist, trucks_new, t_load, t_fix_load);
 //
@@ -445,7 +507,7 @@ int main() {
 //			break;
 //		case 3 :
 //			//swap njobs
-//			for(int i = 0; i < n_tries; i++){
+//			for(long i = 0; i < n_tries; i++){
 //
 //				swap_njobs_difftrucks(docks_new, dist, trucks_new, t_load, t_fix_load, n_swaps);
 //
@@ -466,7 +528,7 @@ int main() {
 //			docks_new = docks_best;
 //			trucks_new = trucks_best;
 //
-//			for(int i = 0; i < n_tries; i++){
+//			for(long i = 0; i < n_tries; i++){
 //
 //				move_job(docks_new, dist, trucks_new, t_load, t_fix_load);
 //			}
@@ -508,7 +570,7 @@ int main() {
 
 
 
-//	for(int i = 0; i < 1; i++){
+//	for(long i = 0; i < 1; i++){
 //		swap_njobs_difftrucks(docks_new, dist, trucks_new, t_load, t_fix_load, n_swaps);
 //
 //		docks = docks_new;
@@ -516,7 +578,7 @@ int main() {
 //	}
 //
 //
-//	for(int i = 0; i < 1; i++){
+//	for(long i = 0; i < 1; i++){
 //		move_job(docks_new, dist, trucks_new, t_load, t_fix_load);
 //
 //		docks = docks_new;
@@ -526,7 +588,7 @@ int main() {
 
 
 //
-//	for(int i = 0; i < 50; i++){
+//	for(long i = 0; i < 50; i++){
 //		swap_2jobs_difftrucks(docks_new, dist, trucks_new, t_load, t_fix_load);
 //		if(accept_solution(trucks, trucks_new)){
 //			docks = docks_new;
@@ -537,7 +599,7 @@ int main() {
 //			trucks_new = trucks;
 //		}
 //	}
-//	for(int i = 0; i < 500; i++){
+//	for(long i = 0; i < 500; i++){
 //		opt_2(docks_new, dist, trucks_new, t_load, t_fix_load);
 //		if(accept_solution(trucks, trucks_new)){
 //			docks = docks_new;
@@ -556,13 +618,13 @@ int main() {
 //	//
 //	//
 //	cout << "new max: " << evaluate_solution(trucks_best) << endl;
-//	print_docks(docks_best);
-//	print_docks_mathematicaLabel(docks_best);
-//	print_trucks_mathematicaLabel(trucks_best);
+//	prlong_docks(docks_best);
+//	prlong_docks_mathematicaLabel(docks_best);
+//	prlong_trucks_mathematicaLabel(trucks_best);
 //
 //	cout << endl << "Docks_best:" << endl;
 //	for(auto i : docks_best){
-//		//list< tuple <int, int, int> > jobs;
+//		//list< tuple <long, long, long> > jobs;
 //		for(auto j : i.jobs){
 //			cout << "{";
 //			cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j);
@@ -573,7 +635,7 @@ int main() {
 //
 //	cout << endl << "Trucks_best:" << endl;
 //	for(auto i : trucks_best){
-//		//list< tuple <int, int, int> > jobs;
+//		//list< tuple <long, long, long> > jobs;
 //		for(auto j : i.jobs){
 //			cout << "{";
 //			cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j);
@@ -590,16 +652,16 @@ int main() {
 	//	}
 	//	cout << endl;
 	//
-	//	int result = 0;
+	//	long result = 0;
 	//	evaluate_solution(result, solution, dist);
 	//
 	//	cout << "Result: " << result << endl;
 	//
-	//	//-----split into sublists-----
+	//	//-----split longo sublists-----
 	//
-	//	int route_size = 0;
-	//	vector<int> it_routes_size;
-	//	vector< list<int>::iterator > it_routes;
+	//	long route_size = 0;
+	//	vector<long> it_routes_size;
+	//	vector< list<long>::iterator > it_routes;
 	//	for(auto it = solution.begin(); it != solution.end(); it++, route_size++){
 	//		if(*it == 0){
 	//			it_routes.push_back(it);
@@ -612,9 +674,9 @@ int main() {
 	//
 	////	opt_2(it_routes.at(0), it_routes.at(1), it_routes_size.at(0), dist);
 	//
-	//	for(int i = 0; i < 1000; i++){
+	//	for(long i = 0; i < 1000; i++){
 	//
-	//		int select = rand() % (it_routes_size.size() - 1);
+	//		long select = rand() % (it_routes_size.size() - 1);
 	//
 	//		opt_2(it_routes.at(select), it_routes.at(select + 1), it_routes_size.at(select), dist);
 	//
@@ -637,10 +699,10 @@ int main() {
 	//
 	//
 	//
-	//	list<int> t = {1,2,3,4,5,6,7,8,9};
+	//	list<long> t = {1,2,3,4,5,6,7,8,9};
 
-	//	int a = 2;
-	//	int b = 7;
+	//	long a = 2;
+	//	long b = 7;
 
 	//	auto it_start = next(t.begin(),min(a,b));
 	//	auto it_end = next(t.begin(),max(a,b));
@@ -651,7 +713,7 @@ int main() {
 	//	for(auto j : t )
 	//		cout << j  << " ";
 	//	cout << endl;
-	//	vector<list<int>::iterator > del;
+	//	vector<list<long>::iterator > del;
 	//	for(auto j = t.begin();j!=t.end();j++) {
 	//			if(rand()%2) {
 	//				cout << *j << " ";
@@ -667,7 +729,7 @@ int main() {
 	//	cout << endl;
 
 
-	//	for(int i=0;i<(max(a,b)-min(a,b)+1)/2;i++) {
+	//	for(long i=0;i<(max(a,b)-min(a,b)+1)/2;i++) {
 	//
 	//		auto val1 = *it_start;
 	//		auto val2 = *it_end;
@@ -681,7 +743,7 @@ int main() {
 	//
 	//	for(auto s: t ) cout << s << " ";
 	//	cout << endl;
-	//	for(int i=0;i<(max(a,b)-min(a,b)+1)/2;i++) {
+	//	for(long i=0;i<(max(a,b)-min(a,b)+1)/2;i++) {
 	//
 	//		auto val1 = *it_start;
 	//		auto val2 = *it_end;
@@ -699,18 +761,18 @@ int main() {
 	//	dist_mat test;
 	//
 	//	test.distances.resize(3);
-	//	for(int i = 0; i < 3; i++){
+	//	for(long i = 0; i < 3; i++){
 	//		test.distances[i].resize(3);
 	//	}
 	//
-	//	for(int i = 0; i < 3; i++){
-	//		for(int j = 0; j < 3; j++){
+	//	for(long i = 0; i < 3; i++){
+	//		for(long j = 0; j < 3; j++){
 	//			test(i,j) = i*j;
 	//		}
 	//	}
 	//
-	//	for(int i = 0; i < 3; i++){
-	//		for(int j = 0; j < 3; j++){
+	//	for(long i = 0; i < 3; i++){
+	//		for(long j = 0; j < 3; j++){
 	//			cout << test(i,j) << " ";
 	//		}
 	//		cout << endl;

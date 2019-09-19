@@ -10,14 +10,14 @@
 #include <bits/stdc++.h>
 #include "datastructures.hpp"
 
-void initial_solution_routes(vector< vector< list< vector<long> > > >& solution, vector< store >& stores, dist_mat& dist, vector< truck >& truck, vector<vector< tuple <int, int>>>& nn_mat, int t_unload, int t_fix_unload){
+void initial_solution_routes(vector< vector< list< vector<long> > > >& solution, vector< store >& stores, dist_mat& dist, vector< truck >& truck, vector<vector< tuple <long, long>>>& nn_mat, long t_unload, long t_fix_unload){
 
 	long n_stores = dist.distances.at(0).size();
 	long min_dist = 1e9;
 	long ind_max = 0;
 	long ind_min = 0;
 	vector< long > remain_demand_vec(stores[0].tot_demand.size(), 0);
-	int days = 0;
+	long days = 0;
 
 	for(auto s : stores){
 
@@ -32,10 +32,10 @@ void initial_solution_routes(vector< vector< list< vector<long> > > >& solution,
 
 	cout << remain_demand_vec[0] << " " << remain_demand_vec[1] << endl;
 
-//	solution.emplace_back({0,0});
+	//	solution.emplace_back({0,0});
 
-	for(int day = 0; day < (int)remain_demand_vec.size(); day++){
-		int route_ind = -1;
+	for(long day = 0; day < (long)remain_demand_vec.size(); day++){
+		long route_ind = -1;
 		while(remain_demand_vec[day] > 0){
 
 			route_ind++;
@@ -48,7 +48,7 @@ void initial_solution_routes(vector< vector< list< vector<long> > > >& solution,
 
 			//-----select store farthest away------
 
-			for(long i = (int)nn_mat[0].size() - 1; i >= 0; i--){
+			for(long i = (long)nn_mat[0].size() - 1; i >= 0; i--){
 
 				if(stores.at(get<0>(nn_mat[0][i]) - 1).cur_demand[day] > 0){
 					ind_max = get<0>(nn_mat[0][i]) - 1;
@@ -57,7 +57,7 @@ void initial_solution_routes(vector< vector< list< vector<long> > > >& solution,
 			}
 
 
-			long unload = min((int)stores.at(ind_max).cur_demand[day], (int)truck.at(0).load);
+			long unload = min((long)stores.at(ind_max).cur_demand[day], (long)truck.at(0).load);
 			solution[day][route_ind].push_back({ind_max, unload});
 
 			stores.at(ind_max).cur_demand[day] -= unload;
@@ -68,11 +68,11 @@ void initial_solution_routes(vector< vector< list< vector<long> > > >& solution,
 
 				ind_min = 0;
 
-				for(long i = 0; i < (int)nn_mat[ind_max].size() - 1; i++){
+				for(long i = 0; i < (long)nn_mat[ind_max].size() - 1; i++){
 
 					if(stores.at(get<0>(nn_mat[ind_max][i]) - 1).cur_demand[day] > 0){
 
-						long unload_tmp = min((int)stores.at(get<0>(nn_mat[ind_max][i]) - 1).cur_demand[day], (int)truck.at(0).load);
+						long unload_tmp = min((long)stores.at(get<0>(nn_mat[ind_max][i]) - 1).cur_demand[day], (long)truck.at(0).load);
 						if(stores.at(ind_max).service_time.first + get<1>(nn_mat[ind_max][i]) + 2 * t_fix_unload + t_unload * unload + t_unload * unload_tmp <=	stores.at(get<0>(nn_mat[ind_max][i]) - 1).service_time.second){
 							ind_min = get<0>(nn_mat[ind_max][i]) - 1;
 							unload = unload_tmp;
@@ -82,7 +82,7 @@ void initial_solution_routes(vector< vector< list< vector<long> > > >& solution,
 				}
 
 				if(ind_min == 0){
-//					solution[day][solution[day].size()-1].push_back({ind_min, 0});
+					//					solution[day][solution[day].size()-1].push_back({ind_min, 0});
 					break;
 				}
 
@@ -98,14 +98,14 @@ void initial_solution_routes(vector< vector< list< vector<long> > > >& solution,
 	}
 }
 
-void build_nn_mat(dist_mat& dist, vector<vector< tuple <int, int>>>& nn_mat, vector< store >& stores){
+void build_nn_mat(dist_mat& dist, vector<vector< tuple <long, long>>>& nn_mat, vector< store >& stores){
 
-	nn_mat.resize((int)dist.distances.size() );
+	nn_mat.resize((long)dist.distances.size() );
 
-	for(int i = 0; i < (int)dist.distances.size(); i++){
+	for(long i = 0; i < (long)dist.distances.size(); i++){
 		nn_mat[i].resize(dist.distances.size() );
 
-		for(int j = 0; j < (int)dist.distances.size(); j++){
+		for(long j = 0; j < (long)dist.distances.size(); j++){
 
 			if(i == j){
 				continue;
@@ -114,17 +114,17 @@ void build_nn_mat(dist_mat& dist, vector<vector< tuple <int, int>>>& nn_mat, vec
 			nn_mat[i][j] = make_tuple(j+1, dist(i,j));
 		}
 
-		sort(nn_mat[i].begin(), nn_mat[i].end(), [](tuple<int,int> t1, tuple<int,int> t2){return get<1>(t1) < get<1>(t2);});
+		sort(nn_mat[i].begin(), nn_mat[i].end(), [](tuple<long,long> t1, tuple<long,long> t2){return get<1>(t1) < get<1>(t2);});
 		nn_mat[i].erase(nn_mat[i].begin());
 	}
 
 }
 
-//void initial_solution_A(vector< dock >& docks, vector< store >& stores, dist_mat& dist, vector< truck >& trucks, int& t_load, int& t_fix_load){
+//void initial_solution_A(vector< dock >& docks, vector< store >& stores, dist_mat& dist, vector< truck >& trucks, long& t_load, long& t_fix_load){
 //
-//	int n_stores = dist.distances.at(0).size();
-//	int hub_ind = 0;
-//	int remain_demand = 0;
+//	long n_stores = dist.distances.at(0).size();
+//	long hub_ind = 0;
+//	long remain_demand = 0;
 //
 //	for(auto s : stores){
 //		remain_demand += s.tot_demand;
@@ -136,27 +136,27 @@ void build_nn_mat(dist_mat& dist, vector<vector< tuple <int, int>>>& nn_mat, vec
 //
 //		cout << remain_demand << endl;
 //
-//		for(int i = 0; i < n_stores; i++){
+//		for(long i = 0; i < n_stores; i++){
 //			cout << remain_demand << "  " << stores.at(i).id << endl;
 //			if(stores.at(i).cur_demand > 0){
 //
-//				int avail = 0;
-//				for(int j = 0; j < (int)trucks.size(); j++){
+//				long avail = 0;
+//				for(long j = 0; j < (long)trucks.size(); j++){
 //
 //					if(get<1>(trucks[j].jobs.back()) < get<1>(trucks[avail].jobs.back())){
 //						avail = j;
 //					}
 //				}
 //
-//				int earliest_dock = 0;
-//				for(int d = 0; d < (int)docks.size(); d++){
+//				long earliest_dock = 0;
+//				for(long d = 0; d < (long)docks.size(); d++){
 //
 //					if( docks[d].is_free(get<1>(trucks[avail].jobs.back())) ){
 //
-//						int start_time = get<1>(trucks[avail].jobs.back());
-//						int end_time = start_time + (min(stores.at(i).cur_demand, trucks[avail].capacity) * t_load + t_fix_load);
+//						long start_time = get<1>(trucks[avail].jobs.back());
+//						long end_time = start_time + (min(stores.at(i).cur_demand, trucks[avail].capacity) * t_load + t_fix_load);
 //
-//						int end_time_truck = start_time + 2 * (min(stores.at(i).cur_demand, trucks[avail].capacity) * t_load + t_fix_load + dist(0, stores.at(i).id ) );
+//						long end_time_truck = start_time + 2 * (min(stores.at(i).cur_demand, trucks[avail].capacity) * t_load + t_fix_load + dist(0, stores.at(i).id ) );
 //
 //						trucks[avail].jobs.emplace_back(make_tuple(start_time, end_time_truck, i,min(stores.at(i).cur_demand, trucks[avail].capacity)));
 //
@@ -177,10 +177,10 @@ void build_nn_mat(dist_mat& dist, vector<vector< tuple <int, int>>>& nn_mat, vec
 //				}
 //
 //				if(earliest_dock >= 0){
-//					int start_time = get<1>(docks[earliest_dock].jobs.back());
-//					int end_time = start_time + (min(stores.at(i).cur_demand, trucks[avail].capacity) * t_load + t_fix_load);
+//					long start_time = get<1>(docks[earliest_dock].jobs.back());
+//					long end_time = start_time + (min(stores.at(i).cur_demand, trucks[avail].capacity) * t_load + t_fix_load);
 //
-//					int end_time_truck = start_time + 2 * (min(stores.at(i).cur_demand, trucks[avail].capacity) * t_load + t_fix_load + dist(0, stores.at(i).id) );
+//					long end_time_truck = start_time + 2 * (min(stores.at(i).cur_demand, trucks[avail].capacity) * t_load + t_fix_load + dist(0, stores.at(i).id) );
 //
 //					trucks[avail].jobs.emplace_back(make_tuple(start_time, end_time_truck, i,min(stores.at(i).cur_demand, trucks[avail].capacity)));
 //
@@ -199,9 +199,9 @@ void build_nn_mat(dist_mat& dist, vector<vector< tuple <int, int>>>& nn_mat, vec
 //	}
 //}
 
-int evaluate_solution(vector< truck >& trucks){
+long evaluate_solution(vector< truck >& trucks){
 
-	int max = 0;
+	long max = 0;
 
 	for(auto t : trucks){
 
@@ -215,24 +215,24 @@ int evaluate_solution(vector< truck >& trucks){
 	return max;
 }
 
-void evaluate_sublist_solution(int& result, list<int>::iterator& start, list<int>::iterator& end, dist_mat& dist){
+void evaluate_sublist_solution(long& result, list<long>::iterator& start, list<long>::iterator& end, dist_mat& dist){
 
 	result = 0;
 
 	for(auto it = start; it != end; ){
 
-		int id = *it;
+		long id = *it;
 		result += dist(id , *(++it) );
 	}
 }
 
-void delete_jobs_docks(vector< dock >& docks_try, truck& truck, int& truck_id, int& job_id_1 ,int& job_id_2){
+void delete_jobs_docks(vector< dock >& docks_try, truck& truck, long& truck_id, long& job_id_1 ,long& job_id_2){
 
 	auto it_start = next(truck.jobs.begin(), min(job_id_1, job_id_2));
 	for(auto it = it_start; it != truck.jobs.end(); it++) {
 
-		list<tuple<int,int,int>>::iterator del;
-		int found = 0;
+		list<tuple<long,long,long>>::iterator del;
+		long found = 0;
 
 		for(auto& d : docks_try) {
 
@@ -252,29 +252,29 @@ void delete_jobs_docks(vector< dock >& docks_try, truck& truck, int& truck_id, i
 
 }
 
-void create_new_jobs(vector< dock >& docks_try, truck& truck, dist_mat& dist, int& truck_id, int& job_id_1 ,int& job_id_2, int& t_fix_load, int& t_load) {
+void create_new_jobs(vector< dock >& docks_try, truck& truck, dist_mat& dist, long& truck_id, long& job_id_1 ,long& job_id_2, long& t_fix_load, long& t_load) {
 
 	auto it_start = next(truck.jobs.begin(), min(job_id_1, job_id_2));
 
 	for(auto &job = it_start; job!=truck.jobs.end(); job++) {
 
-		int loading_time = t_fix_load + t_load*get<3>(*job);
-		int start_time;
+		long loading_time = t_fix_load + t_load*get<3>(*job);
+		long start_time;
 		if(job == truck.jobs.begin())
 			start_time = 0;
 		else
 			start_time = get<1>(*prev(job,1));
 
-		int is_dock_free = 0;
-		int earliest_dock = -1;
+		long is_dock_free = 0;
+		long earliest_dock = -1;
 
-		for(int d_ind = 0; d_ind < (int)docks_try.size(); d_ind++){
+		for(long d_ind = 0; d_ind < (long)docks_try.size(); d_ind++){
 
 			if( docks_try[d_ind].is_free(start_time, start_time+loading_time) ){
 				//				docks_try[d].jobs.insert(next(it_dock_job,1), make_tuple(time_wind_begin,time_wind_begin+loading_time,truck_id));
 
 				docks_try[d_ind].jobs.push_back(make_tuple(start_time, start_time+loading_time, truck_id));
-				docks_try[d_ind].jobs.sort([](tuple<int,int,int> a,tuple<int,int,int> b) {return get<0>(a) < get<0>(b);});
+				docks_try[d_ind].jobs.sort([](tuple<long,long,long> a,tuple<long,long,long> b) {return get<0>(a) < get<0>(b);});
 
 				get<0>(*job) = start_time;
 				get<1>(*job) = start_time + 2*loading_time + 2*dist(0, get<2>(*job));
@@ -284,18 +284,18 @@ void create_new_jobs(vector< dock >& docks_try, truck& truck, dist_mat& dist, in
 		}
 
 		if(!is_dock_free) {
-			for(int d = 0; d < (int)docks_try.size(); d++) {
+			for(long d = 0; d < (long)docks_try.size(); d++) {
 				for(auto it_dock_job = docks_try[d].jobs.begin(); it_dock_job != prev(docks_try[d].jobs.end(),1); it_dock_job++ ) {
 
-					int time_wind_begin = get<1>(*it_dock_job);
-					int time_wind_end = get<0>(*next(it_dock_job,1));
+					long time_wind_begin = get<1>(*it_dock_job);
+					long time_wind_end = get<0>(*next(it_dock_job,1));
 
 					if(start_time <= time_wind_begin) {
 						if(loading_time <= (time_wind_end-time_wind_begin)) {
 							//							docks_try[d].jobs.insert(next(it_dock_job,1), make_tuple(time_wind_begin,time_wind_begin+loading_time,truck_id));
 
 							docks_try[d].jobs.emplace_back(make_tuple(time_wind_begin, time_wind_begin+loading_time, truck_id));
-							docks_try[d].jobs.sort([](tuple<int,int,int> a,tuple<int,int,int> b) {return get<0>(a) < get<0>(b);});
+							docks_try[d].jobs.sort([](tuple<long,long,long> a,tuple<long,long,long> b) {return get<0>(a) < get<0>(b);});
 
 							get<0>(*job) = time_wind_begin;
 							get<1>(*job) = time_wind_begin + 2*loading_time + 2*dist(0,get<2>(*job));
@@ -305,7 +305,7 @@ void create_new_jobs(vector< dock >& docks_try, truck& truck, dist_mat& dist, in
 					}
 					//					else if((time_wind_end - loading_time) >= start_time && time_wind_begin <= start_time){
 					//						docks_try[d].jobs.emplace_back(make_tuple(start_time, start_time+loading_time, truck_id));
-					//						docks_try[d].jobs.sort([](tuple<int,int,int> a,tuple<int,int,int> b) {return get<0>(a) < get<0>(b);});
+					//						docks_try[d].jobs.sort([](tuple<long,long,long> a,tuple<long,long,long> b) {return get<0>(a) < get<0>(b);});
 					//
 					//						get<0>(*job) = start_time;
 					//						get<1>(*job) = start_time + 2*loading_time + 2*dist(0,get<2>(*job));
@@ -321,7 +321,7 @@ void create_new_jobs(vector< dock >& docks_try, truck& truck, dist_mat& dist, in
 		if(!is_dock_free && earliest_dock < 0) {
 			earliest_dock = 0;
 
-			for(int d = 0; d < (int)docks_try.size(); d++) {
+			for(long d = 0; d < (long)docks_try.size(); d++) {
 				if( get<1>(docks_try[d].jobs.back()) < get<1>(docks_try[earliest_dock].jobs.back()) ){
 					earliest_dock = d;
 				}
@@ -331,7 +331,7 @@ void create_new_jobs(vector< dock >& docks_try, truck& truck, dist_mat& dist, in
 			//			docks_try[earliest_dock].jobs.insert(docks_try[earliest_dock].jobs.end(), make_tuple(t1,t1+loading_time,truck_id));
 
 			docks_try[earliest_dock].jobs.emplace_back(make_tuple(start_time, start_time+loading_time, truck_id));
-			//			docks_try[earliest_dock].jobs.sort([](tuple<int,int,int> a,tuple<int,int,int> b) {return get<0>(a) < get<0>(b);});
+			//			docks_try[earliest_dock].jobs.sort([](tuple<long,long,long> a,tuple<long,long,long> b) {return get<0>(a) < get<0>(b);});
 
 			get<0>(*job) = start_time;
 			get<1>(*job) = start_time + 2*loading_time + 2*dist(0, get<2>(*job));
@@ -341,8 +341,8 @@ void create_new_jobs(vector< dock >& docks_try, truck& truck, dist_mat& dist, in
 
 bool accept_solution(vector< truck >& trucks, vector< truck >& trucks_try){
 
-	int score_old = evaluate_solution(trucks);
-	int score_new = evaluate_solution(trucks_try);
+	long score_old = evaluate_solution(trucks);
+	long score_new = evaluate_solution(trucks_try);
 
 	if(score_new <= score_old){
 		return true;
@@ -352,16 +352,16 @@ bool accept_solution(vector< truck >& trucks, vector< truck >& trucks_try){
 	}
 }
 
-bool opt_2(vector< dock >& docks, dist_mat& dist, vector< truck >& trucks, int& t_load, int& t_fix_load){
+bool opt_2(vector< dock >& docks, dist_mat& dist, vector< truck >& trucks, long& t_load, long& t_fix_load){
 
 	//-----Version of 2-opt for the Scheduling Problem at the Docks-----
 
 	//-----Select random truck and 2 random jobs of that truck-----
-	int truck_id = rand() % trucks.size();
+	long truck_id = rand() % trucks.size();
 	auto& truck = trucks[truck_id];
 
-	int job_id_1 = rand() % truck.jobs.size();
-	int job_id_2 = rand() % truck.jobs.size();
+	long job_id_1 = rand() % truck.jobs.size();
+	long job_id_2 = rand() % truck.jobs.size();
 
 	if (truck.jobs.size() > 1) {
 		if (job_id_1 == job_id_2) {
@@ -381,7 +381,7 @@ bool opt_2(vector< dock >& docks, dist_mat& dist, vector< truck >& trucks, int& 
 	auto it_start = next(truck.jobs.begin(), min(job_id_1, job_id_2));
 	auto it_end = next(truck.jobs.begin(), max(job_id_1, job_id_2));
 
-	for(int i = 0 ; i < (max(job_id_1, job_id_2)- min(job_id_1, job_id_2) + 1)/2; i++) {
+	for(long i = 0 ; i < (max(job_id_1, job_id_2)- min(job_id_1, job_id_2) + 1)/2; i++) {
 
 		auto temp_job = *it_start;
 		*it_start = *it_end;
@@ -394,38 +394,38 @@ bool opt_2(vector< dock >& docks, dist_mat& dist, vector< truck >& trucks, int& 
 	//-----Delete all jobs of truck_id starting from it_start in all docks-----
 	delete_jobs_docks(docks, truck, truck_id, job_id_1, job_id_2);
 
-	//-----make new dock-jobs by inserting the reversed list of jobs on the truck_id into the docks-----
+	//-----make new dock-jobs by inserting the reversed list of jobs on the truck_id longo the docks-----
 	create_new_jobs(docks, truck, dist, truck_id, job_id_1, job_id_2, t_fix_load, t_load);
 
-//	//-----Evaluate the solution and accept everything that does not make the solution worse-----
+	//	//-----Evaluate the solution and accept everything that does not make the solution worse-----
 	return true;
-//	auto trucks_temp = trucks;
-//	trucks_temp[truck_id] = truck;
-//
-//	int score_old = evaluate_solution(trucks);
-//	int score_new = evaluate_solution(trucks_temp);
-//
-//	if(score_new <= score_old) {
-//		docks = docks;
-//		trucks = trucks_temp;
-//		//		for(auto& d : docks)
-//		//			d.jobs.sort([](tuple<int,int,int> a,tuple<int,int,int> b) {return get<0>(a) < get<0>(b);});
-//
-//		return true;
-//	}
-//	else {
-////		trucks[truck_id] = truck_temp;
-//		return false;
-//	}
+	//	auto trucks_temp = trucks;
+	//	trucks_temp[truck_id] = truck;
+	//
+	//	long score_old = evaluate_solution(trucks);
+	//	long score_new = evaluate_solution(trucks_temp);
+	//
+	//	if(score_new <= score_old) {
+	//		docks = docks;
+	//		trucks = trucks_temp;
+	//		//		for(auto& d : docks)
+	//		//			d.jobs.sort([](tuple<long,long,long> a,tuple<long,long,long> b) {return get<0>(a) < get<0>(b);});
+	//
+	//		return true;
+	//	}
+	//	else {
+	////		trucks[truck_id] = truck_temp;
+	//		return false;
+	//	}
 };
 
-bool swap_2jobs_difftrucks(vector< dock >& docks, dist_mat& dist, vector< truck >& trucks, int& t_load, int& t_fix_load){
+bool swap_2jobs_difftrucks(vector< dock >& docks, dist_mat& dist, vector< truck >& trucks, long& t_load, long& t_fix_load){
 
 	//-----Swap 2 jobs for the Scheduling Problem at the Docks-----
 
 	//-----Select random truck and 2 random jobs of that truck-----
-	int truck_id_1 = rand() % trucks.size();
-	int truck_id_2 = rand() % trucks.size();
+	long truck_id_1 = rand() % trucks.size();
+	long truck_id_2 = rand() % trucks.size();
 
 	while(truck_id_1 == truck_id_2){
 		truck_id_2=rand() % trucks.size();
@@ -434,8 +434,8 @@ bool swap_2jobs_difftrucks(vector< dock >& docks, dist_mat& dist, vector< truck 
 	auto& truck_1 = trucks[truck_id_1];
 	auto& truck_2 = trucks[truck_id_2];
 
-	int job_id_1 = rand() % truck_1.jobs.size();
-	int job_id_2 = rand() % truck_2.jobs.size();
+	long job_id_1 = rand() % truck_1.jobs.size();
+	long job_id_2 = rand() % truck_2.jobs.size();
 
 	if(truck_1.jobs.size() == 0 || truck_2.jobs.size() == 0){
 		return false;
@@ -461,35 +461,35 @@ bool swap_2jobs_difftrucks(vector< dock >& docks, dist_mat& dist, vector< truck 
 	//-----Evaluate the solution and accept everything that does not make the solution worse-----
 	return true;
 
-//	auto truck_temp_1 = trucks[truck_id_1];
-//	auto truck_temp_2 = trucks[truck_id_2];
-//	int score_old = evaluate_solution(trucks);
-//
-//	trucks[truck_id_1] = truck_1;
-//	trucks[truck_id_2] = truck_2;
-//	int score_new = evaluate_solution(trucks);
-//
-//	if(score_new <= score_old) {
-//		docks = docks;
-//		//		for(auto& d : docks)
-//		//			d.jobs.sort([](tuple<int,int,int> a,tuple<int,int,int> b) {return get<0>(a) < get<0>(b);});
-//
-//		return true;
-//	}
-//	else {
-//		trucks[truck_id_1] = truck_temp_1;
-//		trucks[truck_id_2] = truck_temp_2;
-//		return false;
-//	}
+	//	auto truck_temp_1 = trucks[truck_id_1];
+	//	auto truck_temp_2 = trucks[truck_id_2];
+	//	long score_old = evaluate_solution(trucks);
+	//
+	//	trucks[truck_id_1] = truck_1;
+	//	trucks[truck_id_2] = truck_2;
+	//	long score_new = evaluate_solution(trucks);
+	//
+	//	if(score_new <= score_old) {
+	//		docks = docks;
+	//		//		for(auto& d : docks)
+	//		//			d.jobs.sort([](tuple<long,long,long> a,tuple<long,long,long> b) {return get<0>(a) < get<0>(b);});
+	//
+	//		return true;
+	//	}
+	//	else {
+	//		trucks[truck_id_1] = truck_temp_1;
+	//		trucks[truck_id_2] = truck_temp_2;
+	//		return false;
+	//	}
 };
 
-bool move_job(vector< dock >& docks, dist_mat& dist, vector< truck >& trucks, int& t_load, int& t_fix_load){
+bool move_job(vector< dock >& docks, dist_mat& dist, vector< truck >& trucks, long& t_load, long& t_fix_load){
 
 	//-----Move job to a different Truck-----
 
 	//-----Select random truck and 2 random jobs of that truck-----
-	int truck_id_1 = rand() % trucks.size();
-	int truck_id_2 = rand() % trucks.size();
+	long truck_id_1 = rand() % trucks.size();
+	long truck_id_2 = rand() % trucks.size();
 
 	while(truck_id_1 == truck_id_2){
 		truck_id_2=rand() % trucks.size();
@@ -498,7 +498,7 @@ bool move_job(vector< dock >& docks, dist_mat& dist, vector< truck >& trucks, in
 	auto& truck_1 = trucks[truck_id_1];
 	auto& truck_2 = trucks[truck_id_2];
 
-	int job_id_1 = rand() % truck_1.jobs.size();
+	long job_id_1 = rand() % truck_1.jobs.size();
 
 	if(truck_1.jobs.size() == 0 || truck_2.jobs.size() == 0){
 		return false;
@@ -507,7 +507,7 @@ bool move_job(vector< dock >& docks, dist_mat& dist, vector< truck >& trucks, in
 		return false;
 	}
 
-//	cout << "truck_id1: " << truck_id_1 << "  truck_id2: " << truck_id_2 << "  job_id1: " << job_id_1 << endl;
+	//	cout << "truck_id1: " << truck_id_1 << "  truck_id2: " << truck_id_2 << "  job_id1: " << job_id_1 << endl;
 
 	//-----delete the job + succeeding jobs from docks_try-----
 	delete_jobs_docks(docks, truck_1, truck_id_1, job_id_1, job_id_1);
@@ -521,46 +521,46 @@ bool move_job(vector< dock >& docks, dist_mat& dist, vector< truck >& trucks, in
 	create_new_jobs(docks, truck_1, dist, truck_id_1, job_id_1, job_id_1, t_fix_load, t_load);
 
 	//-----Create a new job for the moved job on truck_2-----
-	int job_id_2 = truck_2.jobs.size() - 1;
+	long job_id_2 = truck_2.jobs.size() - 1;
 	create_new_jobs(docks, truck_2, dist, truck_id_2, job_id_2, job_id_2, t_fix_load, t_load);
 
 
 	//-----Evaluate the solution and accept everything that does not make the solution worse-----
 	return true;
 
-//	auto truck_temp_1 = trucks[truck_id_1];
-//	auto truck_temp_2 = trucks[truck_id_2];
-//	int score_old = evaluate_solution(trucks);
-//
-//	trucks[truck_id_1] = truck_1;
-//	trucks[truck_id_2] = truck_2;
-//	int score_new = evaluate_solution(trucks);
-//
-//	if(score_new <= score_old) {
-//		docks = docks;
-//		//		for(auto& d : docks)
-//		//			d.jobs.sort([](tuple<int,int,int> a,tuple<int,int,int> b) {return get<0>(a) < get<0>(b);});
-//
-//		return true;
-//	}
-//	else {
-//		trucks[truck_id_1] = truck_temp_1;
-//		trucks[truck_id_2] = truck_temp_2;
-//		return false;
-//	}
+	//	auto truck_temp_1 = trucks[truck_id_1];
+	//	auto truck_temp_2 = trucks[truck_id_2];
+	//	long score_old = evaluate_solution(trucks);
+	//
+	//	trucks[truck_id_1] = truck_1;
+	//	trucks[truck_id_2] = truck_2;
+	//	long score_new = evaluate_solution(trucks);
+	//
+	//	if(score_new <= score_old) {
+	//		docks = docks;
+	//		//		for(auto& d : docks)
+	//		//			d.jobs.sort([](tuple<long,long,long> a,tuple<long,long,long> b) {return get<0>(a) < get<0>(b);});
+	//
+	//		return true;
+	//	}
+	//	else {
+	//		trucks[truck_id_1] = truck_temp_1;
+	//		trucks[truck_id_2] = truck_temp_2;
+	//		return false;
+	//	}
 };
 
-bool swap_njobs_difftrucks(vector< dock >& docks, dist_mat& dist, vector< truck >& trucks, int& t_load, int& t_fix_load, int& n){
+bool swap_njobs_difftrucks(vector< dock >& docks, dist_mat& dist, vector< truck >& trucks, long& t_load, long& t_fix_load, long& n){
 
 	//-----Performance Improvement?: Create vector for random-jobs at different trucks and delete / create in one step-----
 	//-----is limited to #of total amount of jobs though!-----
 
 	//-----Swap n jobs for the Scheduling Problem at the Docks-----
-	int truck_id_1 = rand() % trucks.size();
+	long truck_id_1 = rand() % trucks.size();
 
-	for(int i = 0; i < n; i++){
+	for(long i = 0; i < n; i++){
 		//-----Select random truck and 2 random jobs of those trucks-----
-		int truck_id_2 = rand() % trucks.size();
+		long truck_id_2 = rand() % trucks.size();
 
 		while(truck_id_1 == truck_id_2){
 			truck_id_2=rand() % trucks.size();
@@ -569,14 +569,14 @@ bool swap_njobs_difftrucks(vector< dock >& docks, dist_mat& dist, vector< truck 
 		auto& truck_1 = trucks[truck_id_1];
 		auto& truck_2 = trucks[truck_id_2];
 
-		int job_id_1 = rand() % truck_1.jobs.size();
-		int job_id_2 = rand() % truck_2.jobs.size();
+		long job_id_1 = rand() % truck_1.jobs.size();
+		long job_id_2 = rand() % truck_2.jobs.size();
 
 		if(truck_1.jobs.size() == 0 || truck_2.jobs.size() == 0){
 			return false;
 		}
 
-//		cout << "truck_id1: " << truck_id_1 << "  truck_id2: " << truck_id_2 << "  job_id1: " << job_id_1 << "  job_id2: " << job_id_2 << endl;
+		//		cout << "truck_id1: " << truck_id_1 << "  truck_id2: " << truck_id_2 << "  job_id1: " << job_id_1 << "  job_id2: " << job_id_2 << endl;
 
 		//-----delete the 2 jobs + succeeding jobs from docks_try-----
 
@@ -599,16 +599,16 @@ bool swap_njobs_difftrucks(vector< dock >& docks, dist_mat& dist, vector< truck 
 	return true;
 };
 
-bool swap_2job_sametruck(vector< dock >& docks, dist_mat& dist, vector< truck >& trucks, int& t_load, int& t_fix_load){
+bool swap_2job_sametruck(vector< dock >& docks, dist_mat& dist, vector< truck >& trucks, long& t_load, long& t_fix_load){
 
 	//-----Swap_2 on the same Truck for the Scheduling Problem at the Docks-----
 
 	//-----Select random truck and 2 random jobs of that truck-----
-	int truck_id = rand() % trucks.size();
+	long truck_id = rand() % trucks.size();
 	auto& truck = trucks[truck_id];
 
-	int job_id_1 = rand() % truck.jobs.size();
-	int job_id_2 = rand() % truck.jobs.size();
+	long job_id_1 = rand() % truck.jobs.size();
+	long job_id_2 = rand() % truck.jobs.size();
 
 	if (truck.jobs.size() > 1) {
 		if (job_id_1 == job_id_2) {
@@ -635,26 +635,26 @@ bool swap_2job_sametruck(vector< dock >& docks, dist_mat& dist, vector< truck >&
 	//-----Delete all jobs of truck_id starting from it_start in all docks-----
 	delete_jobs_docks(docks, truck, truck_id, job_id_1, job_id_2);
 
-	//-----make new dock-jobs by inserting the reversed list of jobs on the truck_id into the docks-----
+	//-----make new dock-jobs by inserting the reversed list of jobs on the truck_id longo the docks-----
 	create_new_jobs(docks, truck, dist, truck_id, job_id_1, job_id_2, t_fix_load, t_load);
 
-//	//-----Evaluate the solution and accept everything that does not make the solution worse-----
+	//	//-----Evaluate the solution and accept everything that does not make the solution worse-----
 	return true;
 };
 
-bool latest_returntime(int& time, int& route_time, int& wait_time, list< vector<long> >& subsolution, int& t_unload, int& t_fix_unload, vector< store >& stores, dist_mat& dist){
+bool latest_returntime(long& time, long& route_time, long& wait_time, list< vector<long> >& subsolution, long& t_unload, long& t_fix_unload, vector< store >& stores, dist_mat& dist){
 
 	//-----Calculate Latest Starting-Time-----
 
-	if((int)subsolution.size() == 0){
+	if((long)subsolution.size() == 0){
 		time = 0;
 		return true;
 	}
 
-	int latest_time = stores[(*next(subsolution.begin(), subsolution.size()-1)).at(0)].service_time.second;
-	int unload_time = 0;
+	long latest_time = stores[(*next(subsolution.begin(), subsolution.size()-1)).at(0)].service_time.second;
+	long unload_time = 0;
 
-	for(int i = subsolution.size() - 1; i > 0; i--){
+	for(long i = subsolution.size() - 1; i > 0; i--){
 
 		unload_time = (*next(subsolution.begin(), i)).at(1) * t_unload + t_fix_unload;
 		latest_time = min(latest_time, stores[(*next(subsolution.begin(),i)).at(0)].service_time.second);
@@ -682,7 +682,7 @@ bool latest_returntime(int& time, int& route_time, int& wait_time, list< vector<
 	wait_time = 0;
 
 	route_time = latest_time + dist(0, (*next(subsolution.begin(), 0)).at(0)) + unload_time;
-	for(int i = 1; i < (int)subsolution.size(); i++){
+	for(long i = 1; i < (long)subsolution.size(); i++){
 
 		route_time += dist((*next(subsolution.begin(), i-1)).at(0), (*next(subsolution.begin(), i)).at(0));
 
@@ -701,22 +701,22 @@ bool latest_returntime(int& time, int& route_time, int& wait_time, list< vector<
 	return true;
 }
 
-bool earliest_returntime(int& time, int& route_time, int& wait_time, list< vector<long> >& subsolution, int& t_unload, int& t_fix_unload, vector< store >& stores, dist_mat& dist){
+bool earliest_returntime(long& time, long& route_time, long& wait_time, list< vector<long> >& subsolution, long& t_unload, long& t_fix_unload, vector< store >& stores, dist_mat& dist){
 
 	//-----Calculate Earliest Starting-Time-----
 
-	if((int)subsolution.size() == 0){
+	if((long)subsolution.size() == 0){
 		time = 0;
 		return false;
 	}
 
-	int earliest_time = stores[(*subsolution.begin()).at(0)].service_time.first;
-	int unload_time = 0;
+	long earliest_time = stores[(*subsolution.begin()).at(0)].service_time.first;
+	long unload_time = 0;
 
 	unload_time = (*next(subsolution.begin(), 0)).at(1) * t_unload + t_fix_unload;
 	earliest_time += unload_time;
 
-	for(int i = 1; i < (int)subsolution.size(); i++){
+	for(long i = 1; i < (long)subsolution.size(); i++){
 
 		unload_time = (*next(subsolution.begin(), i)).at(1) * t_unload + t_fix_unload;
 		earliest_time+= dist((*next(subsolution.begin(), i-1)).at(0), (*next(subsolution.begin(), i)).at(0));
@@ -732,7 +732,7 @@ bool earliest_returntime(int& time, int& route_time, int& wait_time, list< vecto
 	wait_time = 0;
 
 	route_time = earliest_time;
-	for(int i = (int)subsolution.size() - 1; i > 0; i--){
+	for(long i = (long)subsolution.size() - 1; i > 0; i--){
 
 		route_time -= dist((*next(subsolution.begin(), i-1)).at(0), (*next(subsolution.begin(), i)).at(0));
 
@@ -747,7 +747,7 @@ bool earliest_returntime(int& time, int& route_time, int& wait_time, list< vecto
 
 	route_time -= dist((*prev(subsolution.begin(), 0)).at(0), 0);
 
-	int earliest_time_tmp = earliest_time;
+	long earliest_time_tmp = earliest_time;
 	earliest_time = route_time;
 
 	route_time = earliest_time_tmp - route_time + dist((*prev(subsolution.end(), 1)).at(0), 0) + (*prev(subsolution.end(), 1)).at(1) * t_unload + t_fix_unload;
@@ -756,7 +756,7 @@ bool earliest_returntime(int& time, int& route_time, int& wait_time, list< vecto
 	return true;
 }
 
-bool evaluate_subroute(int& latest_time, int& route_time, int& wait_time, list< vector<long> >& subsolution, int& t_unload, int& t_fix_unload, vector< store >& stores, dist_mat& dist){
+bool evaluate_subroute(long& latest_time, long& route_time, long& wait_time, list< vector<long> >& subsolution, long& t_unload, long& t_fix_unload, vector< store >& stores, dist_mat& dist){
 
 	latest_time = 0;
 	route_time = 0;
@@ -769,271 +769,218 @@ bool evaluate_subroute(int& latest_time, int& route_time, int& wait_time, list< 
 	return latest_returntime(latest_time, route_time, wait_time, subsolution, t_unload, t_fix_unload, stores, dist);
 }
 
-long updateDemand(list< long >& solution, vector< store >& stores, vector< truck >& trucks, vector<long> & route_remaining_loads,long &total_demand) {
 
-	total_demand=0;
+//
+//void splitRoutes(list<long>& solution, vector<list<long> >& routes) {
+//	for(auto it = solution.begin(); it != prev(solution.end(),1);it++) {
+//		if(*it==0) {
+//			routes.resize(routes.size()+1);
+//		}
+//		else {
+//			routes[routes.size()-1].emplace_back(*it);
+//		}
+//	}
+//}
+//
+//void updateRoutes(list<long>& solution,vector<long>& it_routes_size, vector< list<long>::iterator >& it_routes) {
+//	long route_size = 0;
+//	it_routes_size.clear();
+//	it_routes.clear();
+//	for(auto it = solution.begin(); it != solution.end(); it++, route_size++){
+//		if(*it == 0){
+//			it_routes.push_back(it);
+//			it_routes_size.push_back(route_size);
+//			route_size = 0;
+//		}
+//	}
+//	it_routes_size.erase(it_routes_size.begin());
+//}
+//
+
+long updateDemand(vector< list< vector<long> > >& solution_day, long& day, vector< store >& stores, vector< truck >& trucks, vector<long> & route_remaining_loads,long &total_demand) {
+
+	total_demand = 0;
 	route_remaining_loads.clear();
-	long i=0;
 	for(auto& s: stores) {
-		s.cur_demand = s.tot_demand;
-		total_demand +=s.tot_demand;
+		s.cur_demand[day] = s.tot_demand[day];
+		total_demand +=s.tot_demand[day];
 		//		cout << i << ":" << s.cur_demand << " ";
 		//		i++;
 	}
-	i=-1;
 	//	cout << endl;
 
 	long reduce =0;
 
-	for(auto r : solution) {
-		//		cout << r << ":" << stores[r].cur_demand << " ";
-		if(r == 0) {
-			i++;
-			trucks[0].load = trucks[0].capacity;
-			route_remaining_loads.push_back(trucks[0].load);
-			//			cout << " " <<  route_remaining_loads[i-1] << endl;
-		}
-		else {
-			reduce = min(trucks[0].load,stores[r].cur_demand);
-			stores[r].cur_demand -= reduce;
-			trucks[0].load -= reduce;
-			total_demand -= reduce;
-			route_remaining_loads[route_remaining_loads.size()-1]-= reduce;
+	for(auto& route : solution_day) {
+		trucks[0].load = trucks[0].capacity;
+		route_remaining_loads.push_back(trucks[0].load);
+
+		auto stop = route.begin();
+
+		while(stop != route.end()){
+			//		cout << r << ":" << stores[r].cur_demand << " ";
+			reduce = min(trucks[0].load,stores[(*stop)[0]].cur_demand[day]);
+
+			//-----Delete Store from Route if no demand is left-----
+			//-----Otherwise update demand-----
+			if(reduce == 0){
+				stop = route.erase(stop);
+			}
+			else{
+				(*stop)[1] = reduce;
+				stores[(*stop)[0]].cur_demand[day] -= reduce;
+				trucks[0].load -= reduce;
+				total_demand -= reduce;
+				route_remaining_loads[route_remaining_loads.size()-1]-= reduce;
+
+				stop++;
+			}
 		}
 	}
-	route_remaining_loads.pop_back();
-	i=0;
+//	route_remaining_loads.pop_back();
 	//	for(auto& s: stores) {
 	//		cout << i << ":" << s.cur_demand << " ";
 	//		i++;
 	//	}
 	//	cout << endl;
 
+	//-----if total_demand > 0 the solution needs to be fixed-----
 	return total_demand;
 }
 
-void splitRoutes(list<long>& solution, vector<list<long> >& routes) {
-	for(auto it = solution.begin(); it != prev(solution.end(),1);it++) {
-		if(*it==0) {
-			routes.resize(routes.size()+1);
-		}
-		else {
-			routes[routes.size()-1].emplace_back(*it);
-		}
-	}
-}
+void fixSolutionConstrains(vector< list< vector<long> > >& solution_day,long& day, vector< store >& stores, vector< truck >& trucks, vector<long>& route_remaining_loads, long &total_demand) {
 
-void updateRoutes(list<long>& solution,vector<long>& it_routes_size, vector< list<long>::iterator >& it_routes) {
-	long route_size = 0;
-	it_routes_size.clear();
-	it_routes.clear();
-	for(auto it = solution.begin(); it != solution.end(); it++, route_size++){
-		if(*it == 0){
-			it_routes.push_back(it);
-			it_routes_size.push_back(route_size);
-			route_size = 0;
-		}
-	}
-	it_routes_size.erase(it_routes_size.begin());
-}
-
-void fixSolutionConstrains(list< long >& solution, vector< store >& stores, vector< truck >& trucks, vector<list<long>> &routes, vector<long>& route_remaining_loads, long &total_demand) {
-
-
-	//		for(auto r: routes) {
-	//			for(auto s: r) {
-	//				cout << s << " ";
-	//			}
-	//			cout << endl;
-	//		}
-	//	for(auto& s: stores) {
-	//		cout << i << ":" << s.cur_demand << " ";
-	//		i++;
-	//	}
-	//	cout << endl;
-
-	//----------- try random stuff
-
-	vector<tuple<long,store*>> sort_stores;
-	long s_id=0;
-	bool random_select = rand()%2;
-	for(auto it = stores.begin();it!=stores.end(); it++,s_id++ ){
-		sort_stores.push_back(make_tuple(s_id,&(*it)));
-	}
-	if(random_select)
-		random_shuffle(sort_stores.begin(),sort_stores.end());
+//
+//	//		for(auto r: routes) {
+//	//			for(auto s: r) {
+//	//				cout << s << " ";
+//	//			}
+//	//			cout << endl;
+//	//		}
+//	//	for(auto& s: stores) {
+//	//		cout << i << ":" << s.cur_demand << " ";
+//	//		i++;
+//	//	}
+//	//	cout << endl;
+//
+//	//----------- try random stuff
+//
+//	vector<tuple<long,store*>> sort_stores;
+//	long s_id=0;
+//	bool random_select = rand()%2;
+//	for(auto it = stores.begin();it!=stores.end(); it++,s_id++ ){
+//		sort_stores.push_back(make_tuple(s_id,&(*it)));
+//	}
+//	if(random_select)
+//		random_shuffle(sort_stores.begin(),sort_stores.end());
 
 	for(unsigned long i=0; i<route_remaining_loads.size();i++) {
+
 		if(route_remaining_loads[i]==0)
 			continue;
-		for(auto& s: sort_stores) {
-			if(get<1>(s)->cur_demand > 0 && ((rand()%2) ? route_remaining_loads[i] >0 : get<1>(s)->cur_demand <= route_remaining_loads[i])) { //
-				long reduce = min(route_remaining_loads[i],get<1>(s)->cur_demand);
-				get<1>(s)->cur_demand-=reduce;
+
+		for(auto& s: stores) {
+
+//			if(s.cur_demand[day] > 0 && ((rand()%2) ? route_remaining_loads[i] >0 : s.cur_demand[day] <= route_remaining_loads[i])) { //
+			if(s.cur_demand[day] > 0 && (s.cur_demand[day] <= route_remaining_loads[i])) { //
+				long reduce = min(route_remaining_loads[i],s.cur_demand[day]);
+				s.cur_demand[day] -= reduce;
 				route_remaining_loads[i] -= reduce;
 				total_demand -= reduce;
-				routes[i].emplace_back(get<0>(s));
+
+				solution_day[i].push_back({s.id, reduce});
 			}
 		}
 		if(total_demand==0)
 			break;
 	}
-	//	for(auto r: routes) {
-	//		for(auto s: r) {
-	//			cout << s << " ";
-	//		}
-	//		cout << endl;
-	//	}
-	//		for(auto r: routes) {
-	//			for(auto s: r) {
-	//				cout << s << " ";
-	//			}
-	//			cout << endl;
-	//		}
 
-	for(auto& s: stores) {
-		s.cur_demand = s.tot_demand;
-		total_demand+= s.tot_demand;
-	}
+	updateDemand(solution_day, day, stores, trucks, route_remaining_loads, total_demand);
 
-	for(auto& r: routes) {
-		trucks[0].load=trucks[0].capacity;
-		list<long>::iterator it;
-		for(it= r.begin();it!=r.end();it++) {
-			if(trucks[0].load==0)
-				break;
-			long reduce = min(trucks[0].load,stores[*it].cur_demand);
-			stores[*it].cur_demand -= reduce;
-			trucks[0].load -= reduce;
-			//			total_demand -= reduce;
-		}
-		r.erase(it,r.end());
-	}
-	//		for(auto r: routes) {
-	//			for(auto s: r) {
-	//				cout << s << " ";
-	//			}
-	//			cout << endl;
-	//		}
-	//	for(auto& s: stores) {
-	//		cout << i << ":" << s.cur_demand << " ";
-	//		i++;
-	//	}
-	//	cout << endl;
+	while(total_demand > 0) {
 
-	//	solution.clear();
-	//	for(auto& r : routes) {
-	//		solution.emplace_back(0);
-	//		for(auto& s: r) {
-	//			solution.emplace_back(s);
-	//		}
-	//	}
-	//	solution.emplace_back(0);
-
-	createSolutionFromRoutes(solution,routes);
-
-	updateDemand(solution,stores,trucks,route_remaining_loads,total_demand);
-	bool sort_in=false;
-	while(total_demand>0) {
-		sort_in=true;
-		list<long> new_route;
+		list<vector<long> > new_route;
 		trucks[0].load = trucks[0].capacity;
-		for(auto &s: sort_stores) {
+
+		for(auto &s: stores) {
 			if(trucks[0].load==0) {
 				continue;
 			}
 			else {
-				if(get<1>(s)->cur_demand > 0 && trucks[0].load >0) { // && s.cur_demand
-					long reduce = min(trucks[0].load,get<1>(s)->cur_demand );
-					get<1>(s)->cur_demand -=reduce;
+				if(s.cur_demand[day] > 0 && trucks[0].load >0) { // && s.cur_demand
+					long reduce = min(trucks[0].load, s.cur_demand[day]);
+					s.cur_demand[day] -= reduce;
 					trucks[0].load -= reduce;
 					total_demand -= reduce;
-					new_route.emplace_back(get<0>(s));
+					new_route.push_back({s.id, reduce});
 				}
 			}
-			s_id++;
 		}
-		if(new_route.size()>0) {
-			routes.push_back(new_route);
+		if(new_route.size() > 0) {
+			solution_day.push_back(new_route);
 		}
 	}
-	//		for(auto s: solution) {
-	//			cout << s << " ";
-	//		}
-	//		cout << endl;
-	if(sort_in) {
-		createSolutionFromRoutes(solution,routes);
-		//		solution.clear();
-		//		for(auto& r : routes) {
-		//			solution.emplace_back(0);
-		//			for(auto& s: r) {
-		//				solution.emplace_back(s);
-		//			}
-		//		}
-		//		solution.emplace_back(0);
-	}
-	//		for(auto s: solution) {
-	//			cout << s << " ";
-	//		}
-	//		cout << endl;
-
-	//	trucks[0].load = trucks[0].capacity;
-	//	for(long i=0;i<stores.size();i++) {
-	//		if(stores[i].cur_demand>0) {
-	//			auto it = solution.end();
-	//			do {
-	//				it--;
-	//			}while(*it != 0);
-	//			for(;it!=solution.end();i++) {
-	//
-	//			}
-	//
-	//
-	//		}
-	//
-	//	}
 }
 
-long checkSolution(list< vector<long> >& solution, vector< store >& stores, dist_mat& dist, vector< truck >& trucks, long &total_demand, bool fix, bool prlong=false) {
-	vector<long> route_remaining_loads;
+long checkSolution(vector< list< vector<long> > >& solution_day, long day, vector< store >& stores, dist_mat& dist, vector< truck >& trucks, long &total_demand, bool fix, bool prlong=false) {
 
-	updateDemand(solution,stores,trucks,route_remaining_loads,total_demand);
+	vector<long> route_remaining_loads;
+	updateDemand(solution_day, day, stores, trucks, route_remaining_loads, total_demand);
 
 	if(fix) {
 		while(total_demand > 0) {
-			vector<list<long> > routes;
-			splitRoutes(solution,routes);
-			//		for(auto v: routes) {
-			//			for(auto r : v) {
-			//				cout << r << " ";
-			//			}
-			//			cout << endl;
-			//		}
-			//		cout << endl;
 
-			fixSolutionConstrains(solution,stores,trucks,routes,route_remaining_loads,total_demand);
+			fixSolutionConstrains(solution_day, day, stores, trucks, route_remaining_loads, total_demand);
 			if(total_demand)
 				cout << "total demand >0" << endl;
 			if(prlong)
 				cout << "fixed" << " " << total_demand <<endl;
 		}
-		//		cout << "total demand: " << total_demand << " remaining loads: ";
-		//		for(auto r: route_remaining_loads) {
-		//			cout << r << " ";
-		//		}
-		//		cout << endl;
 	}
-
-	for(auto it=next(solution.begin(),1);it!=solution.end();it++) {
-		if(*it==*prev(it,1)) {
-			solution.erase(prev(it,1));
-		}
-	}
-
-
 
 	return 0;
 }
+
+//long checkSolution(list< vector<long> >& solution, vector< store >& stores, dist_mat& dist, vector< truck >& trucks, long &total_demand, bool fix, bool prlong=false) {
+//	vector<long> route_remaining_loads;
+//
+//	updateDemand(solution,stores,trucks,route_remaining_loads,total_demand);
+//
+//	if(fix) {
+//		while(total_demand > 0) {
+//			vector<list<long> > routes;
+//			splitRoutes(solution,routes);
+//			//		for(auto v: routes) {
+//			//			for(auto r : v) {
+//			//				cout << r << " ";
+//			//			}
+//			//			cout << endl;
+//			//		}
+//			//		cout << endl;
+//
+//			fixSolutionConstrains(solution,stores,trucks,routes,route_remaining_loads,total_demand);
+//			if(total_demand)
+//				cout << "total demand >0" << endl;
+//			if(prlong)
+//				cout << "fixed" << " " << total_demand <<endl;
+//		}
+//		//		cout << "total demand: " << total_demand << " remaining loads: ";
+//		//		for(auto r: route_remaining_loads) {
+//		//			cout << r << " ";
+//		//		}
+//		//		cout << endl;
+//	}
+//
+//	for(auto it=next(solution.begin(),1);it!=solution.end();it++) {
+//		if(*it==*prev(it,1)) {
+//			solution.erase(prev(it,1));
+//		}
+//	}
+//
+//
+//
+//	return 0;
+//}
 
 long routes_swap_2(list< vector<long> >& sol_1, list< vector<long> >& sol_2, vector< store >& stores, dist_mat& dist, vector< truck >& trucks, long& sw_1, long& sw_2){
 
@@ -1044,20 +991,15 @@ long routes_swap_2(list< vector<long> >& sol_1, list< vector<long> >& sol_2, vec
 	auto end_1 =  next(start_1, sol_1.size());
 	auto end_2 =  next(start_2, sol_2.size());
 
-//	long a = 1+rand() % (route_size_1-1);
-//	long b;
-//
-//	do {
-//		b = 1+rand() % (route_size_2-1);
-//	}
-//	while(start_1==start_2 && a==b && route_size_1>2 && route_size_2 >2);
-
-
-	//	if(a == 0)	a++;
-	//	if(a == route_size_1) a--;
-	//	if(b == 0) b++;
-	//	if(b == route_size_2) b--;
 	auto swap_1 = next(start_1, sw_1), swap_2 = next(start_2, sw_2);
+
+	auto is_swap_1 = [&](vector<long> swap){ return (swap[0] == (*swap_1)[0]);};
+	auto is_swap_2 = [&](vector<long> swap){ return (swap[0] == (*swap_2)[0]);};
+
+	//	if(is_swap_1(swap_2)){
+	//		cout << "is swap1" << endl;
+	//	}
+
 
 	//-----Swap if Route 1 & 2 are the same-----
 	if(start_1 == start_2) {
@@ -1068,21 +1010,21 @@ long routes_swap_2(list< vector<long> >& sol_1, list< vector<long> >& sol_2, vec
 	else {
 		//-----Check if Store from Route 1 is already in Route 2 and vice versa-----
 		//-----and swap Demands accordingly-----
-		if(end_2 == find(start_2,end_2,*swap_1) && end_1 == find(start_1,end_1,*swap_2)) {
+		if(end_2 == find_if(start_2,end_2, is_swap_1) && end_1 == find_if(start_1,end_1, is_swap_2)){
 			auto temp = *swap_1;
 			*swap_1 = *swap_2;
 			*swap_2 = temp;
 		}
-		else if(end_1!=find(start_1,end_1,*swap_2) && end_2==find(start_2,end_2,*swap_1)) {
-			int demand_2 = *swap_2[1];
-			(*find(start_1,end_1,*swap_2))[1]+=demand_2;
+		else if(end_1!=find_if(start_1,end_1, is_swap_2) && end_2==find_if(start_2,end_2, is_swap_1)) {
+			long demand_2 = (*swap_2)[1];
+			(*find_if(start_1,end_1, is_swap_2))[1]+=demand_2;
 			*swap_2 = *swap_1;
 
 			sol_1.erase(swap_1);
 		}
-		else if(end_1==find(start_1,end_1,*swap_2) && end_2!=find(start_2,end_2,*swap_1)) {
-			int demand_1 = *swap_1[1];
-			(*find(start_2,end_2,*swap_1))[1]+=demand_1;
+		else if(end_1==find_if(start_1,end_1, is_swap_2) && end_2!=find_if(start_2,end_2, is_swap_1)) {
+			long demand_1 = (*swap_1)[1];
+			(*find_if(start_2,end_2, is_swap_1))[1]+=demand_1;
 			*swap_1 = *swap_2;
 
 			sol_2.erase(swap_2);
@@ -1091,10 +1033,21 @@ long routes_swap_2(list< vector<long> >& sol_1, list< vector<long> >& sol_2, vec
 
 	long total_demand;
 
-	checkSolution(solution,stores,dist,trucks,total_demand,true);
+	//	checkSolution(solution,stores,dist,trucks,total_demand,true);
 
 	return 1;
 }
 
+long evaluate_route_scores(vector < vector< long > > route_scores_day){
+
+	long score = 0;
+
+	for(unsigned long i = 0; i < route_scores_day.size(); i++){
+		//-----take route time for score-----
+		score += route_scores_day[i][2];
+	}
+
+	return score;
+}
 
 #endif /* METAHEURISTICS_HPP_ */

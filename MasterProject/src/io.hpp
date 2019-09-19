@@ -59,13 +59,13 @@ void read_csv_demand(string& file,vector< tuple<string,string,string,tuple<strin
 
 }
 
-void read_csv_demand_multipleDays(string& file,vector < vector< tuple<string,string,string,tuple<string,string> > > >& demands, int& numb_days){
+void read_csv_demand_multipleDays(string& file,vector < vector< tuple<string,string,string,tuple<string,string> > > >& demands, long& numb_days){
 	ifstream in;
 	in.open(file);
 	string line;
 
-	int first_day = 2;
-	int i = 1;
+	long first_day = 2;
+	long i = 1;
 	getline(in,line);
 
 	while(in.good()){
@@ -177,7 +177,7 @@ void read_csv_servicetimes(string& file, vector<tuple<string, string, string, st
 		cout << get<0>(d) << " " << get<1>(d) << " " << get<2>(d) << " " << get<3>(d) << " "  << endl;
 }
 
-void print_docks(vector< dock >& docks){
+void prlong_docks(vector< dock >& docks){
 
 	cout << endl << endl << "Mathematica Output: " << endl;
 
@@ -214,7 +214,7 @@ void print_docks(vector< dock >& docks){
 	cout << "}" << endl;
 }
 
-void print_docks_mathematicaLabel(vector< dock >& docks){
+void prlong_docks_mathematicaLabel(vector< dock >& docks){
 
 	cout << endl << endl << "Mathematica Output for Docks with Labels: " << endl;
 
@@ -230,8 +230,8 @@ void print_docks_mathematicaLabel(vector< dock >& docks){
 
 		for(auto it = (*i).jobs.begin(); it != prev((*i).jobs.end(), 1); it++){
 
-			int d_first = get<1>(*it) - get<0>(*it);
-			int d_break = get<0>( *next(it, 1) ) - get<1>(*it);
+			long d_first = get<1>(*it) - get<0>(*it);
+			long d_break = get<0>( *next(it, 1) ) - get<1>(*it);
 
 			cout << "Style[Labeled[" << d_first << ", Style[\"Truck " << get<2>(*it)+1 << "\", Black, 12], Center], ColorData[\"BrightBands\"," << (double)get<2>(*it)/10.0 << "]]";
 			cout << "," ;
@@ -240,7 +240,7 @@ void print_docks_mathematicaLabel(vector< dock >& docks){
 
 		}
 
-		int d_last = get<1>(*prev((*i).jobs.end(), 1)) - get<0>(*prev((*i).jobs.end(), 1));
+		long d_last = get<1>(*prev((*i).jobs.end(), 1)) - get<0>(*prev((*i).jobs.end(), 1));
 
 		cout << "Style[Labeled[" << d_last << ", Style[\"Truck " << get<2>(*prev((*i).jobs.end(), 1))+1 << "\", Black, 12], Center], ColorData[\"BrightBands\"," << get<2>(*prev((*i).jobs.end(), 1))/10.0 << "]]";
 
@@ -252,7 +252,7 @@ void print_docks_mathematicaLabel(vector< dock >& docks){
 	cout << "}" << endl;
 }
 
-void print_trucks_mathematicaLabel(vector< truck >& trucks){
+void prlong_trucks_mathematicaLabel(vector< truck >& trucks){
 
 	cout << endl << endl << "Mathematica Output for Trucks with Labels: " << endl;
 
@@ -269,15 +269,15 @@ void print_trucks_mathematicaLabel(vector< truck >& trucks){
 
 		for(auto it = (*i).jobs.begin(); it != prev((*i).jobs.end(), 1); it++){
 
-			int d_first = get<1>(*it) - get<0>(*it);
-			int d_break = get<0>( *next(it, 1) ) - get<1>(*it);
+			long d_first = get<1>(*it) - get<0>(*it);
+			long d_break = get<0>( *next(it, 1) ) - get<1>(*it);
 
 			cout << "Style[Labeled[" << d_first << ", Style[\"Job " << get<2>(*it) << "\", Black, 12], Center], Lighter[ColorData[\"Rainbow\"," << (double)get<2>(*it)/10.0 << "]]]";
 			cout << "," ;
 			cout << d_break;
 			cout << ",";
 		}
-		int d_last = get<1>(*prev((*i).jobs.end(), 1)) - get<0>(*prev((*i).jobs.end(), 1));
+		long d_last = get<1>(*prev((*i).jobs.end(), 1)) - get<0>(*prev((*i).jobs.end(), 1));
 
 		cout << "Style[Labeled[" << d_last << ", Style[\"Job " << get<2>(*prev((*i).jobs.end(), 1)) << "\", Black, 12], Center], Lighter[ColorData[\"Rainbow\"," << get<2>(*prev((*i).jobs.end(), 1))/10.0 << "]]]";
 
