@@ -139,10 +139,28 @@ public:
 
 class job{
 public:
-	long earliest_time, latest_time, route_time, wait_time, dock_id, truck_id, job_id;
+	long earliest_time, latest_time, route_time, wait_time, dock_id, truck_id, job_id, load, loading_time, job_dura;
 
 	job(){
-		earliest_time = latest_time = route_time = wait_time = dock_id = truck_id = job_id = -1;
+		earliest_time = latest_time = route_time = wait_time = dock_id = truck_id = job_id = load = loading_time = job_dura = -1;
+	}
+
+	job(long earliest_time_, long latest_time_, long route_time_, long wait_time_, long dock_id_, long truck_id_, long job_id_, long load_){
+		earliest_time = earliest_time_;
+		latest_time = latest_time_;
+		route_time = route_time_;
+		wait_time = wait_time_;
+		dock_id = dock_id_;
+		truck_id = truck_id_;
+		job_id = job_id_;
+		load = load_;
+		loading_time = -1;
+		job_dura = -1;
+	}
+
+	void calc_loading_t(long t_load, long t_fix_load){
+		loading_time = load * t_load + t_fix_load;
+		job_dura = loading_time + route_time;
 	}
 };
 

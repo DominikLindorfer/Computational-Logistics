@@ -120,84 +120,82 @@ void build_nn_mat(dist_mat& dist, vector<vector< tuple <long, long>>>& nn_mat, v
 
 }
 
-//void initial_solution_A(vector< dock >& docks, vector< store >& stores, dist_mat& dist, vector< truck >& trucks, long& t_load, long& t_fix_load){
-//
-//	long n_stores = dist.distances.at(0).size();
-//	long hub_ind = 0;
-//	long remain_demand = 0;
-//
-//	for(auto s : stores){
-//		remain_demand += s.tot_demand;
-//	}
-//
-//	//	solution.emplace_back(0);
-//
-//	while(remain_demand > 0){
-//
-//		cout << remain_demand << endl;
-//
-//		for(long i = 0; i < n_stores; i++){
-//			cout << remain_demand << "  " << stores.at(i).id << endl;
-//			if(stores.at(i).cur_demand > 0){
-//
-//				long avail = 0;
-//				for(long j = 0; j < (long)trucks.size(); j++){
-//
-//					if(get<1>(trucks[j].jobs.back()) < get<1>(trucks[avail].jobs.back())){
-//						avail = j;
-//					}
-//				}
-//
-//				long earliest_dock = 0;
-//				for(long d = 0; d < (long)docks.size(); d++){
-//
-//					if( docks[d].is_free(get<1>(trucks[avail].jobs.back())) ){
-//
-//						long start_time = get<1>(trucks[avail].jobs.back());
-//						long end_time = start_time + (min(stores.at(i).cur_demand, trucks[avail].capacity) * t_load + t_fix_load);
-//
-//						long end_time_truck = start_time + 2 * (min(stores.at(i).cur_demand, trucks[avail].capacity) * t_load + t_fix_load + dist(0, stores.at(i).id ) );
-//
-//						trucks[avail].jobs.emplace_back(make_tuple(start_time, end_time_truck, i,min(stores.at(i).cur_demand, trucks[avail].capacity)));
-//
-//						remain_demand -= min(stores.at(i).cur_demand, trucks[avail].capacity);
-//						stores.at(i).cur_demand -= min(stores.at(i).cur_demand, trucks[avail].capacity);
-//
-//						docks[d].jobs.emplace_back(make_tuple(start_time, end_time, avail));
-//
-//						earliest_dock = -1;
-//
-//						cout << "d : " << d << endl;
-//						break;
-//					}
-//
-//					if( get<1>(docks[d].jobs.back()) < get<1>(docks[earliest_dock].jobs.back()) ){
-//						earliest_dock = d;
-//					}
-//				}
-//
-//				if(earliest_dock >= 0){
-//					long start_time = get<1>(docks[earliest_dock].jobs.back());
-//					long end_time = start_time + (min(stores.at(i).cur_demand, trucks[avail].capacity) * t_load + t_fix_load);
-//
-//					long end_time_truck = start_time + 2 * (min(stores.at(i).cur_demand, trucks[avail].capacity) * t_load + t_fix_load + dist(0, stores.at(i).id) );
-//
-//					trucks[avail].jobs.emplace_back(make_tuple(start_time, end_time_truck, i,min(stores.at(i).cur_demand, trucks[avail].capacity)));
-//
-//					remain_demand -= min(stores.at(i).cur_demand, trucks[avail].capacity);
-//					stores.at(i).cur_demand -= min(stores.at(i).cur_demand, trucks[avail].capacity);
-//
-//					docks[earliest_dock].jobs.emplace_back(make_tuple(start_time, end_time, avail));
-//				}
-//
-//				cout << "earliest dock: " << earliest_dock << endl;
-//			}
-//		}
-//	}
-//	for(auto &t : trucks) {
-//		t.jobs.erase(t.jobs.begin());
-//	}
-//}
+long initial_solution_docks(vector< dock >& docks, vector< vector <job> >& jobs, vector< truck >& trucks, long& t_load, long& t_fix_load){
+
+
+	for(unsigned long day = 0; day < jobs.size(); day ++){
+
+		//-----sort jobs by latest_time and job duration (route-time + loading time)-----
+		sort(jobs[day].begin(), jobs[day].end(), [](job a, job b){ return tie(a.latest_time, a.job_dura) > tie(b.latest_time, b.job_dura); });
+
+		for(unsigned long job = 0; job < jobs[day].size(); job++){
+
+			//-----Select earliest truck available-----
+			long avail = 0;
+			for(long j = 0; j < (long)trucks.size(); j++){
+
+				if(get<1>(trucks[j].jobs.back()) < get<1>(trucks[avail].jobs.back())){
+					avail = j;
+				}
+			}
+
+			long earliest_dock = 0;
+			for(long d = 0; d < (long)docks.size(); d++){
+
+				if( docks[d].is_free(get<1>(trucks[avail].jobs.back())) ){
+
+					long start_time = get<1>(trucks[avail].jobs.back());
+					long end_time = start_time + jobs[day][job].loading_time;
+
+					if(end_time <= jobs[day][job].latest_time){
+						long end_time_truck = start_time + jobs[day][job].job_dura;
+
+						trucks[avail].jobs.emplace_back(make_tuple(start_time, end_time_truck, jobs[day][job].job_id, 0));
+						docks[d].jobs.emplace_back(make_tuple(start_time, end_time, avail));
+						jobs[day][job].truck_id = avail;
+
+						earliest_dock = -1;
+
+						cout << "d : " << d << endl;
+						break;
+					}
+				}
+
+				if( get<1>(docks[d].jobs.back()) < get<1>(docks[earliest_dock].jobs.back()) ){
+					earliest_dock = d;
+				}
+			}
+
+			if(earliest_dock >= 0){
+				long start_time = get<1>(trucks[avail].jobs.back());
+				long end_time = start_time + jobs[day][job].loading_time;
+
+				if(end_time <= jobs[day][job].latest_time){
+
+					long end_time_truck = start_time + jobs[day][job].job_dura;
+
+					trucks[avail].jobs.emplace_back(make_tuple(start_time, end_time_truck, jobs[day][job].job_id, 0));
+					docks[earliest_dock].jobs.emplace_back(make_tuple(start_time, end_time, avail));
+					jobs[day][job].truck_id = avail;
+				}
+			}
+
+			if(jobs[day][job].truck_id == -1){
+
+				//-----if no dock and truck can be found there is no viable initial solution-----
+				return -1;
+			}
+			cout << "earliest dock: " << earliest_dock << endl;
+		}
+	}
+
+	for(auto &t : trucks) {
+		t.jobs.erase(t.jobs.begin());
+	}
+
+	//-----ADD THE RETURN TIMES FOR TRUCKS-----
+	return 0;
+}
 
 long evaluate_solution(vector< truck >& trucks){
 

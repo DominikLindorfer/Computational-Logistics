@@ -324,17 +324,25 @@ int main() {
 
 	//-----Dock Scheduling with Optimized Routes-----
 
+	//-----create dock jobs from the best route-----
 	//-----day, route-jobs -----
 	vector< vector <job> > jobs;
 	jobs.resize(route_scores_best.size());
 
 	for(unsigned long d = 0; d < route_scores_best.size(); d++){
-		for(unsigned long r = 0; r < route_scores_best[d].size(); d++)
-//		jobs[d].push_back()
+		for(unsigned long r = 0; r < route_scores_best[d].size(); r++){
 
+			long load = 0;
+			for(auto l : solution[d][r]){
+				load += l[1];
+			}
+
+			jobs[d].push_back(job(route_scores_best[d][r][0], route_scores_best[d][r][1], route_scores_best[d][r][2], route_scores_best[d][r][3], -1, -1, r, load));
+			jobs[d].back().calc_loading_t(t_load, t_fix_load);
+		}
 	}
 
-	//	initial_solution_A(docks, stores, dist, trucks, t_load, t_fix_load);
+	initial_solution_docks(docks, jobs, trucks, t_load, t_fix_load);
 //
 //
 //	for(auto i : docks){
