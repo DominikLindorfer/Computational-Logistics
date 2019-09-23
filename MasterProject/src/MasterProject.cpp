@@ -28,7 +28,7 @@ int main() {
 	read_csv_servicetimes(ServiceTime, service_times);
 
 	//	vector< tuple<string,string,string>> distances(data.size());
-	long t_load = 15 * 60;
+	long t_load = 1 * 60;
 	long t_fix_load = 10 * 60;
 	long t_unload = 1 * 60;
 	long t_fix_unload = 10 * 60;
@@ -341,18 +341,40 @@ int main() {
 			jobs[d].back().calc_loading_t(t_load, t_fix_load);
 		}
 	}
+	cout << "Dock-Jobs Created!" << endl;
 
-	initial_solution_docks(docks, jobs, trucks, t_load, t_fix_load);
-//
-//
-//	for(auto i : docks){
-//		//list< tuple <long, long, long> > jobs;
-//		for(auto j : i.jobs){
-//			cout << "{";
-//			cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j);
-//			cout << "},"<< endl;
-//		}
-//	}
+	cur_day = 0;
+	long is_feasible = 0;
+	is_feasible = initial_solution_docks(docks, jobs, trucks, t_load, t_fix_load, cur_day);
+
+	if(is_feasible < 0){
+		cout << "No Feasible Solution found!" << endl;
+	}
+
+	long cur_dock = 0;
+	for(auto i : docks){
+		//list< tuple <long, long, long> > jobs;
+		cout << "Dock_id: " << cur_dock << endl;
+		cur_dock++;
+		for(auto j : i.jobs[cur_day]){
+			cout << "{";
+			cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j);
+			cout << "},"<< endl;
+		}
+	}
+
+	cout << endl << "Trucks:" << endl;
+	for(auto i : trucks){
+		//list< tuple <long, long, long> > jobs;
+		for(auto j : i.jobs[cur_day]){
+			cout << "{";
+			cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j) << " , " << get<3>(j);
+			cout << "},"<< endl;
+		}
+		cout << endl;
+	}
+
+
 //
 //	cout << "max: " << evaluate_solution(trucks) << endl;
 //	prlong_docks(docks);
@@ -362,18 +384,7 @@ int main() {
 //	long numb_j_trucks = 0;
 //	long numb_j_docks  = 0;
 //
-////	cout << endl << "Trucks:" << endl;
-////	for(auto i : trucks){
-////		//list< tuple <long, long, long> > jobs;
-////		for(auto j : i.jobs){
-////			cout << "{";
-////			cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j);
-////			cout << "},"<< endl;
-////
-////			numb_j_trucks++;
-////		}
-////		cout << endl;
-////	}
+
 ////
 ////	cout << endl << "Docks:" << endl;
 ////	for(auto i : docks){

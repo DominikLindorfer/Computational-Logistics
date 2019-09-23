@@ -177,117 +177,117 @@ void read_csv_servicetimes(string& file, vector<tuple<string, string, string, st
 		cout << get<0>(d) << " " << get<1>(d) << " " << get<2>(d) << " " << get<3>(d) << " "  << endl;
 }
 
-void prlong_docks(vector< dock >& docks){
-
-	cout << endl << endl << "Mathematica Output: " << endl;
-
-	cout << "{";
-
-	for(auto i = docks.begin(); i != docks.end(); i++){
-
-		cout << "{";
-
-		if( get<0>(*(*i).jobs.begin()) != 0){
-			cout << "0," << get<0>(*(*i).jobs.begin()) << ",";
-		}
-
-		for(auto it = (*i).jobs.begin(); it != prev((*i).jobs.end(), 1); it++){
-
-
-			cout << get<1>(*it) - get<0>(*it) << "," << get<0>( *next(it, 1) ) - get<1>(*it) << ",";
-
-//			if(it != prev((*i).jobs.end(), 2)){
+//void prlong_docks(vector< dock >& docks){
 //
-//			}
-//			else{
-//				cout << get<1>(*it) - get<0>(*it) << "," << get<0>( *next(it, 1) ) - get<1>(*it);
-//			}
-		}
-
-		cout << get<1>(*prev((*i).jobs.end(), 1)) - get<0>(*prev((*i).jobs.end(), 1));
-
-		if(i != prev(docks.end(),1))
-			cout << "},";
-		else
-			cout << "}";
-	}
-	cout << "}" << endl;
-}
-
-void prlong_docks_mathematicaLabel(vector< dock >& docks){
-
-	cout << endl << endl << "Mathematica Output for Docks with Labels: " << endl;
-
-	cout << "{";
-
-	for(auto i = docks.begin(); i != docks.end(); i++){
-
-		cout << "{";
-
-		if( get<0>(*(*i).jobs.begin()) != 0){
-			cout << "0," << get<0>(*(*i).jobs.begin()) << ",";
-		}
-
-		for(auto it = (*i).jobs.begin(); it != prev((*i).jobs.end(), 1); it++){
-
-			long d_first = get<1>(*it) - get<0>(*it);
-			long d_break = get<0>( *next(it, 1) ) - get<1>(*it);
-
-			cout << "Style[Labeled[" << d_first << ", Style[\"Truck " << get<2>(*it)+1 << "\", Black, 12], Center], ColorData[\"BrightBands\"," << (double)get<2>(*it)/10.0 << "]]";
-			cout << "," ;
-			cout << d_break;
-			cout << ",";
-
-		}
-
-		long d_last = get<1>(*prev((*i).jobs.end(), 1)) - get<0>(*prev((*i).jobs.end(), 1));
-
-		cout << "Style[Labeled[" << d_last << ", Style[\"Truck " << get<2>(*prev((*i).jobs.end(), 1))+1 << "\", Black, 12], Center], ColorData[\"BrightBands\"," << get<2>(*prev((*i).jobs.end(), 1))/10.0 << "]]";
-
-		if(i != prev(docks.end(),1))
-			cout << "},";
-		else
-			cout << "}";
-	}
-	cout << "}" << endl;
-}
-
-void prlong_trucks_mathematicaLabel(vector< truck >& trucks){
-
-	cout << endl << endl << "Mathematica Output for Trucks with Labels: " << endl;
-
-	cout << "{";
-
-
-	for(auto i = trucks.begin(); i != trucks.end(); i++){
-
-		cout << "{";
-
-		if( get<0>(*(*i).jobs.begin()) != 0){
-			cout << "0," << get<0>(*(*i).jobs.begin()) << ",";
-		}
-
-		for(auto it = (*i).jobs.begin(); it != prev((*i).jobs.end(), 1); it++){
-
-			long d_first = get<1>(*it) - get<0>(*it);
-			long d_break = get<0>( *next(it, 1) ) - get<1>(*it);
-
-			cout << "Style[Labeled[" << d_first << ", Style[\"Job " << get<2>(*it) << "\", Black, 12], Center], Lighter[ColorData[\"Rainbow\"," << (double)get<2>(*it)/10.0 << "]]]";
-			cout << "," ;
-			cout << d_break;
-			cout << ",";
-		}
-		long d_last = get<1>(*prev((*i).jobs.end(), 1)) - get<0>(*prev((*i).jobs.end(), 1));
-
-		cout << "Style[Labeled[" << d_last << ", Style[\"Job " << get<2>(*prev((*i).jobs.end(), 1)) << "\", Black, 12], Center], Lighter[ColorData[\"Rainbow\"," << get<2>(*prev((*i).jobs.end(), 1))/10.0 << "]]]";
-
-		if(i != prev(trucks.end(),1))
-			cout << "},";
-		else
-			cout << "}";
-	}
-	cout << "}" << endl;
-}
+//	cout << endl << endl << "Mathematica Output: " << endl;
+//
+//	cout << "{";
+//
+//	for(auto i = docks.begin(); i != docks.end(); i++){
+//
+//		cout << "{";
+//
+//		if( get<0>(*(*i).jobs.begin()) != 0){
+//			cout << "0," << get<0>(*(*i).jobs.begin()) << ",";
+//		}
+//
+//		for(auto it = (*i).jobs.begin(); it != prev((*i).jobs.end(), 1); it++){
+//
+//
+//			cout << get<1>(*it) - get<0>(*it) << "," << get<0>( *next(it, 1) ) - get<1>(*it) << ",";
+//
+////			if(it != prev((*i).jobs.end(), 2)){
+////
+////			}
+////			else{
+////				cout << get<1>(*it) - get<0>(*it) << "," << get<0>( *next(it, 1) ) - get<1>(*it);
+////			}
+//		}
+//
+//		cout << get<1>(*prev((*i).jobs.end(), 1)) - get<0>(*prev((*i).jobs.end(), 1));
+//
+//		if(i != prev(docks.end(),1))
+//			cout << "},";
+//		else
+//			cout << "}";
+//	}
+//	cout << "}" << endl;
+//}
+//
+//void prlong_docks_mathematicaLabel(vector< dock >& docks){
+//
+//	cout << endl << endl << "Mathematica Output for Docks with Labels: " << endl;
+//
+//	cout << "{";
+//
+//	for(auto i = docks.begin(); i != docks.end(); i++){
+//
+//		cout << "{";
+//
+//		if( get<0>(*(*i).jobs.begin()) != 0){
+//			cout << "0," << get<0>(*(*i).jobs.begin()) << ",";
+//		}
+//
+//		for(auto it = (*i).jobs.begin(); it != prev((*i).jobs.end(), 1); it++){
+//
+//			long d_first = get<1>(*it) - get<0>(*it);
+//			long d_break = get<0>( *next(it, 1) ) - get<1>(*it);
+//
+//			cout << "Style[Labeled[" << d_first << ", Style[\"Truck " << get<2>(*it)+1 << "\", Black, 12], Center], ColorData[\"BrightBands\"," << (double)get<2>(*it)/10.0 << "]]";
+//			cout << "," ;
+//			cout << d_break;
+//			cout << ",";
+//
+//		}
+//
+//		long d_last = get<1>(*prev((*i).jobs.end(), 1)) - get<0>(*prev((*i).jobs.end(), 1));
+//
+//		cout << "Style[Labeled[" << d_last << ", Style[\"Truck " << get<2>(*prev((*i).jobs.end(), 1))+1 << "\", Black, 12], Center], ColorData[\"BrightBands\"," << get<2>(*prev((*i).jobs.end(), 1))/10.0 << "]]";
+//
+//		if(i != prev(docks.end(),1))
+//			cout << "},";
+//		else
+//			cout << "}";
+//	}
+//	cout << "}" << endl;
+//}
+//
+//void prlong_trucks_mathematicaLabel(vector< truck >& trucks){
+//
+//	cout << endl << endl << "Mathematica Output for Trucks with Labels: " << endl;
+//
+//	cout << "{";
+//
+//
+//	for(auto i = trucks.begin(); i != trucks.end(); i++){
+//
+//		cout << "{";
+//
+//		if( get<0>(*(*i).jobs.begin()) != 0){
+//			cout << "0," << get<0>(*(*i).jobs.begin()) << ",";
+//		}
+//
+//		for(auto it = (*i).jobs.begin(); it != prev((*i).jobs.end(), 1); it++){
+//
+//			long d_first = get<1>(*it) - get<0>(*it);
+//			long d_break = get<0>( *next(it, 1) ) - get<1>(*it);
+//
+//			cout << "Style[Labeled[" << d_first << ", Style[\"Job " << get<2>(*it) << "\", Black, 12], Center], Lighter[ColorData[\"Rainbow\"," << (double)get<2>(*it)/10.0 << "]]]";
+//			cout << "," ;
+//			cout << d_break;
+//			cout << ",";
+//		}
+//		long d_last = get<1>(*prev((*i).jobs.end(), 1)) - get<0>(*prev((*i).jobs.end(), 1));
+//
+//		cout << "Style[Labeled[" << d_last << ", Style[\"Job " << get<2>(*prev((*i).jobs.end(), 1)) << "\", Black, 12], Center], Lighter[ColorData[\"Rainbow\"," << get<2>(*prev((*i).jobs.end(), 1))/10.0 << "]]]";
+//
+//		if(i != prev(trucks.end(),1))
+//			cout << "},";
+//		else
+//			cout << "}";
+//	}
+//	cout << "}" << endl;
+//}
 
 
 #endif /* IO_HPP_ */

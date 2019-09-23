@@ -53,14 +53,21 @@ public:
 	long capacity;
 	long load;
 	long id;
-	//----- start, end, store-id -----
-	list< tuple <long, long, long, long> > jobs;
+	vector<long> earliest_truck_starttime;
+
+	//----- For each day we have -----
+	//----- start, end, job-id , dock-id -----
+	vector< list< tuple <long, long, long, long> > > jobs;
 
 	truck(){
 		capacity = 0;
 		load = 0;
-		jobs.emplace_back( make_tuple(0,0,0,0) );  //tuple<long, long, long> (0,0,0)
+
+		jobs.resize(1);
+		jobs[0].emplace_back( make_tuple(0,0,0,0) );  //tuple<long, long, long> (0,0,0)
 		id = -1;
+
+		earliest_truck_starttime.push_back(0);
 	};
 
 	truck(const truck& t){
@@ -68,6 +75,40 @@ public:
 		load = t.load;
 		jobs = t.jobs;
 		id = t.id;
+	}
+
+	void resize_jobs2days(long days){
+
+		//-----Resize to real number of Days-----
+		jobs.resize(days);
+
+		long size_old = earliest_truck_starttime.size();
+		earliest_truck_starttime.resize(days);
+
+		for(unsigned long i = size_old - 1; i < days; i++){
+
+			earliest_truck_starttime[i] = 0;
+		}
+
+		for(long i = 0; i < days; i++) {
+
+			if(jobs[i].size() == 0){
+				jobs[i].emplace_back( make_tuple(0,0,0,0) );
+			}
+		}
+	}
+
+	void set_starttime(long day){
+
+		if(day > 0){
+
+			if(get<1>(jobs[day - 1].back()) > 24*3600){
+
+				//-----Set start time of first job of the day-----
+				*jobs[day].begin() = make_tuple( (long)(get<1>(jobs[day - 1].back()) - 24*3600), (long)(get<1>(jobs[day - 1].back()) - 24*3600), -1, -1);
+				earliest_truck_starttime[day] = get<1>(jobs[day - 1].back()) - 24*3600;
+			}
+		}
 	}
 
 	truck(long capacity_, long load_){
@@ -79,27 +120,40 @@ public:
 class dock{
 public:
 	long id;
+	//----- For each day we have -----
 	//----- start, end, truck-id -----
-	list< tuple <long, long, long> > jobs;
+	vector< list< tuple <long, long, long> > > jobs;
 
 	dock():jobs(0){
 		id = -1;
 //		jobs.emplace_back ( make_tuple(-1,-1,-1) );
 	}
 
-	dock(long id_, list< tuple <long, long, long> > jobs_){
+	dock(long id_, list< tuple <long, long, long> > jobs_, long day){
 		id = id_;
-		jobs = jobs_;
+
+		if(jobs.size() <= day){
+			jobs.resize(day + 1);
+		}
+
+		jobs[day] = jobs_;
 	}
 
-	bool is_free(long start_time, long end_time){
-		if((long)jobs.size() > 1){
+	bool is_free(long start_time, long end_time, long day){
 
-			if(end_time <= get<0>(*jobs.begin())){
+		if((long)jobs.size() < day){
+			//-----Check for Errors-----
+			cout << "Jobs Size != number of Days!!!" << endl;
+			return false;
+		}
+
+		if((long)jobs[day].size() > 1){
+
+			if(end_time <= get<0>(*jobs[day].begin())){
 				return true;
 			}
 
-			for(auto it = jobs.begin(); it != prev(jobs.end(), 1); it++){
+			for(auto it = jobs[day].begin(); it != prev(jobs[day].end(), 1); it++){
 //				start_time >= get<1>(*it) && end_time <= get<0>(*next(it, 1
 
 				if(start_time >= get<1>(*(it)) && end_time <= get<0>(*(next(it, 1)))){
@@ -108,8 +162,8 @@ public:
 			}
 			return false;
 		}
-		else if((long)jobs.size() == 1) {
-			auto it = jobs.begin();
+		else if((long)jobs[day].size() == 1) {
+			auto it = jobs[day].begin();
 			if(end_time <= get<0>(*it) || start_time >= get<1>(*it))
 				return true;
 			else
@@ -119,13 +173,13 @@ public:
 			return true;
 	}
 
-	bool is_free(long time){
-		if((long)jobs.size() > 0){
+	bool is_free(long time, long day){
+		if((long)jobs[day].size() > 0){
 //			if(time > get<1>( jobs.back() )){
 //				return true;
 //			}
-			auto it = jobs.begin();
-			for(auto j=0;j<jobs.size();j++,it++) {
+			auto it = jobs[day].begin();
+			for(auto j=0;j<jobs[day].size();j++,it++) {
 				if( (time >= get<0>(*it)) && (time <= get<1>(*it)) ){
 					return false;
 				}
