@@ -126,7 +126,7 @@ public:
 
 	dock():jobs(0){
 		id = -1;
-//		jobs.emplace_back ( make_tuple(-1,-1,-1) );
+//		jobs.emplace_back ( make_tuple(0, 0, -1) );
 	}
 
 	dock(long id_, list< tuple <long, long, long> > jobs_, long day){
@@ -179,7 +179,7 @@ public:
 //				return true;
 //			}
 			auto it = jobs[day].begin();
-			for(auto j=0;j<jobs[day].size();j++,it++) {
+			for(auto j = 0; j < jobs[day].size(); j++,it++) {
 				if( (time >= get<0>(*it)) && (time <= get<1>(*it)) ){
 					return false;
 				}

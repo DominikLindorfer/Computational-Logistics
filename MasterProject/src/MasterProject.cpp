@@ -344,12 +344,72 @@ int main() {
 	cout << "Dock-Jobs Created!" << endl;
 
 	cur_day = 0;
-	long is_feasible = 0;
-	is_feasible = initial_solution_docks(docks, jobs, trucks, t_load, t_fix_load, cur_day);
+	for(cur_day = 0; cur_day < 2; cur_day++){
 
-	if(is_feasible < 0){
-		cout << "No Feasible Solution found!" << endl;
+		long feasible_solution = -1;
+
+		for(long is_feasible = 0; is_feasible < 10; is_feasible++){
+
+			cout << "sort-routine: " << is_feasible << endl;
+
+			feasible_solution = initial_solution_docks(docks, jobs, trucks, cur_day, is_feasible);
+			if(feasible_solution == 0){
+				break;
+			}
+
+			for(auto& d : docks){
+				d.jobs[cur_day].resize(0);
+			}
+
+			for(auto& t: trucks){
+				t.jobs[cur_day].resize(1);
+			}
+
+		}
+
+		if(feasible_solution < 0){
+			cout << "No Feasible Solution found!" << endl;
+		}
+
+		//-----sort jobs by id again, after the initial solution-----
+		sort(jobs[cur_day].begin(), jobs[cur_day].end(), [](job a, job b){ return (a.job_id < b.job_id); });
+
+		long cur_dock = 0;
+		for(auto i : docks){
+			//list< tuple <long, long, long> > jobs;
+			cout << "Dock_id: " << cur_dock << endl;
+			cur_dock++;
+			for(auto j : i.jobs[cur_day]){
+				cout << "{";
+				cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j);
+				cout << "},"<< endl;
+			}
+		}
+
+		cout << endl << "Trucks:" << endl;
+		for(auto i : trucks){
+			//list< tuple <long, long, long> > jobs;
+			for(auto j : i.jobs[cur_day]){
+				cout << "{";
+				cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j) << " , " << get<3>(j);
+				cout << "},"<< endl;
+			}
+			cout << endl;
+		}
+
+		cout << endl << endl << "Day 1 finished!" << endl << endl;
 	}
+
+	cur_day = 1;
+	long truck_1 = 0;
+	long truck_2 = 2;
+	long job_1 = 0;
+	long job_2 = 2;
+
+
+	swap_2jobs_difftrucks(docks, jobs, trucks, cur_day, truck_1, truck_2, job_1, job_2);
+
+	cout << "Swap 2 jobs difftrucks performed!: " << endl;
 
 	long cur_dock = 0;
 	for(auto i : docks){
