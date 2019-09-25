@@ -254,13 +254,22 @@ int main() {
 	long sw_2 = 0;
 	auto& sol_1 = solution[0][0];
 	auto& sol_2 = solution[0][1];
+	auto& sol_3 = solution[0][7];
+
+	long st = 1;
+	long st2 = 1;
+
 	auto route_scores_best = route_scores;
 
 //	//-----Test-----
 //	(*next(solution[0][9].begin(), 0))[1] = 25;
 //	stores[2].tot_demand[0] += 24;
 
-	routes_swap_2(sol_1, sol_2, stores, dist, trucks, sw_1, sw_2);
+//	routes_swap_2(sol_1, sol_2, stores, dist, trucks, sw_1, sw_2);
+//	routes_opt_2(sol_3, st, st2);
+
+	routes_move(solution[0][1], solution[0][9], st, st2);
+	cout << "Routes move!" << endl;
 
 	long cur_day = 0;
 	long total_demand = 0;
@@ -401,15 +410,24 @@ int main() {
 	}
 
 	cur_day = 1;
-	long truck_1 = 0;
-	long truck_2 = 2;
-	long job_1 = 0;
-	long job_2 = 2;
+	long truck_id_1 = 0;
+	long truck_id_2 = 1;
+	long job_id_1 = 0;
+	long job_id_2 = 0;
 
+//	docks_swap_2jobs_trucks(docks, jobs, trucks, cur_day, truck_id_1, truck_id_2, job_id_1, job_id_2);
+//
+//	//-----swap back job-ids if the new solution does not get accepted-----
+//	jobs[day][get<2>(*next(trucks[truck_id_1].jobs[day].begin(), job_id_1))].truck_id = truck_id_1;
+//	jobs[day][get<2>(*next(trucks[truck_id_2].jobs[day].begin(), job_id_2))].truck_id = truck_id_2;
+//
+//	cout << "Swap 2 jobs difftrucks performed!: " << endl;
+//
+//	docks_opt_2(docks, jobs, trucks, cur_day, truck_id_1, job_id_1, job_id_2);
+//	cout << "2opt performed on docks!: " << endl;
 
-	swap_2jobs_difftrucks(docks, jobs, trucks, cur_day, truck_1, truck_2, job_1, job_2);
-
-	cout << "Swap 2 jobs difftrucks performed!: " << endl;
+	docks_move_job(docks, jobs, trucks, cur_day, truck_id_1, truck_id_2, job_id_1, job_id_2);
+	cout << "move job performed on docks!: " << endl;
 
 	long cur_dock = 0;
 	for(auto i : docks){
