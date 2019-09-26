@@ -225,6 +225,9 @@ long initial_solution_docks(vector< dock >& docks, vector< vector <job> >& jobs,
 		if(jobs[day][job].truck_id == -1){
 
 			//-----if no dock and truck can be found there is no viable initial solution-----
+			for(auto& j : jobs[day]){
+				j.truck_id = -1;
+			}
 			return -1;
 		}
 //		cout << "earliest dock: " << earliest_dock << endl;
@@ -462,6 +465,10 @@ bool docks_swap_2jobs_trucks(vector< dock >& docks, vector< vector <job> >& jobs
 		return false;
 	}
 
+	if(truck_id_1 == truck_id_2 && job_id_1 == job_id_2){
+		return false;
+	}
+
 	//-----delete the 2 jobs + succeeding jobs from docks_try-----
 	delete_jobs_docks(docks, truck_1, day, truck_id_1, job_id_1, job_id_1);
 	delete_jobs_docks(docks, truck_2, day, truck_id_2, job_id_2, job_id_2);
@@ -479,6 +486,16 @@ bool docks_swap_2jobs_trucks(vector< dock >& docks, vector< vector <job> >& jobs
 	//-----ZURÜCKSETZEN DER TRUCKIDS-----
 
 	long feasible = 0;
+
+	if(truck_id_1 == truck_id_2){
+		feasible = create_new_jobs(docks, truck_1, jobs, day, truck_id_1, job_id_1, job_id_2);
+		if(feasible < 0){
+			jobs[day][get<2>(*it_t1)].truck_id = truck_id_2;
+			jobs[day][get<2>(*it_t2)].truck_id = truck_id_1;
+			return false;
+		}
+		return true;
+	}
 
 	feasible = create_new_jobs(docks, truck_1, jobs, day, truck_id_1, job_id_1, job_id_1);
 	if(feasible < 0){
@@ -533,6 +550,16 @@ bool docks_move_job(vector< dock >& docks, vector< vector <job> >& jobs, vector<
 
 	//-----Delete Job from truck_1 & truck_2 and create new jobs for all affected jobs-----
 	truck_1.jobs[day].erase(it_t1);
+
+	if(truck_id_1 == truck_id_2){
+		feasible = create_new_jobs(docks, truck_1, jobs, day, truck_id_1, job_id_1, job_id_2);
+		if(feasible < 0){
+			jobs[day][get<2>(*it_t2)].truck_id = truck_id_1;
+			return false;
+		}
+		return true;
+	}
+
 	feasible = create_new_jobs(docks, truck_1, jobs, day, truck_id_1, job_id_1, job_id_1);
 	if(feasible < 0){
 		jobs[day][get<2>(*it_t2)].truck_id = truck_id_1;
@@ -911,6 +938,35 @@ long checkSolution(vector< list< vector<long> > >& solution_day, long day, vecto
 	return 0;
 }
 
+bool validateSolution(vector< list< vector<long> > >& solution_day, long& cur_day, long& t_unload, long& t_fix_unload, vector< store >& stores, dist_mat& dist, vector< vector < vector< long > > >& route_scores){
+
+	//-----Check if solution is feasible-----
+	bool accept_solution = false;
+	route_scores[cur_day].clear();
+
+	for(long route = 0; route < (long)solution_day.size(); route++){
+
+		long latest_time = 0;
+		long earliest_time = 0;
+		long route_time = 0;
+		long wait_time = 0;
+
+		long feasible = 0;
+		feasible = latest_returntime(latest_time, route_time, wait_time, solution_day[route], t_unload, t_fix_unload, stores, dist);
+		if(feasible == 0){
+//			cout << "Route " << route << " is not feasible!" << endl;
+			accept_solution = false;
+			break;
+		}
+		accept_solution = true;
+		earliest_returntime(earliest_time, route_time, wait_time, solution_day[route], t_unload, t_fix_unload, stores, dist);
+
+		route_scores[cur_day].push_back({earliest_time, latest_time, route_time, wait_time});
+	}
+
+	return accept_solution;
+}
+
 //long checkSolution(list< vector<long> >& solution, vector< store >& stores, dist_mat& dist, vector< truck >& trucks, long &total_demand, bool fix, bool prlong=false) {
 //	vector<long> route_remaining_loads;
 //
@@ -952,7 +1008,7 @@ long checkSolution(vector< list< vector<long> > >& solution_day, long day, vecto
 //	return 0;
 //}
 
-long routes_swap_2(list< vector<long> >& sol_1, list< vector<long> >& sol_2, vector< store >& stores, dist_mat& dist, vector< truck >& trucks, long& sw_1, long& sw_2){
+long routes_swap_2(list< vector<long> >& sol_1, list< vector<long> >& sol_2, long& sw_1, long& sw_2){
 
 	//-----implement evaluate_sublist-----
 	auto start_1 = sol_1.begin();
@@ -1081,6 +1137,20 @@ long evaluate_route_scores(vector < vector< long > > route_scores_day){
 	for(unsigned long i = 0; i < route_scores_day.size(); i++){
 		//-----take route time for score-----
 		score += route_scores_day[i][2];
+	}
+
+	return score;
+}
+
+long evaluate_truck_workingtime(vector< truck >& trucks, vector< vector <job> >& jobs, long& day){
+
+	//-----Evaluates the truck working time. That is: the time from loading @ dock to the return of the truck-----
+	long score = 0;
+
+	for(auto& t : trucks){
+		for(auto& j : t.jobs[day]){
+			score += get<1>(j) - get<0>(j);
+		}
 	}
 
 	return score;

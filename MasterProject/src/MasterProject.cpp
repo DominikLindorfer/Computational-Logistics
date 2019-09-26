@@ -45,23 +45,11 @@ int main() {
 		dist(i, j) = stoi(get<2>(d));
 	}
 
-	//	for(long i = 0; i < n_stores; i++){
-	//		for(long j = 0; j < n_stores; j++){
-	//			cout << dist(i,j) << " ";
-	//		}
-	//		cout << endl;
-	//	}
-
 	//-----initialize stores-----
 	vector< store > stores(n_stores);
 
 	cout << n_stores << endl;
 
-	//
-	//	for(long i = 0; i < n_stores - demands.size(); i++){
-	//		stores.at(i).tot_demand = 0;
-	//		stores.at(i).cur_demand = 0;
-	//	}
 
 	//-----push back the HUBs-----
 	vector<long> hub_demand(numb_Days, 0);
@@ -135,6 +123,7 @@ int main() {
 		}
 	}
 
+	//-----Print out Total Demand and Service Times-----
 	for(auto s : stores){
 		for(auto i : s.tot_demand)
 			cout << i << " ";
@@ -152,32 +141,26 @@ int main() {
 	for(auto& i : trucks){
 		i.capacity = 30;
 	}
-	//	truck.at(0).capacity = 100;
 
 	//-----initialize docks-----
 	long n_docks = 2;
 	vector< dock > docks(n_docks);
 
-//	//-----sort store-demands-----
-//	sort(stores.begin(), stores.end(), [](store s1, store s2){
-//		return s1.tot_demand > s2.tot_demand;
-//	});
-
 	//-----build nearest neighbor matrix-----
 	vector<vector< tuple <long, long>>> nn_mat;
 	build_nn_mat(dist, nn_mat, stores);
 
-	for(long i = 0; i < (long)nn_mat.size(); i++){
-		cout << "{";
-		for(long j = 0; j < (long)nn_mat[i].size();j++){
-			cout << "(" << get<0>(nn_mat[i][j]) << "," << get<1>(nn_mat[i][j]) << ")" << ",";
-		}
-		cout << "}" << endl << endl;
-	}
+//	for(long i = 0; i < (long)nn_mat.size(); i++){
+//		cout << "{";
+//		for(long j = 0; j < (long)nn_mat[i].size();j++){
+//			cout << "(" << get<0>(nn_mat[i][j]) << "," << get<1>(nn_mat[i][j]) << ")" << ",";
+//		}
+//		cout << "}" << endl << endl;
+//	}
 
 	//-----build initial solution-----
 
-	//-----Days (vector) - Routes on that day (vector) - Routes (lists) - Store# and Demands as vector (longs) [0] == store, [1] == demands-----
+	//-----solution structure: Days (vector) - Routes on that day (vector) - Routes (lists) - Store# and Demands as vector (longs): [0] == store, [1] == demands-----
 	vector<vector< list< vector<long> > > > solution;
 	initial_solution_routes(solution, stores, dist, trucks, nn_mat, t_unload, t_fix_unload);
 
@@ -211,9 +194,13 @@ int main() {
 			long route_time = 0;
 			long wait_time = 0;
 
-			long tmp = 0;
-			tmp = latest_returntime(latest_time, route_time, wait_time, solution[day][route], t_unload, t_fix_unload, stores, dist);
-			cout << tmp << endl;
+			long feasible = 0;
+			feasible = latest_returntime(latest_time, route_time, wait_time, solution[day][route], t_unload, t_fix_unload, stores, dist);
+
+			if(feasible == 0){
+				cout << "Initial Solution of Routes is unfeasible!" << endl;
+			}
+
 			earliest_returntime(earliest_time, route_time, wait_time, solution[day][route], t_unload, t_fix_unload, stores, dist);
 
 			route_scores[day][route].push_back(earliest_time);
@@ -224,105 +211,203 @@ int main() {
 	}
 
 	//-----Print Scores of Initial Solution-----
-	for(long day = 0; day < (long)solution.size(); day++){
-			for(long route = 0; route < (long)solution[day].size(); route++){
-				cout << route_scores[day][route].at(0) << " " << route_scores[day][route].at(1) << " " << route_scores[day][route].at(2) << " " << route_scores[day][route].at(3) << endl;
-			}
-			cout << endl << endl;
-		}
+//	for(long day = 0; day < (long)solution.size(); day++){
+//			for(long route = 0; route < (long)solution[day].size(); route++){
+//				cout << route_scores[day][route].at(0) << " " << route_scores[day][route].at(1) << " " << route_scores[day][route].at(2) << " " << route_scores[day][route].at(3) << endl;
+//			}
+//			cout << endl << endl;
+//	}
+//
+//	latest_returntime(latest_time, route_time, wait_time, solution[0][0], t_unload, t_fix_unload, stores, dist);
+//
+//	cout << "Latest Return-Time: " << latest_time << "  " << route_time << "  " << wait_time << endl;
+//	cout << "Latest Return-Time: " << latest_time << "  " << stores[10].service_time.first << "  " << stores[10].service_time.second << "  " << dist(0,10) << endl;
+//
+//	long earliest_time = 0;
+//	route_time = 0;
+//	wait_time = 0;
+//	earliest_returntime(earliest_time, route_time, wait_time, solution[0][0], t_unload, t_fix_unload, stores, dist);
+//
+//	cout << "Earliest Return-Time: " << earliest_time << "  " << route_time << "  " << wait_time << endl;
+//
+//	//-----Swap 2 Stores in diff Routes-----
+//
+//	long sw_1 = 0;
+//	long sw_2 = 0;
+//	auto& sol_1 = solution[0][0];
+//	auto& sol_2 = solution[0][1];
+//	auto& sol_3 = solution[0][7];
+//
+//	long st = 1;
+//	long st2 = 1;
+//
+//
+//
+////	//-----Test-----
+////	(*next(solution[0][9].begin(), 0))[1] = 25;
+////	stores[2].tot_demand[0] += 24;
+//
+////	routes_swap_2(sol_1, sol_2, stores, dist, trucks, sw_1, sw_2);
+////	routes_opt_2(sol_3, st, st2);
+//
+//	routes_move(solution[0][1], solution[0][9], st, st2);
+//	cout << "Routes move!" << endl;
+//
+//	long cur_day = 0;
+//
+//	checkSolution(solution[0], cur_day, stores,dist,trucks,total_demand,true);
+//	bool accept_swap = false;
+//
+//	for(long route = 0; route < (long)solution[cur_day].size(); route++){
+//
+//		long latest_time = 0;
+//		long earliest_time = 0;
+//		long route_time = 0;
+//		long wait_time = 0;
+//
+//		long tmp = 0;
+//		tmp = latest_returntime(latest_time, route_time, wait_time, solution[cur_day][route], t_unload, t_fix_unload, stores, dist);
+//		if(tmp == 0){
+//
+//			cout << "Route " << route << " is not feasible!" << endl;
+//
+//			accept_swap = false;
+//			break;
+//		}
+//		cout << tmp << endl;
+//		accept_swap = true;
+//		earliest_returntime(earliest_time, route_time, wait_time, solution[cur_day][route], t_unload, t_fix_unload, stores, dist);
+//
+//		route_scores[cur_day][route] = {earliest_time, latest_time, route_time, wait_time};
+////		route_scores[day][route].push_back(latest_time);
+////		route_scores[day][route].push_back(route_time);
+////		route_scores[day][route].push_back(wait_time);
+//	}
+//
+//	long score_best = evaluate_route_scores(route_scores_best[cur_day]);
+//	long score = evaluate_route_scores(route_scores[cur_day]);
+//
+//	cout << "Scores: " << score << "  " << score_best << endl;
+//
+//	if(accept_swap == true && score < score_best){
+//
+//		cout << "New best found!" << endl;
+//		score_best = score;
+//		route_scores_best[cur_day] = route_scores[cur_day];
+//	}
+//
+//	long feasible = latest_returntime(latest_time, route_time, wait_time, solution[0][0], t_unload, t_fix_unload, stores, dist);
+//	cout << "Feasible?: " << feasible << endl;
 
 
+	//-----VND/S for Route Optimization-----
 	long latest_time = 0;
 	long route_time = 0;
 	long wait_time = 0;
-	latest_returntime(latest_time, route_time, wait_time, solution[0][0], t_unload, t_fix_unload, stores, dist);
-
-	cout << "Latest Return-Time: " << latest_time << "  " << route_time << "  " << wait_time << endl;
-	cout << "Latest Return-Time: " << latest_time << "  " << stores[10].service_time.first << "  " << stores[10].service_time.second << "  " << dist(0,10) << endl;
-
-	long earliest_time = 0;
-	route_time = 0;
-	wait_time = 0;
-	earliest_returntime(earliest_time, route_time, wait_time, solution[0][0], t_unload, t_fix_unload, stores, dist);
-
-	cout << "Earliest Return-Time: " << earliest_time << "  " << route_time << "  " << wait_time << endl;
-
-
-	//-----Swap 2 Stores in diff Routes-----
-
-	long sw_1 = 0;
-	long sw_2 = 0;
-	auto& sol_1 = solution[0][0];
-	auto& sol_2 = solution[0][1];
-	auto& sol_3 = solution[0][7];
-
-	long st = 1;
-	long st2 = 1;
 
 	auto route_scores_best = route_scores;
 
-//	//-----Test-----
-//	(*next(solution[0][9].begin(), 0))[1] = 25;
-//	stores[2].tot_demand[0] += 24;
-
-//	routes_swap_2(sol_1, sol_2, stores, dist, trucks, sw_1, sw_2);
-//	routes_opt_2(sol_3, st, st2);
-
-	routes_move(solution[0][1], solution[0][9], st, st2);
-	cout << "Routes move!" << endl;
-
-	long cur_day = 0;
+	auto solution_best = solution;
 	long total_demand = 0;
-	checkSolution(solution[0], cur_day, stores,dist,trucks,total_demand,true);
-	bool accept_swap = false;
 
-	for(long route = 0; route < (long)solution[cur_day].size(); route++){
+	long level = 0;
+	long moves = 0;
+	long accept = 0;
+	long n_tries = 1000;
+	long tries = 0;
+	long not_updated = 0;
+	long not_updated_max = 50;
 
-		long latest_time = 0;
-		long earliest_time = 0;
-		long route_time = 0;
-		long wait_time = 0;
+	double accept_ratio = 0.3;
 
-		long tmp = 0;
-		tmp = latest_returntime(latest_time, route_time, wait_time, solution[cur_day][route], t_unload, t_fix_unload, stores, dist);
-		if(tmp == 0){
+	cout << "Doing VND/S for routes now!" << endl;
+	//-----Potential parallelization at this loop b/c routes of different days are independently created-----
+	for(long cur_day = 0; cur_day < (long)solution.size(); cur_day++){
+		long score_best = evaluate_route_scores(route_scores_best[cur_day]);
+		level = 0;
 
-			cout << "Route " << route << " is not feasible!" << endl;
+		while(level < 3){
+			accept = 0;
 
-			accept_swap = false;
-			break;
+			for(long i = 0; i < n_tries; i++){
+
+//				cout << i << " " << cur_day << " " << level << endl;
+
+				long route_1 = rand() % solution[cur_day].size();
+				long route_2 = rand() % solution[cur_day].size();
+
+				long pos_1 = rand() % solution[cur_day][route_1].size();
+				long pos_2 = rand() % solution[cur_day][route_2].size();
+
+				switch(level){
+				case 0 :
+					//-----swap 2 jobs-----
+					routes_swap_2(solution[cur_day][route_1], solution[cur_day][route_2], pos_1, pos_2);
+					break;
+				case 1 :
+					//-----move jobs between trucks/routes-----
+					routes_move(solution[cur_day][route_1], solution[cur_day][route_2], pos_1, pos_2);
+					break;
+				case 2 :
+					//-----2opt-----
+					pos_2 = rand() % solution[cur_day][route_1].size();
+					routes_opt_2(solution[cur_day][route_1], pos_1, pos_2);
+					break;
+				default:
+					level = 0;
+				}
+
+//				if(level != 2 && ((double)accept / (double)n_tries) < accept_ratio){
+//					level++;
+//				}
+//				else if(not_updated > not_updated_max){
+//					level++;
+//				}
+//				else{
+//					level = 0;
+//				}
+
+				//-----Check for new best Solution-----
+				checkSolution(solution[cur_day], cur_day, stores, dist, trucks, total_demand, true);
+				bool valid = validateSolution(solution[cur_day], cur_day, t_unload, t_fix_unload, stores, dist, route_scores);
+
+				if(valid){
+					long score = evaluate_route_scores(route_scores[cur_day]);
+					//			cout << "Scores: " << score << "  " << score_best << endl;
+
+					if(score < score_best){
+
+						//				cout << "New best found!" << endl;
+						score_best = score;
+						route_scores_best[cur_day] = route_scores[cur_day];
+						solution_best[cur_day] = solution[cur_day];
+						accept = 1;
+					}
+					else{
+						solution[cur_day] = solution_best[cur_day];
+					}
+				}
+				else{
+					solution[cur_day] = solution_best[cur_day];
+				}
+				//		cout << "Current Level: " << level << "  amount of Tries: " << tries << "  AcceptanceRatio: " << ((double)accept / (double)n_tries) << "  moves: " << moves << endl;
+			}
+
+			if(accept == 1){
+				level = 0;
+			}
+			else{
+				level++;
+			}
 		}
-		cout << tmp << endl;
-		accept_swap = true;
-		earliest_returntime(earliest_time, route_time, wait_time, solution[cur_day][route], t_unload, t_fix_unload, stores, dist);
-
-		route_scores[cur_day][route] = {earliest_time, latest_time, route_time, wait_time};
-//		route_scores[day][route].push_back(latest_time);
-//		route_scores[day][route].push_back(route_time);
-//		route_scores[day][route].push_back(wait_time);
 	}
 
-	long score_best = evaluate_route_scores(route_scores_best[cur_day]);
-	long score = evaluate_route_scores(route_scores[cur_day]);
-
-	cout << "Scores: " << score << "  " << score_best << endl;
-
-	if(accept_swap == true && score < score_best){
-
-		cout << "New best found!" << endl;
-		score_best = score;
-		route_scores_best[cur_day] = route_scores[cur_day];
-	}
-
-	long feasible = latest_returntime(latest_time, route_time, wait_time, solution[0][0], t_unload, t_fix_unload, stores, dist);
-	cout << "Feasible?: " << feasible << endl;
-
-
+	//-----Print out the Route-Solution-----
 	for(long day = 0; day < (long)solution.size(); day++){
 
 		for(long route_ind = 0; route_ind < (long)solution[day].size(); route_ind++){
 
-			for(auto i : solution[day][route_ind]){
+			for(auto i : solution_best[day][route_ind]){
 				cout << i[0] << " " << i[1] << " - ";
 			}
 			cout << endl;
@@ -352,14 +437,18 @@ int main() {
 	}
 	cout << "Dock-Jobs Created!" << endl;
 
-	cur_day = 0;
-	for(cur_day = 0; cur_day < 2; cur_day++){
+	long feasibility_tries = 1000;
+	auto trucks_best = trucks;
+	auto docks_best = docks;
+	accept = 0;
+
+	for(long cur_day = 0; cur_day < (long)solution.size(); cur_day++){	//
 
 		long feasible_solution = -1;
 
-		for(long is_feasible = 0; is_feasible < 10; is_feasible++){
+		for(long is_feasible = 0; is_feasible < feasibility_tries; is_feasible++){
 
-			cout << "sort-routine: " << is_feasible << endl;
+//			cout << "sort-routine: " << is_feasible << endl;
 
 			feasible_solution = initial_solution_docks(docks, jobs, trucks, cur_day, is_feasible);
 			if(feasible_solution == 0){
@@ -406,53 +495,173 @@ int main() {
 			cout << endl;
 		}
 
-		cout << endl << endl << "Day 1 finished!" << endl << endl;
-	}
-
-	cur_day = 1;
-	long truck_id_1 = 0;
-	long truck_id_2 = 1;
-	long job_id_1 = 0;
-	long job_id_2 = 0;
-
-//	docks_swap_2jobs_trucks(docks, jobs, trucks, cur_day, truck_id_1, truck_id_2, job_id_1, job_id_2);
-//
-//	//-----swap back job-ids if the new solution does not get accepted-----
-//	jobs[day][get<2>(*next(trucks[truck_id_1].jobs[day].begin(), job_id_1))].truck_id = truck_id_1;
-//	jobs[day][get<2>(*next(trucks[truck_id_2].jobs[day].begin(), job_id_2))].truck_id = truck_id_2;
-//
-//	cout << "Swap 2 jobs difftrucks performed!: " << endl;
-//
-//	docks_opt_2(docks, jobs, trucks, cur_day, truck_id_1, job_id_1, job_id_2);
-//	cout << "2opt performed on docks!: " << endl;
-
-	docks_move_job(docks, jobs, trucks, cur_day, truck_id_1, truck_id_2, job_id_1, job_id_2);
-	cout << "move job performed on docks!: " << endl;
-
-	long cur_dock = 0;
-	for(auto i : docks){
-		//list< tuple <long, long, long> > jobs;
-		cout << "Dock_id: " << cur_dock << endl;
-		cur_dock++;
-		for(auto j : i.jobs[cur_day]){
-			cout << "{";
-			cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j);
-			cout << "},"<< endl;
+		for(long t = 0; t < (long)trucks.size(); t++){
+			trucks_best[t].jobs.resize(cur_day + 1);
+			trucks_best[t].jobs[cur_day] = trucks[t].jobs[cur_day];
 		}
-	}
 
-	cout << endl << "Trucks:" << endl;
-	for(auto i : trucks){
-		//list< tuple <long, long, long> > jobs;
-		for(auto j : i.jobs[cur_day]){
-			cout << "{";
-			cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j) << " , " << get<3>(j);
-			cout << "},"<< endl;
+		for(long d = 0; d < (long)docks.size(); d++){
+			docks_best[d].jobs.push_back(docks[d].jobs[cur_day]);
 		}
-		cout << endl;
+
+		//-----Evaluate the score of the initial solution-----
+		long score_best = evaluate_truck_workingtime(trucks_best, jobs, cur_day);
+		level = 0;
+
+		cout << "Doing VND/S for Docks now!" << endl;
+
+		while(level < 3){
+			bool valid = 0;
+			accept = 0;
+
+			for(long i = 0; i < n_tries; i++){
+
+//				cout << i << " " << cur_day << " " << level << endl;
+
+				if((docks[0].jobs[cur_day].size() + docks[1].jobs[cur_day].size()) > 10){
+					cout << "size > 10" << endl;
+//					return 0;
+				}
+
+				long truck_id_1 = rand() % trucks.size();
+				long truck_id_2 = rand() % trucks.size();
+				long job_id_1 = rand() % trucks[truck_id_1].jobs[cur_day].size();
+				long job_id_2 = rand() % trucks[truck_id_2].jobs[cur_day].size();
+
+				switch(level){
+				case 0 :
+					//-----swap 2 jobs on docks-----
+					valid = docks_swap_2jobs_trucks(docks, jobs, trucks, cur_day, truck_id_1, truck_id_2, job_id_1, job_id_2);
+					break;
+				case 1 :
+					//-----move jobs between trucks/docks-----
+					valid = docks_move_job(docks, jobs, trucks, cur_day, truck_id_1, truck_id_2, job_id_1, job_id_2);
+					break;
+				case 2 :
+					//-----2opt on trucks-----
+					truck_id_2 = truck_id_1;
+					job_id_2 = rand() % trucks[truck_id_1].jobs[cur_day].size();
+					valid = docks_opt_2(docks, jobs, trucks, cur_day, truck_id_1, job_id_1, job_id_2);
+					break;
+				default:
+					level = 0;
+				}
+
+				if(valid){
+					long score = evaluate_truck_workingtime(trucks, jobs, cur_day);
+					//			cout << "Scores: " << score << "  " << score_best << endl;
+
+					if(score < score_best){
+
+						//				cout << "New best found!" << endl;
+						score_best = score;
+
+						for(long t = 0; t < (long)trucks.size(); t++){
+							trucks_best[t].jobs[cur_day] = trucks[t].jobs[cur_day];
+						}
+
+						for(long d = 0; d < (long)docks.size(); d++){
+							docks_best[d].jobs[cur_day] = docks[d].jobs[cur_day];
+						}
+						accept = 1;
+					}
+					else{
+
+						//-----Change back job-ids if the new solution does not get accepted-----
+						jobs[cur_day][get<2>(*next(trucks[truck_id_1].jobs[cur_day].begin(), job_id_1))].truck_id = truck_id_2;
+						if(level == 0){
+							jobs[cur_day][get<2>(*next(trucks[truck_id_2].jobs[cur_day].begin(), job_id_2))].truck_id = truck_id_1;
+						}
+
+						for(long t = 0; t < (long)trucks.size(); t++){
+							trucks[t].jobs[cur_day] = trucks_best[t].jobs[cur_day];
+						}
+
+						for(long d = 0; d < (long)docks.size(); d++){
+							docks[d].jobs[cur_day] = docks_best[d].jobs[cur_day];
+						}
+					}
+				}
+				else{
+					for(long t = 0; t < (long)trucks.size(); t++){
+						trucks[t].jobs[cur_day] = trucks_best[t].jobs[cur_day];
+					}
+
+					for(long d = 0; d < (long)docks.size(); d++){
+						docks[d].jobs[cur_day] = docks_best[d].jobs[cur_day];
+					}
+				}
+
+//				cout << endl << "Trucks:" << endl;
+//				for(auto i : trucks_best){
+//					//list< tuple <long, long, long> > jobs;
+//					for(auto j : i.jobs[cur_day]){
+//						cout << "{";
+//						cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j) << " , " << get<3>(j);
+//						cout << "},"<< endl;
+//					}
+//					cout << endl;
+//				}
+
+				//		cout << "Current Level: " << level << "  amount of Tries: " << tries << "  AcceptanceRatio: " << ((double)accept / (double)n_tries) << "  moves: " << moves << endl;
+			}
+
+			if(accept == 1){
+				level = 0;
+			}
+			else{
+				level++;
+			}
+
+		}
+
+		//-----Print out the Solution-----
+
+		cout << "Current day: " << cur_day << endl;
+		cur_dock = 0;
+		for(auto i : docks_best){
+			//list< tuple <long, long, long> > jobs;
+			cout << "Dock_id: " << cur_dock << endl;
+			cur_dock++;
+			for(auto j : i.jobs[cur_day]){
+				cout << "{";
+				cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j);
+				cout << "},"<< endl;
+			}
+		}
+
+		cout << endl << "Trucks:" << endl;
+		for(auto i : trucks_best){
+			//list< tuple <long, long, long> > jobs;
+			for(auto j : i.jobs[cur_day]){
+				cout << "{";
+				cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j) << " , " << get<3>(j);
+				cout << "},"<< endl;
+			}
+			cout << endl;
+		}
+
 	}
 
-
+//	long cur_day = 1;
+//	long truck_id_1 = 0;
+//	long truck_id_2 = 1;
+//	long job_id_1 = 0;
+//	long job_id_2 = 0;
+//
+////	docks_swap_2jobs_trucks(docks, jobs, trucks, cur_day, truck_id_1, truck_id_2, job_id_1, job_id_2);
+////
+////	//-----swap back job-ids if the new solution does not get accepted-----
+////	jobs[day][get<2>(*next(trucks[truck_id_1].jobs[day].begin(), job_id_1))].truck_id = truck_id_1;
+////	jobs[day][get<2>(*next(trucks[truck_id_2].jobs[day].begin(), job_id_2))].truck_id = truck_id_2;
+////
+////	cout << "Swap 2 jobs difftrucks performed!: " << endl;
+////
+////	docks_opt_2(docks, jobs, trucks, cur_day, truck_id_1, job_id_1, job_id_2);
+////	cout << "2opt performed on docks!: " << endl;
+//
+//	docks_move_job(docks, jobs, trucks, cur_day, truck_id_1, truck_id_2, job_id_1, job_id_2);
+//	cout << "move job performed on docks!: " << endl;
 //
 //	cout << "max: " << evaluate_solution(trucks) << endl;
 //	prlong_docks(docks);
