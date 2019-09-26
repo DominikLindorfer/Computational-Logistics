@@ -143,7 +143,7 @@ int main() {
 	}
 
 	//-----initialize docks-----
-	long n_docks = 2;
+	long n_docks = 1;
 	vector< dock > docks(n_docks);
 
 	//-----build nearest neighbor matrix-----
@@ -517,11 +517,6 @@ int main() {
 			for(long i = 0; i < n_tries; i++){
 
 //				cout << i << " " << cur_day << " " << level << endl;
-
-				if((docks[0].jobs[cur_day].size() + docks[1].jobs[cur_day].size()) > 10){
-					cout << "size > 10" << endl;
-//					return 0;
-				}
 
 				long truck_id_1 = rand() % trucks.size();
 				long truck_id_2 = rand() % trucks.size();
