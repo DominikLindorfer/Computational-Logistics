@@ -30,7 +30,7 @@ void initial_solution_routes(vector< vector< list< vector<long> > > >& solution,
 
 	solution.resize(days);
 
-	cout << remain_demand_vec[0] << " " << remain_demand_vec[1] << endl;
+//	cout << remain_demand_vec[0] << " " << remain_demand_vec[1] << endl;
 
 	//	solution.emplace_back({0,0});
 
@@ -69,11 +69,39 @@ void initial_solution_routes(vector< vector< list< vector<long> > > >& solution,
 				ind_min = 0;
 
 				for(long i = 0; i < (long)nn_mat[ind_max].size() - 1; i++){
-
+//					cout << get<0>(nn_mat[ind_max][i]) << " " << get<1>(nn_mat[ind_max][i]) << endl;
 					if(stores.at(get<0>(nn_mat[ind_max][i]) - 1).cur_demand[day] > 0){
 
 						long unload_tmp = min((long)stores.at(get<0>(nn_mat[ind_max][i]) - 1).cur_demand[day], (long)truck.at(0).load);
-						if(stores.at(ind_max).service_time.first + get<1>(nn_mat[ind_max][i]) + 2 * t_fix_unload + t_unload * unload + t_unload * unload_tmp <=	stores.at(get<0>(nn_mat[ind_max][i]) - 1).service_time.second){
+//						if(stores.at(ind_max).service_time.first + get<1>(nn_mat[ind_max][i]) + 2 * t_fix_unload + t_unload * unload + t_unload * unload_tmp <=	stores.at(get<0>(nn_mat[ind_max][i]) - 1).service_time.second){
+//							ind_min = get<0>(nn_mat[ind_max][i]) - 1;
+//							unload = unload_tmp;
+//							break;
+//						}
+
+                        long start_time = 0;
+						if (solution[day][route_ind].size() == 1) {
+							start_time = stores.at(ind_max).service_time.first + t_fix_unload + (*solution[day][route_ind].begin())[1] * t_unload;
+						} else {
+							start_time =stores.at((*solution[day][route_ind].begin())[0]).service_time.first;
+							long id_prev;
+							long id_act;
+
+							for (auto it = solution[day][route_ind].begin(); it	!= prev(solution[day][route_ind].end(),	1);) {
+								id_prev = (*it)[0];
+								start_time += t_fix_unload + t_unload * (*it)[1];
+								++it;
+								id_act = (*it)[0];
+//                                start_time+=t_fix_unload+t_unload*(*it)[1];
+								start_time += dist(id_prev, id_act);
+								start_time = max(start_time, stores.at((*it)[0]).service_time.first);
+							}
+							auto it = prev(solution[day][route_ind].end(), 1);
+							start_time += t_fix_unload + t_unload * (*it)[1];
+							start_time = max(start_time, stores.at(get<0>(nn_mat[ind_max][i]) - 1).service_time.first);
+						}
+
+						if (max(start_time + get<1>(nn_mat[ind_max][i]), stores.at(get<0>(nn_mat[ind_max][i]) - 1).service_time.first) + t_fix_unload + t_unload * unload_tmp <= stores.at(get<0>(nn_mat[ind_max][i]) - 1).service_time.second) {
 							ind_min = get<0>(nn_mat[ind_max][i]) - 1;
 							unload = unload_tmp;
 							break;
@@ -107,6 +135,8 @@ void build_nn_mat(dist_mat& dist, vector<vector< tuple <long, long>>>& nn_mat, v
 
 		for(long j = 0; j < (long)dist.distances.size(); j++){
 
+			nn_mat[i][j] = make_tuple(1, 0);
+
 			if(i == j){
 				continue;
 			}
@@ -115,7 +145,15 @@ void build_nn_mat(dist_mat& dist, vector<vector< tuple <long, long>>>& nn_mat, v
 		}
 
 		sort(nn_mat[i].begin(), nn_mat[i].end(), [](tuple<long,long> t1, tuple<long,long> t2){return get<1>(t1) < get<1>(t2);});
-		nn_mat[i].erase(nn_mat[i].begin());
+
+		for(auto it = nn_mat[i].begin(); it != nn_mat[i].end(); ){
+			if(get<1>(*it) == 0){
+				it = nn_mat[i].erase(it);
+			}
+			else
+				break;
+		}
+//		nn_mat[i].erase(nn_mat[i].begin());
 	}
 
 }

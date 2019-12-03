@@ -23,7 +23,12 @@ public:
 		distances.resize(s);
 		for(long i = 0; i < s; i++){
 			distances.at(i).resize(s);
+
+			for(long j = 0; j < distances.at(i).size(); j++){
+				distances.at(i).at(j) = 0;
+			}
 		}
+
 	}
 
 	inline long& operator()(long i, long j) {

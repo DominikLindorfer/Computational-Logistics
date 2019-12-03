@@ -60,11 +60,32 @@ void read_csv_demand(string& file,vector< tuple<string,string,string,tuple<strin
 }
 
 void read_csv_demand_multipleDays(string& file,vector < vector< tuple<string,string,string,tuple<string,string> > > >& demands, long& numb_days){
+
+	//-----Read in first_day from demand-file-----
 	ifstream in;
 	in.open(file);
 	string line;
 
-	long first_day = 2;
+	long first_day = -99;
+
+	getline(in, line);
+	getline(in, line);
+	istringstream ss_(line);
+	string token;
+
+	vector<string> vec_line_;
+
+	while(getline(ss_, token, ';')) {
+		vec_line_.push_back(token);
+	}
+	if(vec_line_.size()>0){
+		first_day = stoi(vec_line_.at(1));
+	}
+	in.close();
+
+
+	//-----Re-Open and Read in demand-file-----
+	in.open(file);
 	long i = 1;
 	getline(in,line);
 
@@ -289,5 +310,94 @@ void read_csv_servicetimes(string& file, vector<tuple<string, string, string, st
 //	cout << "}" << endl;
 //}
 
+void print_docks_mathematicaLabel(vector< dock >& docks, int cur_day){
+
+	//-----Print out the Solution-----
+
+//	cout << "Current day: " << cur_day << endl;
+//	cur_dock = 0;
+//	for(auto i : docks_best){
+//		//list< tuple <long, long, long> > jobs;
+//		cout << "Dock_id: " << cur_dock << endl;
+//		cur_dock++;
+//		for(auto j : i.jobs[cur_day]){
+//			cout << "{";
+//			cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j);
+//			cout << "},"<< endl;
+//		}
+//	}
+
+	cout << endl << endl << "Mathematica Output for Docks with Labels: " << endl;
+
+	cout << "{";
+
+	for(auto i = docks.begin(); i != docks.end(); i++){
+
+		cout << "{";
+
+		if( get<0>(*(*i).jobs[cur_day].begin()) != 0){
+			cout << "0," << get<0>(*(*i).jobs[cur_day].begin()) << ",";
+		}
+
+		for(auto it = (*i).jobs[cur_day].begin(); it != prev((*i).jobs[cur_day].end(), 1); it++){
+
+			int d_first = get<1>(*it) - get<0>(*it);
+			int d_break = get<0>( *next(it, 1) ) - get<1>(*it);
+
+			cout << "Style[Labeled[" << d_first << ", Style[\"Truck " << get<2>(*it)+1 << "\", Black, 12], Center], ColorData[\"BrightBands\"," << (double)get<2>(*it)/10.0 << "]]";
+			cout << "," ;
+			cout << d_break;
+			cout << ",";
+
+		}
+
+		int d_last = get<1>(*prev((*i).jobs[cur_day].end(), 1)) - get<0>(*prev((*i).jobs[cur_day].end(), 1));
+
+		cout << "Style[Labeled[" << d_last << ", Style[\"Truck " << get<2>(*prev((*i).jobs[cur_day].end(), 1))+1 << "\", Black, 12], Center], ColorData[\"BrightBands\"," << get<2>(*prev((*i).jobs[cur_day].end(), 1))/10.0 << "]]";
+
+		if(i != prev(docks.end(),1))
+			cout << "},";
+		else
+			cout << "}";
+	}
+	cout << "}" << endl;
+}
+
+
+void print_trucks_mathematicaLabel(vector< truck >& trucks, int cur_day){
+
+	cout << endl << endl << "Mathematica Output for Trucks with Labels: " << endl;
+
+	cout << "{";
+
+	for(auto i = trucks.begin(); i != trucks.end(); i++){
+
+		cout << "{";
+
+		if( get<0>(*(*i).jobs[cur_day].begin()) != 0){
+			cout << "0," << get<0>(*(*i).jobs[cur_day].begin()) << ",";
+		}
+
+		for(auto it = (*i).jobs[cur_day].begin(); it != prev((*i).jobs[cur_day].end(), 1); it++){
+
+			int d_first = get<1>(*it) - get<0>(*it);
+			int d_break = get<0>( *next(it, 1) ) - get<1>(*it);
+
+			cout << "Style[Labeled[" << d_first << ", Style[\"Job " << get<2>(*it) << "\", Black, 12], Center], Lighter[ColorData[\"Rainbow\"," << (double)get<2>(*it)/10.0 << "]]]";
+			cout << "," ;
+			cout << d_break;
+			cout << ",";
+		}
+		int d_last = get<1>(*prev((*i).jobs[cur_day].end(), 1)) - get<0>(*prev((*i).jobs[cur_day].end(), 1));
+
+		cout << "Style[Labeled[" << d_last << ", Style[\"Job " << get<2>(*prev((*i).jobs[cur_day].end(), 1)) << "\", Black, 12], Center], Lighter[ColorData[\"Rainbow\"," << get<2>(*prev((*i).jobs[cur_day].end(), 1))/10.0 << "]]]";
+
+		if(i != prev(trucks.end(),1))
+			cout << "},";
+		else
+			cout << "}";
+	}
+	cout << "}" << endl;
+}
 
 #endif /* IO_HPP_ */

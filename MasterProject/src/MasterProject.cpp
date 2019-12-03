@@ -13,9 +13,13 @@
 using namespace std;
 
 int main() {
-	string TravTime = "Data/TravelTim1_test.csv";
-	string Demand = "Data/Demand1_test.csv";
-	string ServiceTime = "Data/StoreServiceTimes_Test.csv";
+//	string TravTime = "Data/TravelTim1_test.csv";
+//	string Demand = "Data/Demand1_test.csv";
+//	string ServiceTime = "Data/StoreServiceTimes_Test.csv";
+
+	string TravTime = "Data/TravelTim1.csv";
+	string Demand = "Data/demands_agg_singleday.csv";
+	string ServiceTime = "Data/ServiceTimes_all.csv";
 
 	vector<vector <string> > data;
 	vector< tuple<string,string,string>> distances;
@@ -23,7 +27,7 @@ int main() {
 	vector< tuple<string,string,string, string> > service_times;
 
 	long numb_Days = 0;
-	read_csv_distance(TravTime, data,distances);
+	read_csv_distance(TravTime, data, distances);
 	read_csv_demand_multipleDays(Demand, demands, numb_Days);
 	read_csv_servicetimes(ServiceTime, service_times);
 
@@ -34,7 +38,7 @@ int main() {
 	long t_fix_unload = 10 * 60;
 
 	//-----initialize distance matrix-----
-	long n_stores = sqrt(distances.size());
+	long n_stores = service_times.size() + 1;
 	dist_mat dist(n_stores);
 
 	for(auto d : distances){
@@ -123,27 +127,27 @@ int main() {
 		}
 	}
 
-	//-----Print out Total Demand and Service Times-----
-	for(auto s : stores){
-		for(auto i : s.tot_demand)
-			cout << i << " ";
-		cout << endl;
-	}
-
-	for(auto s: stores){
-		cout << s.id << " " << s.service_time.first << " " <<s.service_time.second << endl;
-	}
+//	//-----Print out Total Demand and Service Times-----
+//	for(auto s : stores){
+//		for(auto i : s.tot_demand)
+//			cout << i << " ";
+//		cout << endl;
+//	}
+//
+//	for(auto s: stores){
+//		cout << s.id << " " << s.service_time.first << " " <<s.service_time.second << endl;
+//	}
 
 	//-----initialize trucks-----
-	long n_trucks = 3;
+	long n_trucks = 5; //3
 	vector< truck > trucks(n_trucks);
 
 	for(auto& i : trucks){
-		i.capacity = 30;
+		i.capacity = 50;	//60
 	}
 
 	//-----initialize docks-----
-	long n_docks = 1;
+	long n_docks = 3; //2
 	vector< dock > docks(n_docks);
 
 	//-----build nearest neighbor matrix-----
@@ -164,17 +168,17 @@ int main() {
 	vector<vector< list< vector<long> > > > solution;
 	initial_solution_routes(solution, stores, dist, trucks, nn_mat, t_unload, t_fix_unload);
 
-	for(long day = 0; day < (long)solution.size(); day++){
-
-		for(long route_ind = 0; route_ind < (long)solution[day].size(); route_ind++){
-
-			for(auto i : solution[day][route_ind]){
-				cout << i[0] << " " << i[1] << " - ";
-			}
-			cout << endl;
-		}
-		cout << endl << endl;
-	}
+//	for(long day = 0; day < (long)solution.size(); day++){
+//
+//		for(long route_ind = 0; route_ind < (long)solution[day].size(); route_ind++){
+//
+//			for(auto i : solution[day][route_ind]){
+//				cout << i[0] << " " << i[1] << " - ";
+//			}
+//			cout << endl;
+//		}
+//		cout << endl << endl;
+//	}
 
 
 	//-----Optimize Initial Solution for Routes-----
@@ -195,10 +199,11 @@ int main() {
 			long wait_time = 0;
 
 			long feasible = 0;
+
 			feasible = latest_returntime(latest_time, route_time, wait_time, solution[day][route], t_unload, t_fix_unload, stores, dist);
 
 			if(feasible == 0){
-				cout << "Initial Solution of Routes is unfeasible!" << endl;
+				cout << "Initial Solution of Routes is unfeasible!" << " Route: " << route << endl;
 			}
 
 			earliest_returntime(earliest_time, route_time, wait_time, solution[day][route], t_unload, t_fix_unload, stores, dist);
@@ -211,13 +216,17 @@ int main() {
 	}
 
 	//-----Print Scores of Initial Solution-----
-//	for(long day = 0; day < (long)solution.size(); day++){
-//			for(long route = 0; route < (long)solution[day].size(); route++){
-//				cout << route_scores[day][route].at(0) << " " << route_scores[day][route].at(1) << " " << route_scores[day][route].at(2) << " " << route_scores[day][route].at(3) << endl;
-//			}
-//			cout << endl << endl;
-//	}
-//
+	cout << "Scores for Routes Initial Solution: " << endl;
+	for(long day = 0; day < (long)solution.size(); day++){
+			for(long route = 0; route < (long)solution[day].size(); route++){
+				cout << route_scores[day][route].at(0) << " " << route_scores[day][route].at(1) << " " << route_scores[day][route].at(2) << " " << route_scores[day][route].at(3) << endl;
+			}
+			cout << endl << endl;
+	}
+
+	long score_tmp = evaluate_route_scores(route_scores[0]);
+	cout << "Initial Roues Score: " << score_tmp << endl;
+
 //	latest_returntime(latest_time, route_time, wait_time, solution[0][0], t_unload, t_fix_unload, stores, dist);
 //
 //	cout << "Latest Return-Time: " << latest_time << "  " << route_time << "  " << wait_time << endl;
@@ -345,6 +354,7 @@ int main() {
 					routes_swap_2(solution[cur_day][route_1], solution[cur_day][route_2], pos_1, pos_2);
 					break;
 				case 1 :
+
 					//-----move jobs between trucks/routes-----
 					routes_move(solution[cur_day][route_1], solution[cur_day][route_2], pos_1, pos_2);
 					break;
@@ -403,6 +413,7 @@ int main() {
 	}
 
 	//-----Print out the Route-Solution-----
+	cout << "Optimized Routes: " << endl;
 	for(long day = 0; day < (long)solution.size(); day++){
 
 		for(long route_ind = 0; route_ind < (long)solution[day].size(); route_ind++){
@@ -415,7 +426,10 @@ int main() {
 		cout << endl << endl;
 	}
 
+	score_tmp = evaluate_route_scores(route_scores_best[0]);
+	cout << "Final Routes Score: " << score_tmp << endl;
 
+	exit(1);
 	//-----Dock Scheduling with Optimized Routes-----
 
 	//-----create dock jobs from the best route-----
@@ -473,27 +487,29 @@ int main() {
 		sort(jobs[cur_day].begin(), jobs[cur_day].end(), [](job a, job b){ return (a.job_id < b.job_id); });
 
 		long cur_dock = 0;
-		for(auto i : docks){
-			//list< tuple <long, long, long> > jobs;
-			cout << "Dock_id: " << cur_dock << endl;
-			cur_dock++;
-			for(auto j : i.jobs[cur_day]){
-				cout << "{";
-				cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j);
-				cout << "},"<< endl;
-			}
-		}
-
-		cout << endl << "Trucks:" << endl;
-		for(auto i : trucks){
-			//list< tuple <long, long, long> > jobs;
-			for(auto j : i.jobs[cur_day]){
-				cout << "{";
-				cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j) << " , " << get<3>(j);
-				cout << "},"<< endl;
-			}
-			cout << endl;
-		}
+//		for(auto i : docks){
+//			//list< tuple <long, long, long> > jobs;
+//			cout << "Dock_id: " << cur_dock << endl;
+//			cur_dock++;
+//			for(auto j : i.jobs[cur_day]){
+//				cout << "{";
+//				cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j);
+//				cout << "},"<< endl;
+//			}
+//		}
+//		print_docks_mathematicaLabel(docks, 0);
+//
+//		cout << endl << "Trucks:" << endl;
+//		for(auto i : trucks){
+//			//list< tuple <long, long, long> > jobs;
+//			for(auto j : i.jobs[cur_day]){
+//				cout << "{";
+//				cout << get<0>(j) << " , " << get<1>(j) << " , " << get<2>(j) << " , " << get<3>(j);
+//				cout << "},"<< endl;
+//			}
+//			cout << endl;
+//		}
+//		print_trucks_mathematicaLabel(trucks, 0);
 
 		for(long t = 0; t < (long)trucks.size(); t++){
 			trucks_best[t].jobs.resize(cur_day + 1);
@@ -529,6 +545,12 @@ int main() {
 					valid = docks_swap_2jobs_trucks(docks, jobs, trucks, cur_day, truck_id_1, truck_id_2, job_id_1, job_id_2);
 					break;
 				case 1 :
+//					break;
+//					cout << i << " " << cur_day << endl;
+//					if(i == 48 && cur_day == 1){
+//						cout << "debug" << endl;
+//					}
+
 					//-----move jobs between trucks/docks-----
 					valid = docks_move_job(docks, jobs, trucks, cur_day, truck_id_1, truck_id_2, job_id_1, job_id_2);
 					break;
@@ -563,17 +585,17 @@ int main() {
 					else{
 
 						//-----Change back job-ids if the new solution does not get accepted-----
-						jobs[cur_day][get<2>(*next(trucks[truck_id_1].jobs[cur_day].begin(), job_id_1))].truck_id = truck_id_2;
-						if(level == 0){
-							jobs[cur_day][get<2>(*next(trucks[truck_id_2].jobs[cur_day].begin(), job_id_2))].truck_id = truck_id_1;
-						}
-
 						for(long t = 0; t < (long)trucks.size(); t++){
 							trucks[t].jobs[cur_day] = trucks_best[t].jobs[cur_day];
 						}
 
 						for(long d = 0; d < (long)docks.size(); d++){
 							docks[d].jobs[cur_day] = docks_best[d].jobs[cur_day];
+						}
+
+						jobs[cur_day][get<2>(*next(trucks[truck_id_1].jobs[cur_day].begin(), job_id_1))].truck_id = truck_id_1;
+						if(level == 0){
+							jobs[cur_day][get<2>(*next(trucks[truck_id_2].jobs[cur_day].begin(), job_id_2))].truck_id = truck_id_2;
 						}
 					}
 				}
@@ -636,7 +658,17 @@ int main() {
 			cout << endl;
 		}
 
+		print_docks_mathematicaLabel(docks_best, 0);
+		print_trucks_mathematicaLabel(trucks_best, 0);
+
+//		cout << endl << "Jobs: " << endl;
+//		for(auto i : jobs[cur_day]){
+//			cout << i.earliest_time << " " << i.latest_time << " " << i.route_time << " " << i.wait_time << " " << i.truck_id << " " << i.dock_id << " " << i.job_dura << endl;
+//		}
+
 	}
+
+	cout << "Calculation done!" << endl;
 
 //	long cur_day = 1;
 //	long truck_id_1 = 0;
