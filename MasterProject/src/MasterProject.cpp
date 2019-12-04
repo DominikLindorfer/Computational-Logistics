@@ -49,6 +49,18 @@ int main() {
 		dist(i, j) = stoi(get<2>(d));
 	}
 
+
+//	//-----Symmetry Operations in Distances-----
+//	dist_mat dist_sym = dist;
+//
+//	for(int i = 0; i < n_stores; i++){
+//		for(int j = 0; j < n_stores; j++){
+//
+//			dist_sym(i, j) = dist(i, j) / 2 + dist(j, i) / 2;
+//		}
+//	}
+//	dist = dist_sym;
+
 	//-----initialize stores-----
 	vector< store > stores(n_stores);
 
@@ -139,15 +151,15 @@ int main() {
 //	}
 
 	//-----initialize trucks-----
-	long n_trucks = 5; //3
+	long n_trucks = 100; //3
 	vector< truck > trucks(n_trucks);
 
 	for(auto& i : trucks){
-		i.capacity = 50;	//60
+		i.capacity = 70;	//60
 	}
 
 	//-----initialize docks-----
-	long n_docks = 3; //2
+	long n_docks = 40; //2
 	vector< dock > docks(n_docks);
 
 	//-----build nearest neighbor matrix-----
@@ -180,7 +192,6 @@ int main() {
 //		cout << endl << endl;
 //	}
 
-
 	//-----Optimize Initial Solution for Routes-----
 
 	//------ Days -- Routes -- Scores -----
@@ -212,17 +223,18 @@ int main() {
 			route_scores[day][route].push_back(latest_time);
 			route_scores[day][route].push_back(route_time);
 			route_scores[day][route].push_back(wait_time);
+
 		}
 	}
 
 	//-----Print Scores of Initial Solution-----
-	cout << "Scores for Routes Initial Solution: " << endl;
-	for(long day = 0; day < (long)solution.size(); day++){
-			for(long route = 0; route < (long)solution[day].size(); route++){
-				cout << route_scores[day][route].at(0) << " " << route_scores[day][route].at(1) << " " << route_scores[day][route].at(2) << " " << route_scores[day][route].at(3) << endl;
-			}
-			cout << endl << endl;
-	}
+//	cout << "Scores for Routes Initial Solution: " << endl;
+//	for(long day = 0; day < (long)solution.size(); day++){
+//			for(long route = 0; route < (long)solution[day].size(); route++){
+//				cout << route_scores[day][route].at(0) << " " << route_scores[day][route].at(1) << " " << route_scores[day][route].at(2) << " " << route_scores[day][route].at(3) << endl;
+//			}
+//			cout << endl << endl;
+//	}
 
 	long score_tmp = evaluate_route_scores(route_scores[0]);
 	cout << "Initial Roues Score: " << score_tmp << endl;
@@ -329,6 +341,8 @@ int main() {
 
 	double accept_ratio = 0.3;
 
+	long numb_iters = 0;
+
 	cout << "Doing VND/S for routes now!" << endl;
 	//-----Potential parallelization at this loop b/c routes of different days are independently created-----
 	for(long cur_day = 0; cur_day < (long)solution.size(); cur_day++){
@@ -340,13 +354,21 @@ int main() {
 
 			for(long i = 0; i < n_tries; i++){
 
-//				cout << i << " " << cur_day << " " << level << endl;
+//				numb_iters++;
+//				cout << i << " " << cur_day << " " << level << " " << numb_iters << endl;
 
 				long route_1 = rand() % solution[cur_day].size();
 				long route_2 = rand() % solution[cur_day].size();
 
+//				if(numb_iters == 21272){
+//					cout << "numb" << endl;
+//					cout << solution[cur_day].size() << " " << solution[cur_day][route_1].size() << " " << solution[cur_day][route_2].size() << endl;
+//				}
+
 				long pos_1 = rand() % solution[cur_day][route_1].size();
 				long pos_2 = rand() % solution[cur_day][route_2].size();
+
+
 
 				switch(level){
 				case 0 :
@@ -379,6 +401,19 @@ int main() {
 
 				//-----Check for new best Solution-----
 				checkSolution(solution[cur_day], cur_day, stores, dist, trucks, total_demand, true);
+
+				//-----Delete empty routes-----
+				auto s = solution[cur_day].begin();
+				do {
+					if((*s).size() == 0) {
+						s = solution[cur_day].erase(s);
+					}
+					else {
+						s++;
+					}
+				}
+				while(s != solution[cur_day].end());
+
 				bool valid = validateSolution(solution[cur_day], cur_day, t_unload, t_fix_unload, stores, dist, route_scores);
 
 				if(valid){
@@ -429,7 +464,6 @@ int main() {
 	score_tmp = evaluate_route_scores(route_scores_best[0]);
 	cout << "Final Routes Score: " << score_tmp << endl;
 
-	exit(1);
 	//-----Dock Scheduling with Optimized Routes-----
 
 	//-----create dock jobs from the best route-----

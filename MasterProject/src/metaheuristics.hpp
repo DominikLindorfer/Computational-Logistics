@@ -808,7 +808,7 @@ bool earliest_returntime(long& time, long& route_time, long& wait_time, list< ve
 		route_time -= unload_time;
 	}
 
-	route_time -= dist((*prev(subsolution.begin(), 0)).at(0), 0);
+	route_time -= dist(0, (*prev(subsolution.begin(), 0)).at(0));
 
 	long earliest_time_tmp = earliest_time;
 	earliest_time = route_time;
