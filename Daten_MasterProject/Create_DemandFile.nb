@@ -1,0 +1,2021 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     71157,       2013]
+NotebookOptionsPosition[     69973,       1984]
+NotebookOutlinePosition[     70310,       1999]
+CellTagsIndexPosition[     70267,       1996]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[
+ RowBox[{"SetDirectory", "[", 
+  RowBox[{"NotebookDirectory", "[", "]"}], "]"}]], "Input",
+ CellChangeTimes->{{3.783774034057317*^9, 3.783774039070417*^9}},
+ CellLabel->"In[1]:=",ExpressionUUID->"c4f54d60-2b11-42ec-b7d3-2de1abfaec0a"],
+
+Cell[BoxData["\<\"/home/lindorfer/ReWiTech/Masterarbeit/Programs/Daten_\
+MasterProject\"\>"], "Output",
+ CellChangeTimes->{3.78377403948176*^9},
+ CellLabel->"Out[1]=",ExpressionUUID->"af3181aa-7e32-435a-b400-30265f4927a2"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"template", "=", 
+   RowBox[{"Import", "[", 
+    RowBox[{"\"\<Demand1_5days_Template.csv\>\"", ",", "\"\<CSV\>\""}], 
+    "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"template", "=", 
+  RowBox[{"Drop", "[", 
+   RowBox[{"template", ",", "1"}], "]"}]}]}], "Input",
+ CellChangeTimes->{{3.7837740418005867`*^9, 3.783774142328209*^9}, {
+  3.783774238325683*^9, 3.783774238632081*^9}},
+ CellLabel->"In[24]:=",ExpressionUUID->"e23decbb-3c31-4223-bbb1-29cca3ffa9a5"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_002\"\>", 
+     ",", "\<\"Ambient\"\>", ",", "7"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_002\"\>", 
+     ",", "\<\"Chilled\"\>", ",", "2"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_002\"\>", 
+     ",", "\<\"Frozen\"\>", ",", "1"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_002\"\>", 
+     ",", "\<\"Temp cont.\"\>", ",", "12"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_003\"\>", 
+     ",", "\<\"Ambient\"\>", ",", "16"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_003\"\>", 
+     ",", "\<\"Chilled\"\>", ",", "2"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_003\"\>", 
+     ",", "\<\"Frozen\"\>", ",", "1"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_003\"\>", 
+     ",", "\<\"Temp cont.\"\>", ",", "8"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_004\"\>", 
+     ",", "\<\"Ambient\"\>", ",", "15"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_004\"\>", 
+     ",", "\<\"Chilled\"\>", ",", "6"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_004\"\>", 
+     ",", "\<\"Frozen\"\>", ",", "2"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_004\"\>", 
+     ",", "\<\"Temp cont.\"\>", ",", "7"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_005\"\>", 
+     ",", "\<\"Ambient\"\>", ",", "31"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_005\"\>", 
+     ",", "\<\"Chilled\"\>", ",", "14"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_005\"\>", 
+     ",", "\<\"Frozen\"\>", ",", "2"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_005\"\>", 
+     ",", "\<\"Temp cont.\"\>", ",", "11"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_006\"\>", 
+     ",", "\<\"Ambient\"\>", ",", "15"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_006\"\>", 
+     ",", "\<\"Chilled\"\>", ",", "8"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_006\"\>", 
+     ",", "\<\"Frozen\"\>", ",", "1"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_006\"\>", 
+     ",", "\<\"Temp cont.\"\>", ",", "9"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_007\"\>", 
+     ",", "\<\"Ambient\"\>", ",", "10"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_007\"\>", 
+     ",", "\<\"Chilled\"\>", ",", "7"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_007\"\>", 
+     ",", "\<\"Temp cont.\"\>", ",", "12"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_008\"\>", 
+     ",", "\<\"Ambient\"\>", ",", "6"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_008\"\>", 
+     ",", "\<\"Chilled\"\>", ",", "2"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_008\"\>", 
+     ",", "\<\"Frozen\"\>", ",", "1"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_008\"\>", 
+     ",", "\<\"Temp cont.\"\>", ",", "17"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_009\"\>", 
+     ",", "\<\"Temp cont.\"\>", ",", "6"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_010\"\>", 
+     ",", "\<\"Ambient\"\>", ",", "7"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_010\"\>", 
+     ",", "\<\"Chilled\"\>", ",", "2"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_010\"\>", 
+     ",", "\<\"Frozen\"\>", ",", "1"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_010\"\>", 
+     ",", "\<\"Temp cont.\"\>", ",", "12"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_011\"\>", 
+     ",", "\<\"Frozen\"\>", ",", "1"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_011\"\>", 
+     ",", "\<\"Temp cont.\"\>", ",", "23"}], "}"}]}], "}"}]], "Output",
+ CellChangeTimes->{{3.783774120642908*^9, 3.7837741723209963`*^9}, 
+   3.7837742389667263`*^9, 3.783774535471345*^9},
+ CellLabel->"Out[25]=",ExpressionUUID->"58a0258c-736c-4669-91f3-869f03393139"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"CreateList", "[", 
+   RowBox[{"numbDays_", ",", "Intmax_", ",", "template_"}], "]"}], ":=", 
+  RowBox[{"Module", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"demandlist", "=", 
+       RowBox[{"{", "}"}]}], ",", "i"}], "}"}], ",", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"For", "[", 
+      RowBox[{
+       RowBox[{"i", " ", "=", " ", "1"}], ",", " ", 
+       RowBox[{"i", " ", "\[LessEqual]", "numbDays"}], ",", 
+       RowBox[{"i", "++"}], ",", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"AppendTo", "[", 
+         RowBox[{"demandlist", ",", 
+          RowBox[{"Map", "[", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"ReplacePart", "[", 
+              RowBox[{"#", ",", 
+               RowBox[{"{", 
+                RowBox[{
+                 RowBox[{"2", "\[Rule]", "i"}], ",", 
+                 RowBox[{"5", "\[Rule]", 
+                  RowBox[{"RandomInteger", "[", "Intmax", "]"}]}]}], "}"}]}], 
+              "]"}], "&"}], ",", "template"}], "]"}]}], "]"}], ";"}]}], 
+      "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+     RowBox[{"Return", "[", "demandlist", "]"}], ";"}]}], 
+   "\[IndentingNewLine]", "]"}]}]], "Input",
+ CellChangeTimes->{{3.7837746951844883`*^9, 3.783774842455023*^9}, {
+  3.783774875066317*^9, 3.783774877258779*^9}},
+ CellLabel->"In[30]:=",ExpressionUUID->"2ac4ee78-fd78-4bf4-a9c2-dfa50add497d"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"list", "=", 
+  RowBox[{"CreateList", "[", 
+   RowBox[{"3", ",", "40", ",", "template"}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.783774846503751*^9, 3.7837748534304333`*^9}, {
+  3.783774973146336*^9, 3.783774973751596*^9}},
+ CellLabel->"In[32]:=",ExpressionUUID->"7c027c5f-edd3-4c1f-b8b8-4d9236e4928e"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "1", ",", "\<\"STO_002\"\>", 
+       ",", "\<\"Ambient\"\>", ",", "8"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "1", ",", "\<\"STO_002\"\>", 
+       ",", "\<\"Chilled\"\>", ",", "1"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "1", ",", "\<\"STO_002\"\>", 
+       ",", "\<\"Frozen\"\>", ",", "38"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "1", ",", "\<\"STO_002\"\>", 
+       ",", "\<\"Temp cont.\"\>", ",", "37"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "1", ",", "\<\"STO_003\"\>", 
+       ",", "\<\"Ambient\"\>", ",", "14"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "1", ",", "\<\"STO_003\"\>", 
+       ",", "\<\"Chilled\"\>", ",", "2"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "1", ",", "\<\"STO_003\"\>", 
+       ",", "\<\"Frozen\"\>", ",", "10"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "1", ",", "\<\"STO_003\"\>", 
+       ",", "\<\"Temp cont.\"\>", ",", "13"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "1", ",", "\<\"STO_004\"\>", 
+       ",", "\<\"Ambient\"\>", ",", "23"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "1", ",", "\<\"STO_004\"\>", 
+       ",", "\<\"Chilled\"\>", ",", "28"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "1", ",", "\<\"STO_004\"\>", 
+       ",", "\<\"Frozen\"\>", ",", "11"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "1", ",", "\<\"STO_004\"\>", 
+       ",", "\<\"Temp cont.\"\>", ",", "40"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "1", ",", "\<\"STO_005\"\>", 
+       ",", "\<\"Ambient\"\>", ",", "37"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "1", ",", "\<\"STO_005\"\>", 
+       ",", "\<\"Chilled\"\>", ",", "2"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "1", ",", "\<\"STO_005\"\>", 
+       ",", "\<\"Frozen\"\>", ",", "19"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "1", ",", "\<\"STO_005\"\>", 
+       ",", "\<\"Temp cont.\"\>", ",", "13"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "1", ",", "\<\"STO_006\"\>", 
+       ",", "\<\"Ambient\"\>", ",", "31"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "1", ",", "\<\"STO_006\"\>", 
+       ",", "\<\"Chilled\"\>", ",", "0"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "1", ",", "\<\"STO_006\"\>", 
+       ",", "\<\"Frozen\"\>", ",", "5"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "1", ",", "\<\"STO_006\"\>", 
+       ",", "\<\"Temp cont.\"\>", ",", "14"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "1", ",", "\<\"STO_007\"\>", 
+       ",", "\<\"Ambient\"\>", ",", "9"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "1", ",", "\<\"STO_007\"\>", 
+       ",", "\<\"Chilled\"\>", ",", "37"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "1", ",", "\<\"STO_007\"\>", 
+       ",", "\<\"Temp cont.\"\>", ",", "15"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "1", ",", "\<\"STO_008\"\>", 
+       ",", "\<\"Ambient\"\>", ",", "9"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "1", ",", "\<\"STO_008\"\>", 
+       ",", "\<\"Chilled\"\>", ",", "33"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "1", ",", "\<\"STO_008\"\>", 
+       ",", "\<\"Frozen\"\>", ",", "12"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "1", ",", "\<\"STO_008\"\>", 
+       ",", "\<\"Temp cont.\"\>", ",", "15"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "1", ",", "\<\"STO_009\"\>", 
+       ",", "\<\"Temp cont.\"\>", ",", "15"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "1", ",", "\<\"STO_010\"\>", 
+       ",", "\<\"Ambient\"\>", ",", "5"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "1", ",", "\<\"STO_010\"\>", 
+       ",", "\<\"Chilled\"\>", ",", "24"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "1", ",", "\<\"STO_010\"\>", 
+       ",", "\<\"Frozen\"\>", ",", "36"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "1", ",", "\<\"STO_010\"\>", 
+       ",", "\<\"Temp cont.\"\>", ",", "18"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "1", ",", "\<\"STO_011\"\>", 
+       ",", "\<\"Frozen\"\>", ",", "2"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "1", ",", "\<\"STO_011\"\>", 
+       ",", "\<\"Temp cont.\"\>", ",", "28"}], "}"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_002\"\>", 
+       ",", "\<\"Ambient\"\>", ",", "9"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_002\"\>", 
+       ",", "\<\"Chilled\"\>", ",", "32"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_002\"\>", 
+       ",", "\<\"Frozen\"\>", ",", "19"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_002\"\>", 
+       ",", "\<\"Temp cont.\"\>", ",", "18"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_003\"\>", 
+       ",", "\<\"Ambient\"\>", ",", "23"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_003\"\>", 
+       ",", "\<\"Chilled\"\>", ",", "6"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_003\"\>", 
+       ",", "\<\"Frozen\"\>", ",", "1"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_003\"\>", 
+       ",", "\<\"Temp cont.\"\>", ",", "22"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_004\"\>", 
+       ",", "\<\"Ambient\"\>", ",", "35"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_004\"\>", 
+       ",", "\<\"Chilled\"\>", ",", "20"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_004\"\>", 
+       ",", "\<\"Frozen\"\>", ",", "37"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_004\"\>", 
+       ",", "\<\"Temp cont.\"\>", ",", "37"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_005\"\>", 
+       ",", "\<\"Ambient\"\>", ",", "34"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_005\"\>", 
+       ",", "\<\"Chilled\"\>", ",", "21"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_005\"\>", 
+       ",", "\<\"Frozen\"\>", ",", "39"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_005\"\>", 
+       ",", "\<\"Temp cont.\"\>", ",", "22"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_006\"\>", 
+       ",", "\<\"Ambient\"\>", ",", "12"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_006\"\>", 
+       ",", "\<\"Chilled\"\>", ",", "38"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_006\"\>", 
+       ",", "\<\"Frozen\"\>", ",", "0"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_006\"\>", 
+       ",", "\<\"Temp cont.\"\>", ",", "3"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_007\"\>", 
+       ",", "\<\"Ambient\"\>", ",", "21"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_007\"\>", 
+       ",", "\<\"Chilled\"\>", ",", "20"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_007\"\>", 
+       ",", "\<\"Temp cont.\"\>", ",", "33"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_008\"\>", 
+       ",", "\<\"Ambient\"\>", ",", "18"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_008\"\>", 
+       ",", "\<\"Chilled\"\>", ",", "5"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_008\"\>", 
+       ",", "\<\"Frozen\"\>", ",", "13"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_008\"\>", 
+       ",", "\<\"Temp cont.\"\>", ",", "27"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_009\"\>", 
+       ",", "\<\"Temp cont.\"\>", ",", "30"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_010\"\>", 
+       ",", "\<\"Ambient\"\>", ",", "13"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_010\"\>", 
+       ",", "\<\"Chilled\"\>", ",", "2"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_010\"\>", 
+       ",", "\<\"Frozen\"\>", ",", "18"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_010\"\>", 
+       ",", "\<\"Temp cont.\"\>", ",", "35"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_011\"\>", 
+       ",", "\<\"Frozen\"\>", ",", "10"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "2", ",", "\<\"STO_011\"\>", 
+       ",", "\<\"Temp cont.\"\>", ",", "34"}], "}"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "3", ",", "\<\"STO_002\"\>", 
+       ",", "\<\"Ambient\"\>", ",", "35"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "3", ",", "\<\"STO_002\"\>", 
+       ",", "\<\"Chilled\"\>", ",", "5"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "3", ",", "\<\"STO_002\"\>", 
+       ",", "\<\"Frozen\"\>", ",", "9"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "3", ",", "\<\"STO_002\"\>", 
+       ",", "\<\"Temp cont.\"\>", ",", "37"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "3", ",", "\<\"STO_003\"\>", 
+       ",", "\<\"Ambient\"\>", ",", "12"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "3", ",", "\<\"STO_003\"\>", 
+       ",", "\<\"Chilled\"\>", ",", "24"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "3", ",", "\<\"STO_003\"\>", 
+       ",", "\<\"Frozen\"\>", ",", "12"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "3", ",", "\<\"STO_003\"\>", 
+       ",", "\<\"Temp cont.\"\>", ",", "24"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "3", ",", "\<\"STO_004\"\>", 
+       ",", "\<\"Ambient\"\>", ",", "36"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "3", ",", "\<\"STO_004\"\>", 
+       ",", "\<\"Chilled\"\>", ",", "38"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "3", ",", "\<\"STO_004\"\>", 
+       ",", "\<\"Frozen\"\>", ",", "21"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "3", ",", "\<\"STO_004\"\>", 
+       ",", "\<\"Temp cont.\"\>", ",", "40"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "3", ",", "\<\"STO_005\"\>", 
+       ",", "\<\"Ambient\"\>", ",", "39"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "3", ",", "\<\"STO_005\"\>", 
+       ",", "\<\"Chilled\"\>", ",", "22"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "3", ",", "\<\"STO_005\"\>", 
+       ",", "\<\"Frozen\"\>", ",", "13"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "3", ",", "\<\"STO_005\"\>", 
+       ",", "\<\"Temp cont.\"\>", ",", "4"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "3", ",", "\<\"STO_006\"\>", 
+       ",", "\<\"Ambient\"\>", ",", "5"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "3", ",", "\<\"STO_006\"\>", 
+       ",", "\<\"Chilled\"\>", ",", "24"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "3", ",", "\<\"STO_006\"\>", 
+       ",", "\<\"Frozen\"\>", ",", "30"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "3", ",", "\<\"STO_006\"\>", 
+       ",", "\<\"Temp cont.\"\>", ",", "22"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "3", ",", "\<\"STO_007\"\>", 
+       ",", "\<\"Ambient\"\>", ",", "14"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "3", ",", "\<\"STO_007\"\>", 
+       ",", "\<\"Chilled\"\>", ",", "26"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "3", ",", "\<\"STO_007\"\>", 
+       ",", "\<\"Temp cont.\"\>", ",", "11"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "3", ",", "\<\"STO_008\"\>", 
+       ",", "\<\"Ambient\"\>", ",", "24"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "3", ",", "\<\"STO_008\"\>", 
+       ",", "\<\"Chilled\"\>", ",", "26"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "3", ",", "\<\"STO_008\"\>", 
+       ",", "\<\"Frozen\"\>", ",", "30"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "3", ",", "\<\"STO_008\"\>", 
+       ",", "\<\"Temp cont.\"\>", ",", "35"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "3", ",", "\<\"STO_009\"\>", 
+       ",", "\<\"Temp cont.\"\>", ",", "37"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "3", ",", "\<\"STO_010\"\>", 
+       ",", "\<\"Ambient\"\>", ",", "8"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "3", ",", "\<\"STO_010\"\>", 
+       ",", "\<\"Chilled\"\>", ",", "38"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "3", ",", "\<\"STO_010\"\>", 
+       ",", "\<\"Frozen\"\>", ",", "37"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "3", ",", "\<\"STO_010\"\>", 
+       ",", "\<\"Temp cont.\"\>", ",", "21"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "3", ",", "\<\"STO_011\"\>", 
+       ",", "\<\"Frozen\"\>", ",", "38"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"January\"\>", ",", "3", ",", "\<\"STO_011\"\>", 
+       ",", "\<\"Temp cont.\"\>", ",", "6"}], "}"}]}], "}"}]}], 
+  "}"}]], "Output",
+ CellChangeTimes->{{3.783774853907139*^9, 3.783774880059992*^9}, 
+   3.783774974033136*^9},
+ CellLabel->"Out[32]=",ExpressionUUID->"1db60b29-bc2c-4cc0-818b-54449ead1684"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"TableForm", "[", "list", "]"}]], "Input",
+ CellChangeTimes->{{3.783774968265593*^9, 3.783774981230516*^9}},
+ CellLabel->"In[34]:=",ExpressionUUID->"eb62695f-1bad-4577-b0d0-ebb2b2bcaaca"],
+
+Cell[BoxData[
+ TagBox[GridBox[{
+    {
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"1"},
+        {"\<\"STO_002\"\>"},
+        {"\<\"Ambient\"\>"},
+        {"8"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"1"},
+        {"\<\"STO_002\"\>"},
+        {"\<\"Chilled\"\>"},
+        {"1"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"1"},
+        {"\<\"STO_002\"\>"},
+        {"\<\"Frozen\"\>"},
+        {"38"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"1"},
+        {"\<\"STO_002\"\>"},
+        {"\<\"Temp cont.\"\>"},
+        {"37"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"1"},
+        {"\<\"STO_003\"\>"},
+        {"\<\"Ambient\"\>"},
+        {"14"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"1"},
+        {"\<\"STO_003\"\>"},
+        {"\<\"Chilled\"\>"},
+        {"2"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"1"},
+        {"\<\"STO_003\"\>"},
+        {"\<\"Frozen\"\>"},
+        {"10"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"1"},
+        {"\<\"STO_003\"\>"},
+        {"\<\"Temp cont.\"\>"},
+        {"13"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"1"},
+        {"\<\"STO_004\"\>"},
+        {"\<\"Ambient\"\>"},
+        {"23"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"1"},
+        {"\<\"STO_004\"\>"},
+        {"\<\"Chilled\"\>"},
+        {"28"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"1"},
+        {"\<\"STO_004\"\>"},
+        {"\<\"Frozen\"\>"},
+        {"11"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"1"},
+        {"\<\"STO_004\"\>"},
+        {"\<\"Temp cont.\"\>"},
+        {"40"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"1"},
+        {"\<\"STO_005\"\>"},
+        {"\<\"Ambient\"\>"},
+        {"37"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"1"},
+        {"\<\"STO_005\"\>"},
+        {"\<\"Chilled\"\>"},
+        {"2"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"1"},
+        {"\<\"STO_005\"\>"},
+        {"\<\"Frozen\"\>"},
+        {"19"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"1"},
+        {"\<\"STO_005\"\>"},
+        {"\<\"Temp cont.\"\>"},
+        {"13"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"1"},
+        {"\<\"STO_006\"\>"},
+        {"\<\"Ambient\"\>"},
+        {"31"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"1"},
+        {"\<\"STO_006\"\>"},
+        {"\<\"Chilled\"\>"},
+        {"0"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"1"},
+        {"\<\"STO_006\"\>"},
+        {"\<\"Frozen\"\>"},
+        {"5"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"1"},
+        {"\<\"STO_006\"\>"},
+        {"\<\"Temp cont.\"\>"},
+        {"14"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"1"},
+        {"\<\"STO_007\"\>"},
+        {"\<\"Ambient\"\>"},
+        {"9"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"1"},
+        {"\<\"STO_007\"\>"},
+        {"\<\"Chilled\"\>"},
+        {"37"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"1"},
+        {"\<\"STO_007\"\>"},
+        {"\<\"Temp cont.\"\>"},
+        {"15"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"1"},
+        {"\<\"STO_008\"\>"},
+        {"\<\"Ambient\"\>"},
+        {"9"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"1"},
+        {"\<\"STO_008\"\>"},
+        {"\<\"Chilled\"\>"},
+        {"33"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"1"},
+        {"\<\"STO_008\"\>"},
+        {"\<\"Frozen\"\>"},
+        {"12"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"1"},
+        {"\<\"STO_008\"\>"},
+        {"\<\"Temp cont.\"\>"},
+        {"15"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"1"},
+        {"\<\"STO_009\"\>"},
+        {"\<\"Temp cont.\"\>"},
+        {"15"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"1"},
+        {"\<\"STO_010\"\>"},
+        {"\<\"Ambient\"\>"},
+        {"5"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"1"},
+        {"\<\"STO_010\"\>"},
+        {"\<\"Chilled\"\>"},
+        {"24"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"1"},
+        {"\<\"STO_010\"\>"},
+        {"\<\"Frozen\"\>"},
+        {"36"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"1"},
+        {"\<\"STO_010\"\>"},
+        {"\<\"Temp cont.\"\>"},
+        {"18"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"1"},
+        {"\<\"STO_011\"\>"},
+        {"\<\"Frozen\"\>"},
+        {"2"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"1"},
+        {"\<\"STO_011\"\>"},
+        {"\<\"Temp cont.\"\>"},
+        {"28"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column]},
+    {
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"2"},
+        {"\<\"STO_002\"\>"},
+        {"\<\"Ambient\"\>"},
+        {"9"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"2"},
+        {"\<\"STO_002\"\>"},
+        {"\<\"Chilled\"\>"},
+        {"32"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"2"},
+        {"\<\"STO_002\"\>"},
+        {"\<\"Frozen\"\>"},
+        {"19"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"2"},
+        {"\<\"STO_002\"\>"},
+        {"\<\"Temp cont.\"\>"},
+        {"18"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"2"},
+        {"\<\"STO_003\"\>"},
+        {"\<\"Ambient\"\>"},
+        {"23"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"2"},
+        {"\<\"STO_003\"\>"},
+        {"\<\"Chilled\"\>"},
+        {"6"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"2"},
+        {"\<\"STO_003\"\>"},
+        {"\<\"Frozen\"\>"},
+        {"1"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"2"},
+        {"\<\"STO_003\"\>"},
+        {"\<\"Temp cont.\"\>"},
+        {"22"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"2"},
+        {"\<\"STO_004\"\>"},
+        {"\<\"Ambient\"\>"},
+        {"35"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"2"},
+        {"\<\"STO_004\"\>"},
+        {"\<\"Chilled\"\>"},
+        {"20"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"2"},
+        {"\<\"STO_004\"\>"},
+        {"\<\"Frozen\"\>"},
+        {"37"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"2"},
+        {"\<\"STO_004\"\>"},
+        {"\<\"Temp cont.\"\>"},
+        {"37"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"2"},
+        {"\<\"STO_005\"\>"},
+        {"\<\"Ambient\"\>"},
+        {"34"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"2"},
+        {"\<\"STO_005\"\>"},
+        {"\<\"Chilled\"\>"},
+        {"21"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"2"},
+        {"\<\"STO_005\"\>"},
+        {"\<\"Frozen\"\>"},
+        {"39"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"2"},
+        {"\<\"STO_005\"\>"},
+        {"\<\"Temp cont.\"\>"},
+        {"22"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"2"},
+        {"\<\"STO_006\"\>"},
+        {"\<\"Ambient\"\>"},
+        {"12"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"2"},
+        {"\<\"STO_006\"\>"},
+        {"\<\"Chilled\"\>"},
+        {"38"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"2"},
+        {"\<\"STO_006\"\>"},
+        {"\<\"Frozen\"\>"},
+        {"0"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"2"},
+        {"\<\"STO_006\"\>"},
+        {"\<\"Temp cont.\"\>"},
+        {"3"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"2"},
+        {"\<\"STO_007\"\>"},
+        {"\<\"Ambient\"\>"},
+        {"21"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"2"},
+        {"\<\"STO_007\"\>"},
+        {"\<\"Chilled\"\>"},
+        {"20"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"2"},
+        {"\<\"STO_007\"\>"},
+        {"\<\"Temp cont.\"\>"},
+        {"33"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"2"},
+        {"\<\"STO_008\"\>"},
+        {"\<\"Ambient\"\>"},
+        {"18"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"2"},
+        {"\<\"STO_008\"\>"},
+        {"\<\"Chilled\"\>"},
+        {"5"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"2"},
+        {"\<\"STO_008\"\>"},
+        {"\<\"Frozen\"\>"},
+        {"13"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"2"},
+        {"\<\"STO_008\"\>"},
+        {"\<\"Temp cont.\"\>"},
+        {"27"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"2"},
+        {"\<\"STO_009\"\>"},
+        {"\<\"Temp cont.\"\>"},
+        {"30"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"2"},
+        {"\<\"STO_010\"\>"},
+        {"\<\"Ambient\"\>"},
+        {"13"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"2"},
+        {"\<\"STO_010\"\>"},
+        {"\<\"Chilled\"\>"},
+        {"2"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"2"},
+        {"\<\"STO_010\"\>"},
+        {"\<\"Frozen\"\>"},
+        {"18"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"2"},
+        {"\<\"STO_010\"\>"},
+        {"\<\"Temp cont.\"\>"},
+        {"35"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"2"},
+        {"\<\"STO_011\"\>"},
+        {"\<\"Frozen\"\>"},
+        {"10"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"2"},
+        {"\<\"STO_011\"\>"},
+        {"\<\"Temp cont.\"\>"},
+        {"34"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column]},
+    {
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"3"},
+        {"\<\"STO_002\"\>"},
+        {"\<\"Ambient\"\>"},
+        {"35"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"3"},
+        {"\<\"STO_002\"\>"},
+        {"\<\"Chilled\"\>"},
+        {"5"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"3"},
+        {"\<\"STO_002\"\>"},
+        {"\<\"Frozen\"\>"},
+        {"9"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"3"},
+        {"\<\"STO_002\"\>"},
+        {"\<\"Temp cont.\"\>"},
+        {"37"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"3"},
+        {"\<\"STO_003\"\>"},
+        {"\<\"Ambient\"\>"},
+        {"12"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"3"},
+        {"\<\"STO_003\"\>"},
+        {"\<\"Chilled\"\>"},
+        {"24"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"3"},
+        {"\<\"STO_003\"\>"},
+        {"\<\"Frozen\"\>"},
+        {"12"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"3"},
+        {"\<\"STO_003\"\>"},
+        {"\<\"Temp cont.\"\>"},
+        {"24"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"3"},
+        {"\<\"STO_004\"\>"},
+        {"\<\"Ambient\"\>"},
+        {"36"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"3"},
+        {"\<\"STO_004\"\>"},
+        {"\<\"Chilled\"\>"},
+        {"38"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"3"},
+        {"\<\"STO_004\"\>"},
+        {"\<\"Frozen\"\>"},
+        {"21"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"3"},
+        {"\<\"STO_004\"\>"},
+        {"\<\"Temp cont.\"\>"},
+        {"40"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"3"},
+        {"\<\"STO_005\"\>"},
+        {"\<\"Ambient\"\>"},
+        {"39"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"3"},
+        {"\<\"STO_005\"\>"},
+        {"\<\"Chilled\"\>"},
+        {"22"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"3"},
+        {"\<\"STO_005\"\>"},
+        {"\<\"Frozen\"\>"},
+        {"13"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"3"},
+        {"\<\"STO_005\"\>"},
+        {"\<\"Temp cont.\"\>"},
+        {"4"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"3"},
+        {"\<\"STO_006\"\>"},
+        {"\<\"Ambient\"\>"},
+        {"5"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"3"},
+        {"\<\"STO_006\"\>"},
+        {"\<\"Chilled\"\>"},
+        {"24"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"3"},
+        {"\<\"STO_006\"\>"},
+        {"\<\"Frozen\"\>"},
+        {"30"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"3"},
+        {"\<\"STO_006\"\>"},
+        {"\<\"Temp cont.\"\>"},
+        {"22"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"3"},
+        {"\<\"STO_007\"\>"},
+        {"\<\"Ambient\"\>"},
+        {"14"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"3"},
+        {"\<\"STO_007\"\>"},
+        {"\<\"Chilled\"\>"},
+        {"26"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"3"},
+        {"\<\"STO_007\"\>"},
+        {"\<\"Temp cont.\"\>"},
+        {"11"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"3"},
+        {"\<\"STO_008\"\>"},
+        {"\<\"Ambient\"\>"},
+        {"24"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"3"},
+        {"\<\"STO_008\"\>"},
+        {"\<\"Chilled\"\>"},
+        {"26"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"3"},
+        {"\<\"STO_008\"\>"},
+        {"\<\"Frozen\"\>"},
+        {"30"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"3"},
+        {"\<\"STO_008\"\>"},
+        {"\<\"Temp cont.\"\>"},
+        {"35"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"3"},
+        {"\<\"STO_009\"\>"},
+        {"\<\"Temp cont.\"\>"},
+        {"37"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"3"},
+        {"\<\"STO_010\"\>"},
+        {"\<\"Ambient\"\>"},
+        {"8"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"3"},
+        {"\<\"STO_010\"\>"},
+        {"\<\"Chilled\"\>"},
+        {"38"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"3"},
+        {"\<\"STO_010\"\>"},
+        {"\<\"Frozen\"\>"},
+        {"37"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"3"},
+        {"\<\"STO_010\"\>"},
+        {"\<\"Temp cont.\"\>"},
+        {"21"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"3"},
+        {"\<\"STO_011\"\>"},
+        {"\<\"Frozen\"\>"},
+        {"38"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column], 
+     TagBox[GridBox[{
+        {"\<\"January\"\>"},
+        {"3"},
+        {"\<\"STO_011\"\>"},
+        {"\<\"Temp cont.\"\>"},
+        {"6"}
+       },
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+       GridBoxSpacings->{"Columns" -> {
+           Offset[0.27999999999999997`], {
+            Offset[0.5599999999999999]}, 
+           Offset[0.27999999999999997`]}, "Rows" -> {{
+            Offset[0.2]}}}],
+      Column]}
+   },
+   GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+   GridBoxSpacings->{"Columns" -> {
+       Offset[0.27999999999999997`], {
+        Offset[2.0999999999999996`]}, 
+       Offset[0.27999999999999997`]}, "Rows" -> {
+       Offset[0.2], {
+        Offset[0.4]}, 
+       Offset[0.2]}}],
+  Function[BoxForm`e$, 
+   TableForm[BoxForm`e$]]]], "Output",
+ CellChangeTimes->{3.783774981904565*^9},
+ CellLabel->
+  "Out[34]//TableForm=",ExpressionUUID->"b95c422d-0ed1-4e8d-99f1-\
+c8f1f04dbd3e"]
+}, Open  ]]
+},
+WindowSize->{1389, 759},
+WindowMargins->{{Automatic, 189}, {Automatic, 138}},
+FrontEndVersion->"12.0 for Linux x86 (64-bit) (April 8, 2019)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 248, 4, 31, "Input",ExpressionUUID->"c4f54d60-2b11-42ec-b7d3-2de1abfaec0a"],
+Cell[831, 28, 222, 3, 35, "Output",ExpressionUUID->"af3181aa-7e32-435a-b400-30265f4927a2"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[1090, 36, 498, 11, 55, "Input",ExpressionUUID->"e23decbb-3c31-4223-bbb1-29cca3ffa9a5"],
+Cell[1591, 49, 4942, 107, 220, "Output",ExpressionUUID->"58a0258c-736c-4669-91f3-869f03393139"]
+}, Open  ]],
+Cell[6548, 159, 1434, 35, 147, "Input",ExpressionUUID->"2ac4ee78-fd78-4bf4-a9c2-dfa50add497d"],
+Cell[CellGroupData[{
+Cell[8007, 198, 327, 6, 31, "Input",ExpressionUUID->"7c027c5f-edd3-4c1f-b8b8-4d9236e4928e"],
+Cell[8337, 206, 15075, 318, 634, "Output",ExpressionUUID->"1db60b29-bc2c-4cc0-818b-54449ead1684"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[23449, 529, 210, 3, 31, "Input",ExpressionUUID->"eb62695f-1bad-4577-b0d0-ebb2b2bcaaca"],
+Cell[23662, 534, 46295, 1447, 332, "Output",ExpressionUUID->"b95c422d-0ed1-4e8d-99f1-c8f1f04dbd3e"]
+}, Open  ]]
+}
+]
+*)
+
