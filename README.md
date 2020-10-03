@@ -1,8 +1,8 @@
 # Computational Logistics
 
-## This Repository accomanies our Master-Thesis at the Institute of Transport and Logistics Managment @ JKU
+## This Repository accompanies our Master-Thesis at the [Institute of Production and Logistics Managment](https://www.jku.at/en/institute-of-production-and-logistics-management/) @ [JKU](http://www.jku.at)
 
-Link to the pdf of the thesis: 
+The pdf of the thesis is available [here!](http://google.com)
 
 ## Introduction
 
