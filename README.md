@@ -15,8 +15,7 @@ The pdf of the thesis is available [here!](http://google.com) (Coming soon!)
 * **Daten_*'**:  Test Data for Example in Chapters 3, 4 and 5 and accompanying Python Programs 
 
 ## Abstract
-
-![Abstract](https://user-images.githubusercontent.com/21077042/94988819-52e2bf80-0570-11eb-8ab5-aed473967617.png)
+<img src="https://user-images.githubusercontent.com/21077042/94988819-52e2bf80-0570-11eb-8ab5-aed473967617.png" width="600" height="400">
 
 When a retail company tries to optimize and extend their distribution operation it often faces a two-fold problem, if they deliver goods from a central warehouse to their stores by a set of delivery trucks: on the one hand delivery trips have to be planned, such that they can be completed in as little time as possible, but on the other hand the loading operation of goods for the delivery trips at the warehouse docks need to be scheduled, such that only a minimal waiting time occurs for the trucks. The latter is because each dock can only  load one truck at a time and thus a waiting time occurs, if a truck has to wait for a dock to become free for loading. Additionally, since the stores have opening hours during which the store is open to receive deliveries from trucks, a waiting time occurs if a truck arrives to early at a store. In the literature the routing part of this problem is known as the multi-trip capacitated vehicle routing problem with time windows (MTCVRPTW) and the dock scheduling problem is abbreviated as DSP.
 
