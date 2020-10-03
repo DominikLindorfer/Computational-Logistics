@@ -333,7 +333,7 @@ int main() {
 	long level = 0;
 	long moves = 0;
 	long accept = 0;
-	long n_tries = 1000;
+	long n_tries = 5000;
 	long tries = 0;
 	long not_updated = 0;
 	long not_updated_max = 50;
@@ -499,7 +499,7 @@ int main() {
 			cout << "n_docks: " << n_docks << " n_trucks: " << n_trucks << endl;
 			Map2D << n_docks << " " << n_trucks << " ";
 
-			long feasibility_tries = 1000;
+			long feasibility_tries = 5000;
 			auto trucks_best = trucks;
 			auto docks_best = docks;
 			accept = 0;

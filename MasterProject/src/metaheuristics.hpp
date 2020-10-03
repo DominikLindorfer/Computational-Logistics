@@ -83,7 +83,7 @@ void initial_solution_routes(vector< vector< list< vector<long> > > >& solution,
 						if (solution[day][route_ind].size() == 1) {
 							start_time = stores.at(ind_max).service_time.first + t_fix_unload + (*solution[day][route_ind].begin())[1] * t_unload;
 						} else {
-							start_time =stores.at((*solution[day][route_ind].begin())[0]).service_time.first;
+							start_time = stores.at((*solution[day][route_ind].begin())[0]).service_time.first;
 							long id_prev;
 							long id_act;
 
