@@ -2,7 +2,7 @@
 
 ## This Repository accompanies our Master-Thesis at the [Institute of Production and Logistics Managment](https://www.jku.at/en/institute-of-production-and-logistics-management/) @ [JKU](http://www.jku.at)
 
-The pdf of the thesis is available [here!](http://google.com) (Coming soon!)
+The pdf of the thesis is available [here!](https://epub.jku.at/urn:nbn:at:at-ubl:1-38493)
 
 ## Directory Tree
 
